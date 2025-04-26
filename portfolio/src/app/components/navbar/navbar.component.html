@@ -1,0 +1,22 @@
+<mat-toolbar color="primary">
+  <span class="logo">
+    <a mat-button routerLink="/">Portfolio</a>
+  </span>
+
+  <span class="spacer"></span>
+
+  <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    <mat-icon>home</mat-icon>
+    <span class="nav-text">Home</span>
+  </a>
+
+  <a mat-button routerLink="/projects" routerLinkActive="active">
+    <mat-icon>work</mat-icon>
+    <span class="nav-text">Projects</span>
+  </a>
+
+  <a mat-button routerLink="/contact" routerLinkActive="active">
+    <mat-icon>contact_mail</mat-icon>
+    <span class="nav-text">Contact</span>
+  </a>
+</mat-toolbar>
