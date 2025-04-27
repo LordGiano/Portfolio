@@ -1,0 +1,276 @@
+.project-detail-container {
+  min-height: 100vh;
+  background: var(--background-main);
+}
+
+/* Hero Section */
+.project-hero {
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.category-chip {
+  background: var(--primary-blue) !important;
+  color: white !important;
+  margin-bottom: 1rem;
+}
+
+.project-title {
+  font-size: 3rem;
+  margin: 0 0 1rem;
+}
+
+.project-subtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+
+.project-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.project-actions a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Content Section */
+.project-content {
+  padding: 4rem 0;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+}
+
+.main-content {
+  min-width: 0; /* Prevents overflow issues */
+}
+
+/* Tab Content */
+.tab-content {
+  padding: 2rem 0;
+}
+
+.tab-content h2 {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.tab-content h3 {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin: 2rem 0 1rem;
+}
+
+.project-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* Project Lists */
+.project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.project-list mat-icon {
+  color: var(--primary-blue);
+  margin-top: 2px;
+}
+
+/* Screenshots Grid */
+.screenshots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.screenshot {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.screenshot img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.screenshot:hover img {
+  transform: scale(1.05);
+}
+
+/* Technologies Grid */
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.tech-card {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.tech-card mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+}
+
+.tech-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+/* Sidebar */
+.sidebar mat-card {
+  margin-bottom: 1.5rem;
+}
+
+.sidebar h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-item mat-icon {
+  color: var(--primary-blue);
+}
+
+.info-label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.info-value {
+  display: block;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.info-value a {
+  color: var(--primary-blue);
+  text-decoration: none;
+}
+
+.info-value a:hover {
+  text-decoration: underline;
+}
+
+/* Technology Chips */
+.tech-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tech-chips mat-chip {
+  background: #f0f4f8 !important;
+  color: var(--primary-blue) !important;
+  font-size: 0.875rem;
+}
+
+/* Navigation */
+.project-navigation {
+  padding: 2rem 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.project-navigation a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-blue);
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .project-hero {
+    height: 300px;
+  }
+
+  .project-title {
+    font-size: 2rem;
+  }
+
+  .project-actions {
+    flex-direction: column;
+  }
+
+  .project-actions a {
+    width: 100%;
+    justify-content: center;
+  }
+}

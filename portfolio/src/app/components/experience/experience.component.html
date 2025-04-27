@@ -1,0 +1,179 @@
+<div class="experience-container">
+  <!-- Hero Section -->
+  <section class="experience-hero">
+    <div class="container">
+      <h1 class="section-title">Studies & Work Experience</h1>
+      <div class="section-divider"></div>
+      <p class="hero-subtitle">
+        A comprehensive overview of my professional journey and educational background
+      </p>
+    </div>
+  </section>
+
+  <!-- Timeline Section -->
+  <section class="timeline-section">
+    <div class="container">
+      <!-- Work Experience -->
+      <div class="experience-category">
+        <h2 class="category-title">
+          <mat-icon>work</mat-icon>
+          Work Experience
+        </h2>
+
+        <div class="timeline">
+          <ng-container *ngFor="let exp of experiences; let i = index">
+            <div *ngIf="exp.type === 'work'"
+                 [class.left]="i % 2 === 0"
+                 [class.right]="i % 2 !== 0"
+                 class="timeline-item">
+
+            <mat-card class="experience-card">
+              <mat-card-header>
+                <div mat-card-avatar class="experience-icon">
+                  <mat-icon>business</mat-icon>
+                </div>
+                <mat-card-title>{{exp.title}}</mat-card-title>
+                <mat-card-subtitle>
+                  {{exp.company}} | {{exp.period}} | {{exp.location}}
+                </mat-card-subtitle>
+              </mat-card-header>
+
+              <mat-card-content>
+                <div class="description-list">
+                  <ul>
+                    <li *ngFor="let desc of exp.description">{{desc}}</li>
+                  </ul>
+                </div>
+
+                <div class="technologies" *ngIf="exp.technologies">
+                  <h4>Technologies:</h4>
+                  <div class="tech-stack">
+                    <span class="tech-badge" *ngFor="let tech of exp.technologies">
+                      {{tech}}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="achievements" *ngIf="exp.achievements">
+                  <h4>Key Achievements:</h4>
+                  <ul>
+                    <li *ngFor="let achievement of exp.achievements">
+                      <mat-icon class="achievement-icon">check_circle</mat-icon>
+                      {{achievement}}
+                    </li>
+                  </ul>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Education -->
+      <div class="experience-category">
+        <h2 class="category-title">
+          <mat-icon>school</mat-icon>
+          Education
+        </h2>
+
+        <div class="timeline">
+          <ng-container *ngFor="let exp of experiences; let i = index">
+            <div *ngIf="exp.type === 'education'"
+                 [class.left]="i % 2 === 0"
+                 [class.right]="i % 2 !== 0"
+                 class="timeline-item">
+
+            <mat-card class="experience-card education-card">
+              <mat-card-header>
+                <div mat-card-avatar class="experience-icon education-icon">
+                  <mat-icon>school</mat-icon>
+                </div>
+                <mat-card-title>{{exp.title}}</mat-card-title>
+                <mat-card-subtitle>
+                  {{exp.institution}} | {{exp.period}} | {{exp.location}}
+                </mat-card-subtitle>
+              </mat-card-header>
+
+              <mat-card-content>
+                <div class="description-list">
+                  <ul>
+                    <li *ngFor="let desc of exp.description">{{desc}}</li>
+                  </ul>
+                </div>
+
+                <div class="achievements" *ngIf="exp.achievements">
+                  <h4>Achievements:</h4>
+                  <ul>
+                    <li *ngFor="let achievement of exp.achievements">
+                      <mat-icon class="achievement-icon">emoji_events</mat-icon>
+                      {{achievement}}
+                    </li>
+                  </ul>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Summary Section -->
+  <section class="skills-summary">
+    <div class="container">
+      <h2 class="section-title">Technical Skills Summary</h2>
+      <div class="section-divider"></div>
+
+      <div class="skills-grid">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Programming Languages</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="skill-tags">
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">JavaScript</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">Java</span>
+              <span class="skill-tag">C++</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Frameworks & Libraries</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="skill-tags">
+              <span class="skill-tag">Angular</span>
+              <span class="skill-tag">React</span>
+              <span class="skill-tag">Node.js</span>
+              <span class="skill-tag">TensorFlow</span>
+              <span class="skill-tag">Firebase</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Tools & Technologies</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="skill-tags">
+              <span class="skill-tag">Git</span>
+              <span class="skill-tag">Docker</span>
+              <span class="skill-tag">AWS</span>
+              <span class="skill-tag">Jenkins</span>
+              <span class="skill-tag">MongoDB</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </section>
+</div>

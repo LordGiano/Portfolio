@@ -1,0 +1,140 @@
+<div class="projects-container">
+  <!-- Hero Section -->
+  <section class="projects-hero">
+    <div class="container">
+      <h1 class="section-title">Projektek</h1>
+      <div class="section-divider"></div>
+      <p class="hero-subtitle">
+        Íme néhány projekt, amelyeken dolgoztam. Minden projekt egy-egy kihívás volt, amelyből sokat tanultam.
+      </p>
+    </div>
+  </section>
+
+  <!-- Search and Filter Section -->
+  <section class="filter-section">
+    <div class="container">
+      <div class="search-filter-wrapper">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Keresés projektekben</mat-label>
+          <input matInput [(ngModel)]="searchText" placeholder="Projekt neve, technológia...">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="category-chips">
+          <mat-chip-set>
+            <mat-chip
+              *ngFor="let category of categories"
+              [class.selected]="selectedCategory === category"
+              (click)="selectCategory(category)">
+              {{category === 'all' ? 'Összes' : category}}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects Section -->
+  <section class="featured-section" *ngIf="hasFeaturedProjects">
+    <div class="container">
+      <h2 class="subsection-title">Kiemelt projektek</h2>
+      <div class="projects-grid featured-grid">
+        <mat-card class="project-card featured-card" *ngFor="let project of featuredProjects | slice:0:2">
+          <div class="project-image" [style.background-image]="'url(' + project.imageUrl + ')'">
+            <div class="project-overlay">
+              <mat-chip class="category-chip">{{project.category}}</mat-chip>
+            </div>
+          </div>
+
+          <mat-card-header>
+            <mat-card-title>{{project.title}}</mat-card-title>
+            <mat-card-subtitle>{{project.date | date:'yyyy MMMM'}}</mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="project-description">{{project.shortDescription}}</p>
+
+            <div class="tech-stack">
+              <mat-chip *ngFor="let tech of project.technologies | slice:0:3">
+                {{tech}}
+              </mat-chip>
+              <mat-chip *ngIf="project.technologies.length > 3" class="more-chip">
+                +{{project.technologies.length - 3}}
+              </mat-chip>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <a mat-button [routerLink]="['/projects', project.id]">
+              <mat-icon>info</mat-icon>
+              Részletek
+            </a>
+            <a mat-button *ngIf="project.demoUrl" [href]="project.demoUrl" target="_blank">
+              <mat-icon>launch</mat-icon>
+              Demo
+            </a>
+            <a mat-button *ngIf="project.githubUrl" [href]="project.githubUrl" target="_blank">
+              <mat-icon>code</mat-icon>
+              GitHub
+            </a>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </section>
+
+  <!-- All Projects Section -->
+  <section class="all-projects-section">
+    <div class="container">
+      <h2 class="subsection-title">Összes projekt</h2>
+      <div class="projects-grid">
+        <mat-card class="project-card" *ngFor="let project of filteredProjects">
+          <div class="project-image" [style.background-image]="'url(' + project.imageUrl + ')'">
+            <div class="project-overlay">
+              <mat-chip class="category-chip">{{project.category}}</mat-chip>
+            </div>
+          </div>
+
+          <mat-card-header>
+            <mat-card-title>{{project.title}}</mat-card-title>
+            <mat-card-subtitle>{{project.date | date:'yyyy MMMM'}}</mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="project-description">{{project.shortDescription}}</p>
+
+            <div class="tech-stack">
+              <mat-chip *ngFor="let tech of project.technologies | slice:0:3">
+                {{tech}}
+              </mat-chip>
+              <mat-chip *ngIf="project.technologies.length > 3" class="more-chip">
+                +{{project.technologies.length - 3}}
+              </mat-chip>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <a mat-button [routerLink]="['/projects', project.id]">
+              <mat-icon>info</mat-icon>
+              Részletek
+            </a>
+            <a mat-button *ngIf="project.demoUrl" [href]="project.demoUrl" target="_blank">
+              <mat-icon>launch</mat-icon>
+              Demo
+            </a>
+            <a mat-button *ngIf="project.githubUrl" [href]="project.githubUrl" target="_blank">
+              <mat-icon>code</mat-icon>
+              GitHub
+            </a>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <div class="no-results" *ngIf="filteredProjects.length === 0">
+        <mat-icon>search_off</mat-icon>
+        <h3>Nincs találat</h3>
+        <p>Próbálj más keresési feltételekkel vagy kategóriával.</p>
+      </div>
+    </div>
+  </section>
+</div>

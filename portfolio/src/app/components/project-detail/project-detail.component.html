@@ -1,0 +1,167 @@
+<div class="project-detail-container" *ngIf="project">
+  <!-- Hero Section with Project Image -->
+  <section class="project-hero" [style.background-image]="'url(' + project.imageUrl + ')'">
+    <div class="hero-overlay">
+      <div class="container">
+        <mat-chip class="category-chip">{{project.category}}</mat-chip>
+        <h1 class="project-title">{{project.title}}</h1>
+        <p class="project-subtitle">{{project.shortDescription}}</p>
+
+        <div class="project-actions">
+          <a mat-raised-button color="primary" *ngIf="project.demoUrl" [href]="project.demoUrl" target="_blank">
+            <mat-icon>launch</mat-icon>
+            Demo megtekintése
+          </a>
+          <a mat-raised-button *ngIf="project.githubUrl" [href]="project.githubUrl" target="_blank">
+            <mat-icon>code</mat-icon>
+            Forráskód
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Content -->
+  <section class="project-content">
+    <div class="container">
+      <div class="content-grid">
+        <!-- Main Content -->
+        <div class="main-content">
+          <mat-card>
+            <mat-card-content>
+              <mat-tab-group>
+                <!-- Overview Tab -->
+                <mat-tab label="Áttekintés">
+                  <div class="tab-content">
+                    <h2>A projekt leírása</h2>
+                    <p class="project-description">{{project.description}}</p>
+
+                    <mat-divider></mat-divider>
+
+                    <h3>Kihívások</h3>
+                    <ul class="project-list">
+                      <li *ngFor="let challenge of project.challenges">
+                        <mat-icon>warning</mat-icon>
+                        {{challenge}}
+                      </li>
+                    </ul>
+
+                    <h3>Megoldások</h3>
+                    <ul class="project-list">
+                      <li *ngFor="let solution of project.solutions">
+                        <mat-icon>lightbulb</mat-icon>
+                        {{solution}}
+                      </li>
+                    </ul>
+
+                    <h3>Eredmények</h3>
+                    <ul class="project-list">
+                      <li *ngFor="let result of project.results">
+                        <mat-icon>check_circle</mat-icon>
+                        {{result}}
+                      </li>
+                    </ul>
+                  </div>
+                </mat-tab>
+
+                <!-- Screenshots Tab -->
+                <mat-tab label="Képernyőképek" *ngIf="project.screenshots?.length">
+                  <div class="tab-content">
+                    <div class="screenshots-grid">
+                      <div class="screenshot" *ngFor="let screenshot of project.screenshots">
+                        <img [src]="screenshot" [alt]="project.title">
+                      </div>
+                    </div>
+                  </div>
+                </mat-tab>
+
+                <!-- Technologies Tab -->
+                <mat-tab label="Technológiák">
+                  <div class="tab-content">
+                    <h2>Használt technológiák</h2>
+                    <div class="tech-grid">
+                      <mat-card class="tech-card" *ngFor="let tech of project.technologies">
+                        <mat-card-content>
+                          <mat-icon>code</mat-icon>
+                          <h3>{{tech}}</h3>
+                        </mat-card-content>
+                      </mat-card>
+                    </div>
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <mat-card>
+            <mat-card-content>
+              <h3>Projekt információk</h3>
+
+              <div class="info-item">
+                <mat-icon>calendar_today</mat-icon>
+                <div>
+                  <span class="info-label">Dátum</span>
+                  <span class="info-value">{{project.date | date:'yyyy MMMM'}}</span>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <mat-icon>category</mat-icon>
+                <div>
+                  <span class="info-label">Kategória</span>
+                  <span class="info-value">{{project.category}}</span>
+                </div>
+              </div>
+
+              <div class="info-item" *ngIf="project.demoUrl">
+                <mat-icon>link</mat-icon>
+                <div>
+                  <span class="info-label">Demo</span>
+                  <a [href]="project.demoUrl" target="_blank" class="info-value">{{project.demoUrl}}</a>
+                </div>
+              </div>
+
+              <div class="info-item" *ngIf="project.githubUrl">
+                <mat-icon>code</mat-icon>
+                <div>
+                  <span class="info-label">GitHub</span>
+                  <a [href]="project.githubUrl" target="_blank" class="info-value">Forráskód</a>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="technologies-card">
+            <mat-card-content>
+              <h3>Technológiák</h3>
+              <div class="tech-chips">
+                <mat-chip *ngFor="let tech of project.technologies">
+                  {{tech}}
+                </mat-chip>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Navigation -->
+  <section class="project-navigation">
+    <div class="container">
+      <a mat-button routerLink="/projects">
+        <mat-icon>arrow_back</mat-icon>
+        Vissza a projektekhez
+      </a>
+    </div>
+  </section>
+</div>
+
+<!-- Loading State -->
+<div class="loading-state" *ngIf="!project">
+  <mat-spinner></mat-spinner>
+  <p>Projekt betöltése...</p>
+</div>
