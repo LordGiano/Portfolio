@@ -1,0 +1,170 @@
+/* bug-report.component.css */
+.bug-report-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  max-width: 700px;
+  margin: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.bug-report-container.expanded {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  max-width: none;
+  margin: 0;
+}
+
+.floating-bug-button {
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.floating-bug-button:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.4) !important;
+}
+
+.bug-report-card {
+  width: 100%;
+  max-width: 700px;
+  border-radius: 12px !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-md) !important;
+  background-color: var(--background-card) !important;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bug-report-card:hover {
+  box-shadow: var(--shadow-lg) !important;
+  transform: translateY(-4px);
+  border-color: var(--primary-light) !important;
+}
+
+mat-card-header {
+  padding: 1.5rem 1.5rem 0.5rem !important;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: var(--text-secondary);
+}
+
+mat-card-title {
+  font-size: 1.75rem !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+mat-card-subtitle {
+  font-size: 1rem !important;
+  color: var(--text-secondary);
+}
+
+.bug-icon {
+  color: var(--primary-blue);
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+mat-card-content {
+  padding: 1rem 1.5rem 1.5rem !important;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.form-actions button {
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.form-actions button:hover:not([disabled]) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.cancel-button {
+  background-color: #EF4444 !important;
+}
+
+.spinner {
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .bug-report-container.expanded {
+    padding: 0.5rem;
+  }
+
+  .bug-report-card {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  mat-card-title {
+    font-size: 1.5rem !important;
+  }
+
+  mat-card-header {
+    padding: 1rem 1rem 0.5rem !important;
+  }
+
+  mat-card-content {
+    padding: 0.5rem 1rem 1rem !important;
+  }
+
+  .floating-bug-button {
+    transform: scale(0.9);
+  }
+}

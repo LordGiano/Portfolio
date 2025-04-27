@@ -1,0 +1,87 @@
+<!-- bug-report.component.html -->
+<div class="bug-report-container" [class.expanded]="isExpanded">
+  <!-- Floating button when collapsed -->
+  <button
+    *ngIf="!isExpanded"
+    mat-fab
+    color="primary"
+    class="floating-bug-button"
+    (click)="toggleExpand()"
+    matTooltip="Hibabejelentés"
+    matTooltipPosition="left">
+    <mat-icon>bug_report</mat-icon>
+  </button>
+
+  <!-- Full form when expanded -->
+  <mat-card *ngIf="isExpanded" class="bug-report-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="bug-icon">bug_report</mat-icon>
+        Hibabejelentő
+      </mat-card-title>
+      <mat-card-subtitle>
+        Segíts az oldal jobbá tételében
+      </mat-card-subtitle>
+      <button mat-icon-button class="close-button" (click)="toggleExpand()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="bugReportForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" color="primary" class="full-width">
+          <mat-label>Hiba kategória</mat-label>
+          <mat-select formControlName="category">
+            <mat-option *ngFor="let category of bugCategories" [value]="category.value">
+              {{category.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary" class="full-width">
+          <mat-label>Hiba címe</mat-label>
+          <input matInput formControlName="title" placeholder="Rövid, leíró cím">
+          <mat-error *ngIf="bugReportForm.get('title')?.invalid && bugReportForm.get('title')?.touched">
+            Kérjük adj meg egy címet (min. 5, max. 100 karakter)
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary" class="full-width">
+          <mat-label>Hiba leírása</mat-label>
+          <textarea matInput formControlName="description" rows="4"
+                    placeholder="Kérjük írd le részletesen a problémát"></textarea>
+          <mat-error *ngIf="bugReportForm.get('description')?.invalid && bugReportForm.get('description')?.touched">
+            Kérjük add meg a hiba részletes leírását (min. 20, max. 500 karakter)
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary" class="full-width">
+          <mat-label>Reprodukálási lépések</mat-label>
+          <textarea matInput formControlName="reproduceSteps" rows="3"
+                    placeholder="Hogyan tudjuk reprodukálni a hibát (opcionális)"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary" class="full-width">
+          <mat-label>E-mail cím (opcionális)</mat-label>
+          <input matInput formControlName="email" placeholder="E-mail cím a visszajelzéshez">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="bugReportForm.get('email')?.invalid && bugReportForm.get('email')?.touched">
+            Kérjük adj meg egy érvényes e-mail címet
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button type="button" color="warn" class="cancel-button" (click)="toggleExpand()">
+            <mat-icon>cancel</mat-icon>
+            <span>Bezárás</span>
+          </button>
+          <button mat-raised-button type="submit" color="primary" [disabled]="isSubmitting">
+            <mat-icon>send</mat-icon>
+            <span>Küldés</span>
+            <mat-icon *ngIf="isSubmitting" class="spinner">sync</mat-icon>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
