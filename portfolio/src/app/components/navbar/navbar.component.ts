@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,5 +18,14 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  isScrolled = false;
 
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 50;
+  }
+
+  toggleMenu() {
+    // Implementáljuk később, ha kell a mobil menü
+  }
 }

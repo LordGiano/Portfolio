@@ -1,22 +1,28 @@
-<mat-toolbar color="primary">
+<mat-toolbar [class.scrolled]="isScrolled">
   <span class="logo">
     <a mat-button routerLink="/">Portfolio</a>
   </span>
 
   <span class="spacer"></span>
 
-  <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-    <mat-icon>home</mat-icon>
-    <span class="nav-text">Főoldal</span>
-  </a>
+  <div class="nav-links">
+    <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <mat-icon>home</mat-icon>
+      <span class="nav-text">Főoldal</span>
+    </a>
 
-  <a mat-button routerLink="/projects" routerLinkActive="active">
-    <mat-icon>work</mat-icon>
-    <span class="nav-text">Projektek</span>
-  </a>
+    <a mat-button routerLink="/projects" routerLinkActive="active">
+      <mat-icon>work</mat-icon>
+      <span class="nav-text">Projektek</span>
+    </a>
 
-  <a mat-button routerLink="/contact" routerLinkActive="active">
-    <mat-icon>contact_mail</mat-icon>
-    <span class="nav-text">Kontakt</span>
-  </a>
+    <a mat-button routerLink="/contact" routerLinkActive="active">
+      <mat-icon>contact_mail</mat-icon>
+      <span class="nav-text">Kapcsolat</span>
+    </a>
+  </div>
+
+  <button mat-icon-button class="menu-button" (click)="toggleMenu()">
+    <mat-icon>menu</mat-icon>
+  </button>
 </mat-toolbar>

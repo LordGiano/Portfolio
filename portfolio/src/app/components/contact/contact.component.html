@@ -1,1 +1,145 @@
-<p>contact works!</p>
+<div class="contact-container">
+  <section class="contact-section">
+    <h1 class="section-title">Kapcsolat</h1>
+    <div class="section-divider"></div>
+    <p class="section-subtitle">Lépj velem kapcsolatba az alábbi módokon</p>
+
+    <!-- Fő kapcsolati kártya -->
+    <mat-card class="main-contact-card">
+      <mat-card-content>
+        <div class="contact-items">
+          <!-- Email -->
+          <div class="contact-item">
+            <mat-icon>email</mat-icon>
+            <div class="contact-item-content">
+              <h3>Email</h3>
+              <p>your.email&#64;example.com</p>
+              <p class="response-time">Általában 24 órán belül válaszolok</p>
+            </div>
+            <a href="mailto:your.email@example.com" mat-raised-button color="primary">
+              Írj emailt
+            </a>
+          </div>
+
+          <!-- Telefon -->
+          <div class="contact-item">
+            <mat-icon>phone</mat-icon>
+            <div class="contact-item-content">
+              <h3>Telefon</h3>
+              <p>+36 XX XXX XXXX</p>
+              <p class="response-time">Munkanapokon 9:00-17:00</p>
+            </div>
+            <a href="tel:+36XXXXXXXX" mat-raised-button color="primary">
+              Hívj fel
+            </a>
+          </div>
+
+          <!-- LinkedIn -->
+          <div class="contact-item">
+            <mat-icon>business</mat-icon>
+            <div class="contact-item-content">
+              <h3>LinkedIn</h3>
+              <p>linkedin.com/in/yourusername</p>
+            </div>
+            <a href="https://linkedin.com/in/yourusername" target="_blank" mat-raised-button color="primary">
+              Profil megtekintése
+            </a>
+          </div>
+
+          <!-- GitHub -->
+          <div class="contact-item">
+            <mat-icon>code</mat-icon>
+            <div class="contact-item-content">
+              <h3>GitHub</h3>
+              <p>github.com/yourusername</p>
+            </div>
+            <a href="https://github.com/yourusername" target="_blank" mat-raised-button color="primary">
+              Projektek megtekintése
+            </a>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Időpontfoglalás kártya -->
+    <div class="additional-cards">
+      <mat-card class="appointment-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>calendar_today</mat-icon>
+          <mat-card-title>Időpontfoglalás</mat-card-title>
+          <mat-card-subtitle>Foglalj időpontot egy online megbeszélésre</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>30 perces online konzultáció</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <a href="https://calendly.com/yourusername" target="_blank" mat-raised-button color="primary">
+            Időpont foglalása
+          </a>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- Hírlevél kártya -->
+      <mat-card class="newsletter-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>notifications_active</mat-icon>
+          <mat-card-title>Hírlevél feliratkozás</mat-card-title>
+          <mat-card-subtitle>Kapj értesítést az új projektekről és blogbejegyzésekről</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <form class="newsletter-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email címed</mat-label>
+              <input matInput type="email" placeholder="pelda&#64;email.com">
+              <mat-icon matPrefix>mail_outline</mat-icon>
+            </mat-form-field>
+            <p class="newsletter-info">Havonta maximum 1-2 levelet küldök. Bármikor leiratkozhatsz.</p>
+          </form>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" type="submit">Feliratkozás</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <!-- Üzenetküldő form -->
+    <mat-card class="contact-form-card">
+      <mat-card-header>
+        <mat-card-title>Küldj üzenetet</mat-card-title>
+        <mat-card-subtitle>Van egy projekted vagy kérdésed? Keress bátran!</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form class="contact-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Név</mat-label>
+            <input matInput placeholder="A neved">
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" placeholder="Email címed">
+            <mat-icon matPrefix>email</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Üzenet</mat-label>
+            <textarea matInput rows="4" placeholder="Írd ide az üzeneted"></textarea>
+            <mat-icon matPrefix>message</mat-icon>
+          </mat-form-field>
+
+          <div class="form-footer">
+            <p class="response-time">
+              <mat-icon>reply</mat-icon>
+              <span>48 órán belül válaszolok minden megkeresésre</span>
+            </p>
+            <button mat-raised-button color="primary" type="submit">
+              <mat-icon>send</mat-icon>
+              Küldés
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </section>
+</div>

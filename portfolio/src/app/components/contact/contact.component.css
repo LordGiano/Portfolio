@@ -1,0 +1,249 @@
+.contact-container {
+  min-height: 100vh;
+  background: var(--background-main);
+  padding: 4rem 0;
+}
+
+.contact-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  text-align: center;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.section-divider {
+  height: 4px;
+  width: 60px;
+  background: var(--primary-gradient);
+  margin: 0 auto 2rem;
+  border-radius: 2px;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
+}
+
+/* Fő kapcsolati kártya */
+.main-contact-card {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  border: 2px solid var(--primary-blue) !important;
+  border-radius: 12px !important;
+  background: #FFFFFF !important;
+}
+
+.contact-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.contact-item:last-child {
+  border-bottom: none;
+}
+
+.contact-item mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: var(--primary-blue);
+}
+
+.contact-item-content {
+  flex: 1;
+}
+
+.contact-item-content h3 {
+  margin: 0;
+  color: var(--primary-blue);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.contact-item-content p {
+  margin: 0.25rem 0 0;
+  color: var(--text-secondary);
+}
+
+.response-time {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* További kártyák */
+.additional-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.appointment-card,
+.newsletter-card {
+  border: 2px solid var(--primary-blue) !important;
+  border-radius: 12px !important;
+  background: #FFFFFF !important;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-mdc-card-header {
+  align-items: center;
+  padding: 1.5rem 1rem 1rem !important;
+}
+
+.mat-mdc-card-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 24px !important;
+  color: var(--primary-blue);
+  background: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 16px !important;
+}
+
+.mat-mdc-card-content {
+  padding: 1rem !important;
+  flex: 1;
+}
+
+.mat-mdc-card-actions {
+  padding: 1rem !important;
+  display: flex;
+  justify-content: center;
+}
+
+/* Hírlevél form */
+.newsletter-form {
+  margin-top: 1rem;
+}
+
+.newsletter-info {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 1rem;
+}
+
+/* Üzenetküldő form */
+.contact-form-card {
+  max-width: 800px;
+  margin: 0 auto;
+  border: 2px solid var(--primary-blue) !important;
+  border-radius: 12px !important;
+  background: #FFFFFF !important;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.form-footer .response-time {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-footer .response-time mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Gombok */
+.mat-mdc-raised-button {
+  background: var(--primary-blue) !important;
+  color: white !important;
+  font-weight: 500 !important;
+  padding: 0 24px !important;
+  height: 48px !important;
+  border-radius: 24px !important;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+.mat-mdc-raised-button:hover {
+  background: var(--primary-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(37, 99, 235, 0.3) !important;
+}
+
+.mat-mdc-raised-button mat-icon {
+  margin-right: 8px;
+  color: white !important;
+}
+
+/* Kártya címek és alcímek */
+.mat-mdc-card-title {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+}
+
+.mat-mdc-card-subtitle {
+  color: var(--text-secondary) !important;
+  margin-top: 0.5rem !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .additional-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .contact-item a.mat-mdc-raised-button {
+    width: 100%;
+  }
+
+  .form-footer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-footer button {
+    width: 100%;
+  }
+}
