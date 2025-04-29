@@ -17,4 +17,4 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PORTFOLIO_DF936 }}
           channelId: live
-          projectId: portfolio-df936
+          projectId: norbert-szabo-portfolio

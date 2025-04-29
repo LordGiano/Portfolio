@@ -26,11 +26,11 @@
 
 .floating-bug-button {
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
-  transition: all 0.3s ease !important;
+  transition: box-shadow 0.3s ease !important;  /* Only transition box-shadow */
 }
 
 .floating-bug-button:hover {
-  transform: translateY(-4px) scale(1.05);
+  /* Remove all transform effects, only enhance shadow */
   box-shadow: 0 8px 16px rgba(37, 99, 235, 0.4) !important;
 }
 
@@ -42,8 +42,25 @@
   box-shadow: var(--shadow-md) !important;
   background-color: var(--background-card) !important;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;  /* Only transition specific properties */
   animation: slideIn 0.3s ease-out;
+}
+
+/* IMPORTANT: Override any global hover transform effects */
+.bug-report-card:hover {
+  box-shadow: var(--shadow-lg) !important;
+  border-color: var(--primary-light) !important;
+  transform: none !important;  /* Prevent any transform on hover */
+}
+
+/* Ensure no transform for all child elements on hover */
+.bug-report-card:hover * {
+  transform: none !important;
+}
+
+/* Override global mat-mdc-card hover effects for this component */
+.bug-report-container .mat-mdc-card:hover {
+  transform: none !important;
 }
 
 @keyframes slideIn {
@@ -55,12 +72,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.bug-report-card:hover {
-  box-shadow: var(--shadow-lg) !important;
-  transform: translateY(-4px);
-  border-color: var(--primary-light) !important;
 }
 
 mat-card-header {
@@ -120,11 +131,11 @@ mat-card-content {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;  /* Only transition specific properties */
 }
 
 .form-actions button:hover:not([disabled]) {
-  transform: translateY(-2px);
+  /* Only shadow effect, no transform */
   box-shadow: var(--shadow-md);
 }
 
@@ -165,6 +176,7 @@ mat-card-content {
   }
 
   .floating-bug-button {
+    /* Keep scale for small screens but without hover changes */
     transform: scale(0.9);
   }
 }

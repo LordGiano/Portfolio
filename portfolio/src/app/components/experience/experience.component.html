@@ -10,41 +10,50 @@
     </div>
   </section>
 
-  <!-- Timeline Section -->
-  <section class="timeline-section">
-    <div class="container">
-      <!-- Work Experience -->
-      <div class="experience-category">
-        <h2 class="category-title">
-          <mat-icon>work</mat-icon>
-          Work Experience
-        </h2>
+  <!-- Vertical Timeline Section -->
+  <section class="vertical-timeline-section">
+    <div class="timeline-container">
+      <!-- Timeline with years and months -->
+      <div class="timeline-track">
+        <div *ngFor="let year of timelineYears" class="timeline-year">
+          <div class="year-marker">
+            <span class="year-label">{{year.year}}</span>
+          </div>
+          <div class="month-marks">
+            <div *ngFor="let month of year.months" class="month-mark"></div>
+          </div>
+        </div>
+      </div>
 
-        <div class="timeline">
-          <ng-container *ngFor="let exp of experiences; let i = index">
-            <div *ngIf="exp.type === 'work'"
-                 [class.left]="i % 2 === 0"
-                 [class.right]="i % 2 !== 0"
-                 class="timeline-item">
-
-            <mat-card class="experience-card">
+      <!-- Experiences on both sides -->
+      <div class="experiences-container">
+        <!-- Work experiences on the left -->
+        <div class="timeline-left">
+          <h2 class="section-heading">
+            <mat-icon>work</mat-icon>
+            Work Experience
+          </h2>
+          <div *ngFor="let exp of workExperiences"
+               class="experience-card-wrapper"
+               [ngStyle]="getVerticalPositionStyle(exp)">
+            <mat-card class="experience-card work-card">
               <mat-card-header>
-                <div mat-card-avatar class="experience-icon">
+                <div mat-card-avatar class="experience-icon work-icon">
                   <mat-icon>business</mat-icon>
                 </div>
                 <mat-card-title>{{exp.title}}</mat-card-title>
                 <mat-card-subtitle>
-                  {{exp.company}} | {{exp.period}} | {{exp.location}}
+                  {{exp.company}} | {{exp.period}}
+                  <br>
+                  {{exp.location}}
                 </mat-card-subtitle>
               </mat-card-header>
-
               <mat-card-content>
                 <div class="description-list">
                   <ul>
                     <li *ngFor="let desc of exp.description">{{desc}}</li>
                   </ul>
                 </div>
-
                 <div class="technologies" *ngIf="exp.technologies">
                   <h4>Technologies:</h4>
                   <div class="tech-stack">
@@ -53,7 +62,6 @@
                     </span>
                   </div>
                 </div>
-
                 <div class="achievements" *ngIf="exp.achievements">
                   <h4>Key Achievements:</h4>
                   <ul>
@@ -65,27 +73,20 @@
                 </div>
               </mat-card-content>
             </mat-card>
-            </div>
-          </ng-container>
+            <div class="connection-line"></div>
+          </div>
         </div>
-      </div>
 
-      <mat-divider></mat-divider>
-
-      <!-- Education -->
-      <div class="experience-category">
-        <h2 class="category-title">
-          <mat-icon>school</mat-icon>
-          Education
-        </h2>
-
-        <div class="timeline">
-          <ng-container *ngFor="let exp of experiences; let i = index">
-            <div *ngIf="exp.type === 'education'"
-                 [class.left]="i % 2 === 0"
-                 [class.right]="i % 2 !== 0"
-                 class="timeline-item">
-
+        <!-- Education experiences on the right -->
+        <div class="timeline-right">
+          <h2 class="section-heading">
+            <mat-icon>school</mat-icon>
+            Education
+          </h2>
+          <div *ngFor="let exp of educationExperiences"
+               class="experience-card-wrapper"
+               [ngStyle]="getVerticalPositionStyle(exp)">
+            <div class="connection-line"></div>
             <mat-card class="experience-card education-card">
               <mat-card-header>
                 <div mat-card-avatar class="experience-icon education-icon">
@@ -93,17 +94,17 @@
                 </div>
                 <mat-card-title>{{exp.title}}</mat-card-title>
                 <mat-card-subtitle>
-                  {{exp.institution}} | {{exp.period}} | {{exp.location}}
+                  {{exp.institution}} | {{exp.period}}
+                  <br>
+                  {{exp.location}}
                 </mat-card-subtitle>
               </mat-card-header>
-
               <mat-card-content>
                 <div class="description-list">
                   <ul>
                     <li *ngFor="let desc of exp.description">{{desc}}</li>
                   </ul>
                 </div>
-
                 <div class="achievements" *ngIf="exp.achievements">
                   <h4>Achievements:</h4>
                   <ul>
@@ -115,8 +116,7 @@
                 </div>
               </mat-card-content>
             </mat-card>
-            </div>
-          </ng-container>
+          </div>
         </div>
       </div>
     </div>
