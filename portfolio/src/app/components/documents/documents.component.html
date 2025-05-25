@@ -1,1 +1,239 @@
-<p>documents works!</p>
+<div class="documents-section">
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header-content">
+      <h1 class="section-title">Dokumentumok</h1>
+      <div class="section-divider"></div>
+      <p class="section-description">
+        Letölthető dokumentumok, tanúsítványok és projektek részletes leírása.
+        Minden dokumentum naprakész és hitelesített.
+      </p>
+    </div>
+
+    <!-- Featured Documents -->
+    <div class="featured-section" *ngIf="getFeaturedDocuments().length > 0">
+      <h2 class="featured-title">
+        <mat-icon>star</mat-icon>
+        Kiemelt dokumentumok
+      </h2>
+      <div class="featured-grid">
+        <mat-card class="featured-card" *ngFor="let doc of getFeaturedDocuments()">
+          <div class="featured-badge">
+            <mat-icon>star</mat-icon>
+            Kiemelt
+          </div>
+
+          <mat-card-header>
+            <div mat-card-avatar class="document-icon" [class]="getDocumentTypeClass(doc.type)">
+              <mat-icon>{{ doc.icon }}</mat-icon>
+            </div>
+            <mat-card-title>{{ doc.title }}</mat-card-title>
+            <mat-card-subtitle>{{ doc.type }}</mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="document-description">{{ doc.description }}</p>
+            <div class="document-meta">
+              <span class="file-info">
+                <mat-icon>insert_drive_file</mat-icon>
+                {{ doc.size }}
+              </span>
+              <span class="file-date">
+                <mat-icon>schedule</mat-icon>
+                {{ doc.date }}
+              </span>
+            </div>
+            <div class="document-tags">
+              <mat-chip-set>
+                <mat-chip *ngFor="let tag of doc.tags">{{ tag }}</mat-chip>
+              </mat-chip-set>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="downloadDocument(doc)">
+              <mat-icon>download</mat-icon>
+              Letöltés
+            </button>
+            <button mat-button
+                    [disabled]="!doc.hasPreview"
+                    (click)="previewDocument(doc)">
+              <mat-icon>visibility</mat-icon>
+              Előnézet
+            </button>
+            <button mat-icon-button (click)="shareDocument(doc)" title="Megosztás">
+              <mat-icon>share</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="category-section">
+      <h2 class="category-title">Kategóriák szerint böngészés</h2>
+
+      <mat-tab-group [selectedIndex]="0" (selectedTabChange)="selectCategory(categories[$event.index].id)">
+        <mat-tab *ngFor="let category of categories" [label]="category.name + ' (' + category.count + ')'">
+          <ng-template matTabContent>
+            <div class="documents-grid">
+              <mat-card class="document-card" *ngFor="let doc of getFilteredDocuments(); trackBy: trackByDocId">
+                <div class="card-header">
+                  <div class="document-icon" [class]="getDocumentTypeClass(doc.type)">
+                    <mat-icon>{{ doc.icon }}</mat-icon>
+                  </div>
+                  <div class="card-badges" *ngIf="doc.featured">
+                    <span class="featured-badge-small">
+                      <mat-icon>star</mat-icon>
+                    </span>
+                  </div>
+                </div>
+
+                <mat-card-header>
+                  <mat-card-title>{{ doc.title }}</mat-card-title>
+                  <mat-card-subtitle>{{ doc.type }}</mat-card-subtitle>
+                </mat-card-header>
+
+                <mat-card-content>
+                  <p class="document-description">{{ doc.description }}</p>
+
+                  <div class="document-meta">
+                    <div class="meta-item">
+                      <mat-icon>insert_drive_file</mat-icon>
+                      <span>{{ doc.size }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <mat-icon>schedule</mat-icon>
+                      <span>{{ doc.date }}</span>
+                    </div>
+                  </div>
+
+                  <div class="document-tags">
+                    <mat-chip-set>
+                      <mat-chip *ngFor="let tag of doc.tags">{{ tag }}</mat-chip>
+                    </mat-chip-set>
+                  </div>
+
+                  <div class="availability-status">
+                    <div class="status-item" [class.available]="doc.isDownloadable">
+                      <mat-icon>{{ doc.isDownloadable ? 'check_circle' : 'cancel' }}</mat-icon>
+                      <span>{{ doc.isDownloadable ? 'Letölthető' : 'Nem elérhető' }}</span>
+                    </div>
+                    <div class="status-item" [class.available]="doc.hasPreview">
+                      <mat-icon>{{ doc.hasPreview ? 'visibility' : 'visibility_off' }}</mat-icon>
+                      <span>{{ doc.hasPreview ? 'Előnézhető' : 'Csak letöltés' }}</span>
+                    </div>
+                  </div>
+                </mat-card-content>
+
+                <mat-card-actions>
+                  <button mat-raised-button
+                          color="primary"
+                          [disabled]="!doc.isDownloadable"
+                          (click)="downloadDocument(doc)">
+                    <mat-icon>download</mat-icon>
+                    Letöltés
+                  </button>
+                  <button mat-button
+                          [disabled]="!doc.hasPreview"
+                          (click)="previewDocument(doc)">
+                    <mat-icon>visibility</mat-icon>
+                    Előnézet
+                  </button>
+                  <button mat-icon-button (click)="shareDocument(doc)" title="Megosztás">
+                    <mat-icon>share</mat-icon>
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="stats-section">
+      <h2 class="stats-title">Dokumentum Statisztikák</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <mat-icon>description</mat-icon>
+          <div class="stat-content">
+            <span class="stat-number">{{ documents.length }}</span>
+            <span class="stat-label">Összes dokumentum</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <mat-icon>workspace_premium</mat-icon>
+          <div class="stat-content">
+            <span class="stat-number">{{ getDocumentsByCategory('certificates').length }}</span>
+            <span class="stat-label">Tanúsítvány</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <mat-icon>download</mat-icon>
+          <div class="stat-content">
+            <span class="stat-number">{{ getDownloadableCount() }}</span>
+            <span class="stat-label">Letölthető</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <mat-icon>update</mat-icon>
+          <div class="stat-content">
+            <span class="stat-number">2024</span>
+            <span class="stat-label">Utolsó frissítés</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Document Preview Modal -->
+<div class="modal-overlay" *ngIf="selectedDocument" (click)="closePreview()">
+  <div class="preview-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">
+        <mat-icon>{{ selectedDocument.icon }}</mat-icon>
+        <div>
+          <h2>{{ selectedDocument.title }}</h2>
+          <span class="document-type">{{ selectedDocument.type }}</span>
+        </div>
+      </div>
+      <button class="close-button" (click)="closePreview()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal-content">
+      <div class="preview-placeholder">
+        <mat-icon>insert_drive_file</mat-icon>
+        <h3>Dokumentum Előnézet</h3>
+        <p>{{ selectedDocument.description }}</p>
+        <div class="preview-info">
+          <div class="info-item">
+            <mat-icon>folder</mat-icon>
+            <span>Méret: {{ selectedDocument.size }}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>schedule</mat-icon>
+            <span>Dátum: {{ selectedDocument.date }}</span>
+          </div>
+        </div>
+
+        <div class="preview-actions">
+          <button mat-raised-button color="primary" (click)="downloadDocument(selectedDocument)">
+            <mat-icon>download</mat-icon>
+            Letöltés
+          </button>
+          <button mat-button (click)="shareDocument(selectedDocument)">
+            <mat-icon>share</mat-icon>
+            Megosztás
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -12,7 +12,7 @@
 
     <!-- Skills Grid -->
     <div class="skills-grid">
-      <mat-card class="skill-card" *ngFor="let skill of skills; trackBy: trackByFn">
+      <mat-card class="skill-card" *ngFor="let skill of skills; trackBy: trackByFn" (click)="openSkillDetails(skill)">
         <!-- Skill Header -->
         <div class="skill-header">
           <div class="icon-container">
@@ -43,6 +43,12 @@
                 {{ tech }}
               </span>
             </div>
+          </div>
+
+          <!-- Click indicator -->
+          <div class="click-indicator">
+            <mat-icon>arrow_forward</mat-icon>
+            <span>Részletek megtekintése</span>
           </div>
         </div>
       </mat-card>
@@ -79,6 +85,123 @@
           </div>
         </mat-card-content>
       </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- Skill Details Modal -->
+<div class="modal-overlay" *ngIf="selectedSkill" (click)="closeSkillDetails()">
+  <div class="skill-details-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">
+        <mat-icon>{{ selectedSkill.icon }}</mat-icon>
+        <h2>{{ selectedSkill.title }}</h2>
+      </div>
+      <button class="close-button" (click)="closeSkillDetails()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal-content">
+      <p class="skill-overview">{{ selectedSkill.description }}</p>
+
+      <h3>Konkrét Technológiák & Tapasztalatok</h3>
+
+      <div class="technologies-detailed">
+        <div class="tech-item" *ngFor="let tech of selectedSkill.detailedTechnologies" (click)="openTechnologyDetails(tech)">
+          <div class="tech-header">
+            <div class="tech-main-info">
+              <h4>{{ tech.name }}</h4>
+              <span class="tech-category">{{ tech.category }}</span>
+            </div>
+            <div class="tech-stats">
+              <span class="tech-level" [class]="getTechnologyLevelClass(tech.level)">
+                {{ getTechnologyLevelText(tech.level) }}
+              </span>
+              <span class="tech-experience">{{ tech.yearsOfExperience }} év</span>
+            </div>
+          </div>
+
+          <div class="tech-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="tech.level"></div>
+            </div>
+            <span class="progress-text">{{ tech.level }}%</span>
+          </div>
+
+          <p class="tech-description">{{ tech.description }}</p>
+
+          <div class="projects-used">
+            <strong>Használt projektekben:</strong>
+            <div class="project-tags">
+              <span class="project-tag" *ngFor="let project of tech.projects">{{ project }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Technology Details Modal -->
+<div class="modal-overlay" *ngIf="selectedTechnology" (click)="closeTechnologyDetails()">
+  <div class="technology-details-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">
+        <h2>{{ selectedTechnology.name }}</h2>
+        <span class="tech-category-badge">{{ selectedTechnology.category }}</span>
+      </div>
+      <button class="close-button" (click)="closeTechnologyDetails()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal-content">
+      <div class="tech-overview">
+        <div class="tech-metric">
+          <mat-icon>trending_up</mat-icon>
+          <div>
+            <span class="metric-value">{{ selectedTechnology.level }}%</span>
+            <span class="metric-label">Tudásszint</span>
+          </div>
+        </div>
+
+        <div class="tech-metric">
+          <mat-icon>schedule</mat-icon>
+          <div>
+            <span class="metric-value">{{ selectedTechnology.yearsOfExperience }}</span>
+            <span class="metric-label">Év tapasztalat</span>
+          </div>
+        </div>
+
+        <div class="tech-metric">
+          <mat-icon>work</mat-icon>
+          <div>
+            <span class="metric-value">{{ selectedTechnology.projects.length }}</span>
+            <span class="metric-label">Projekt</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tech-description-detailed">
+        <h3>Részletes Leírás</h3>
+        <p>{{ selectedTechnology.description }}</p>
+      </div>
+
+      <div class="projects-detailed">
+        <h3>Projektek ({{ selectedTechnology.projects.length }})</h3>
+        <div class="project-list">
+          <div class="project-item" *ngFor="let project of selectedTechnology.projects">
+            <mat-icon>folder</mat-icon>
+            <span>{{ project }}</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="back-button" (click)="closeTechnologyDetails()">
+        <mat-icon>arrow_back</mat-icon>
+        Vissza a technológiákhoz
+      </button>
     </div>
   </div>
 </div>
