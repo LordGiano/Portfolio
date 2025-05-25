@@ -1,0 +1,84 @@
+<div class="skills-section">
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header-content">
+      <h1 class="section-title">Készségek & Technológiák</h1>
+      <div class="section-divider"></div>
+      <p class="section-description">
+        Tapasztalatom különböző technológiákkal és keretrendszerekkel,
+        amelyeket projektjeim során alkalmaztam és fejlesztettem.
+      </p>
+    </div>
+
+    <!-- Skills Grid -->
+    <div class="skills-grid">
+      <mat-card class="skill-card" *ngFor="let skill of skills; trackBy: trackByFn">
+        <!-- Skill Header -->
+        <div class="skill-header">
+          <div class="icon-container">
+            <mat-icon>{{ skill.icon }}</mat-icon>
+          </div>
+          <div class="skill-info">
+            <h3>{{ skill.title }}</h3>
+            <div class="skill-level">
+              <span class="level-text" [class]="getSkillLevelClass(skill.level)">
+                {{ getSkillLevelText(skill.level) }}
+              </span>
+              <div class="level-bar">
+                <div class="level-progress" [style.width.%]="skill.level"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill Content -->
+        <div class="skill-content">
+          <p class="skill-description">{{ skill.description }}</p>
+
+          <!-- Technologies -->
+          <div class="technologies">
+            <h4>Technológiák:</h4>
+            <div class="tech-badges">
+              <span class="tech-badge" *ngFor="let tech of skill.technologies">
+                {{ tech }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Additional Info Section -->
+    <div class="additional-info">
+      <mat-card class="info-card">
+        <mat-card-header>
+          <div mat-card-avatar class="info-icon">
+            <mat-icon>trending_up</mat-icon>
+          </div>
+          <mat-card-title>Folyamatos Fejlődés</mat-card-title>
+          <mat-card-subtitle>Tanulási Szemlélet</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Hiszek a folyamatos tanulásban és fejlődésben. Rendszeresen követem az iparági trendeket,
+            részt veszek képzéseken és konferenciákon, valamint aktívan közreműködöm nyílt forráskódú projektekben.
+          </p>
+          <div class="learning-stats">
+            <div class="stat">
+              <span class="stat-number">5+</span>
+              <span class="stat-label">Év tapasztalat</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">50+</span>
+              <span class="stat-label">Projekt</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">15+</span>
+              <span class="stat-label">Technológia</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

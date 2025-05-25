@@ -1,0 +1,178 @@
+<!-- timeline.component.html -->
+
+<div class="timeline-wrapper mat-elevation-z1">
+  <!-- Vezérlők -->
+  <mat-toolbar color="primary" class="timeline-controls" *ngIf="showControls">
+    <span>Idővonalas Áttekintés</span>
+    <span class="spacer"></span>
+
+    <!-- Szűrő gombok -->
+    <mat-button-toggle-group [value]="filterType" (change)="filterByType($event.value)">
+      <mat-button-toggle value="all">Összes</mat-button-toggle>
+      <mat-button-toggle value="education">Tanulmányok</mat-button-toggle>
+      <mat-button-toggle value="experience">Munkatapasztalat</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <!-- Keresőmező -->
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Keresés</mat-label>
+      <input matInput (input)="onSearchChange($any($event.target).value)">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <!-- Év szűrő -->
+    <mat-form-field appearance="outline" class="year-field" *ngIf="years?.length">
+      <mat-label>Év</mat-label>
+      <mat-select (selectionChange)="filterByYear($event.value)">
+        <mat-option [value]="null">Összes</mat-option>
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-toolbar>
+
+  <!-- Idővonal konténer -->
+  <div class="timeline-container" [style.maxHeight]="maxHeight">
+    <!-- Bal oldali elemek (Munkatapasztalat) -->
+    <div class="timeline-column timeline-left">
+      <div *ngFor="let item of filteredItems">
+        <div *ngIf="isLeftSide(item)"
+             class="timeline-card experience-card mat-elevation-z3"
+             [ngStyle]="getItemPosition(item)"
+             [style.borderLeftColor]="item.color || '#f44336'"
+             (click)="onItemClick(item)">
+          <div class="timeline-card-content">
+            <!-- Cím és alcím helyett sima HTML elemeket használunk -->
+            <h3 class="card-title">{{ item.title }}</h3>
+            <h4 class="card-subtitle">{{ item.organization }}</h4>
+            <p class="timeline-date">
+              {{ formatDate(item.startDate) }} - {{ formatDate(item.endDate) }}
+              <span class="timeline-duration">
+                ({{ calculateDuration(item.startDate, item.endDate) }})
+              </span>
+            </p>
+            <p *ngIf="item.description" class="timeline-description">{{ item.description }}</p>
+
+            <!-- Kapcsolódó készségek -->
+            <div class="timeline-skills" *ngIf="showSkills && item.skills?.length">
+              <mat-chip-list>
+                <mat-chip *ngFor="let skill of item.skills" color="accent" selected>
+                  {{ skill }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Középső idővonalos rész -->
+    <div class="timeline-column timeline-center">
+      <div class="timeline-line"></div>
+
+      <!-- Évek megjelenítése -->
+      <div class="timeline-years">
+        <div *ngFor="let year of years" class="timeline-year">
+          <div class="year-marker"></div>
+          <div class="year-label">{{ year }}</div>
+
+          <!-- Hónapok megjelenítése behúzásként -->
+          <div class="timeline-months">
+            <div *ngFor="let month of months; let i = index" class="month-marker"
+                 [style.height.%]="100/12">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jobb oldali elemek (Tanulmányok) -->
+    <div class="timeline-column timeline-right">
+      <div *ngFor="let item of filteredItems">
+        <div *ngIf="!isLeftSide(item)"
+             class="timeline-card education-card mat-elevation-z3"
+             [ngStyle]="getItemPosition(item)"
+             [style.borderLeftColor]="item.color || '#3f51b5'"
+             (click)="onItemClick(item)">
+          <div class="timeline-card-content">
+            <!-- Cím és alcím helyett sima HTML elemeket használunk -->
+            <h3 class="card-title">{{ item.title }}</h3>
+            <h4 class="card-subtitle">{{ item.organization }}</h4>
+            <p class="timeline-date">
+              {{ formatDate(item.startDate) }} - {{ formatDate(item.endDate) }}
+              <span class="timeline-duration">
+                ({{ calculateDuration(item.startDate, item.endDate) }})
+              </span>
+            </p>
+            <p *ngIf="item.description" class="timeline-description">{{ item.description }}</p>
+
+            <!-- Kapcsolódó készségek -->
+            <div class="timeline-skills" *ngIf="showSkills && item.skills?.length">
+              <mat-chip-list>
+                <mat-chip *ngFor="let skill of item.skills" color="primary" selected>
+                  {{ skill }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Részletes nézet dialógus -->
+<ng-template #detailsDialog>
+  <div *ngIf="selectedItem" class="details-dialog-content">
+    <h2 class="dialog-title">{{ selectedItem.title }}</h2>
+
+    <mat-dialog-content>
+      <div class="organization-info">
+        <div *ngIf="selectedItem.logo" class="organization-logo">
+          <img [src]="selectedItem.logo" [alt]="selectedItem.organization">
+        </div>
+        <div class="organization-details">
+          <h3>{{ selectedItem.organization }}</h3>
+          <p class="date-info">
+            {{ formatDate(selectedItem.startDate) }} - {{ formatDate(selectedItem.endDate) }}
+            <span class="timeline-duration">
+              ({{ calculateDuration(selectedItem.startDate, selectedItem.endDate) }})
+            </span>
+          </p>
+          <p *ngIf="selectedItem.url">
+            <a mat-button color="primary" [href]="selectedItem.url" target="_blank">
+              <mat-icon>language</mat-icon> Weboldal
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <mat-divider class="my-3"></mat-divider>
+
+      <div class="item-description" *ngIf="selectedItem.description">
+        <p>{{ selectedItem.description }}</p>
+      </div>
+
+      <div class="item-details" *ngIf="selectedItem.details">
+        <h4>Részletek</h4>
+        <p>{{ selectedItem.details }}</p>
+      </div>
+
+      <div class="item-skills" *ngIf="selectedItem.skills?.length">
+        <h4>Készségek</h4>
+        <mat-chip-list>
+          <mat-chip *ngFor="let skill of selectedItem.skills"
+                    [color]="selectedItem.type === 'education' ? 'primary' : 'accent'"
+                    selected>
+            {{ skill }}
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Bezárás</button>
+    </mat-dialog-actions>
+  </div>
+</ng-template>

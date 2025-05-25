@@ -1,0 +1,432 @@
+/* timeline.component.css */
+
+/* Material témához illeszkedő változók */
+:root {
+  --timeline-center-width: 120px;
+  --timeline-primary-color: #3f51b5;    /* Material indigo */
+  --timeline-accent-color: #f44336;     /* Material red */
+  --timeline-line-width: 4px;
+  --timeline-card-radius: 4px;
+  --timeline-card-border-width: 5px;
+}
+
+.timeline-wrapper {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  color: rgba(0, 0, 0, 0.87);
+  width: 100%;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Vezérlők */
+.timeline-controls {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  flex-wrap: wrap;
+}
+
+.timeline-controls .spacer {
+  flex: 1 1 auto;
+}
+
+.timeline-controls .search-field {
+  width: 200px;
+  margin: 0 8px;
+  font-size: 14px;
+}
+
+.timeline-controls .search-field .mat-form-field-wrapper {
+  margin-bottom: -1.25em;
+}
+
+.timeline-controls .year-field {
+  width: 120px;
+  margin: 0 8px;
+  font-size: 14px;
+}
+
+.timeline-controls .year-field .mat-form-field-wrapper {
+  margin-bottom: -1.25em;
+}
+
+.timeline-controls mat-button-toggle-group {
+  margin: 0 8px;
+}
+
+/* Idővonal konténer */
+.timeline-container {
+  display: flex;
+  width: 100%;
+  min-height: 600px;
+  max-height: 800px;
+  position: relative;
+  overflow-y: auto;
+  background-color: #fafafa;
+  padding: 30px 0;
+}
+
+/* Oszlopok stílusai */
+.timeline-column {
+  flex: 1;
+  position: relative;
+}
+
+.timeline-center {
+  flex: 0 0 var(--timeline-center-width);
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* Idővonal fő vonala */
+.timeline-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--timeline-line-width);
+  background-color: var(--timeline-primary-color);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* Évek és hónapok stílusai */
+.timeline-years {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.timeline-year {
+  position: relative;
+  width: 100%;
+  /* Alapértelmezetten 5 év, de a TypeScript kód felülírja */
+  height: 20%;
+}
+
+.year-marker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: rgba(0, 0, 0, 0.54);
+}
+
+.year-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 0 5px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+  z-index: 5;
+}
+
+.timeline-months {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.month-marker {
+  position: relative;
+  width: 100%;
+  border-top: 1px dashed rgba(0, 0, 0, 0.12);
+}
+
+/* Kártya stílusok */
+.timeline-card {
+  position: absolute;
+  width: 90%;
+  background-color: white;
+  border-radius: var(--timeline-card-radius);
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Bal oldali kártyák (munkatapasztalat) */
+.timeline-left .timeline-card {
+  right: 20px;
+  border-left: var(--timeline-card-border-width) solid var(--timeline-accent-color);
+}
+
+/* Jobb oldali kártyák (tanulmányok) */
+.timeline-right .timeline-card {
+  left: 20px;
+  border-left: var(--timeline-card-border-width) solid var(--timeline-primary-color);
+}
+
+.timeline-card-content {
+  padding: 16px;
+}
+
+/* Új cím és alcím stílusok mat-card-title és mat-card-subtitle helyett */
+.card-title {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.card-subtitle {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.timeline-date {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.54);
+  margin: 8px 0;
+}
+
+.timeline-duration {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.timeline-description {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.87);
+  margin: 8px 0 12px 0;
+}
+
+/* Kártya színek */
+.experience-card {
+  background-color: #fff8f8;
+}
+
+.education-card {
+  background-color: #f5f5ff;
+}
+
+/* Összekötő vonalak a kártya és az idővonal között */
+.timeline-left .timeline-card::after,
+.timeline-right .timeline-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 2px;
+}
+
+.timeline-left .timeline-card::after {
+  right: -20px;
+  background-color: var(--timeline-accent-color);
+}
+
+.timeline-right .timeline-card::after {
+  left: -20px;
+  background-color: var(--timeline-primary-color);
+}
+
+/* Készségek list a kártyákon */
+.timeline-skills {
+  margin-top: 12px;
+}
+
+.timeline-skills .mat-chip {
+  font-size: 12px;
+  min-height: 26px;
+  padding: 4px 8px;
+}
+
+/* Dialógus stílusok */
+.details-dialog-content {
+  min-width: 400px;
+  max-width: 600px;
+}
+
+.dialog-title {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.organization-info {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.organization-logo {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.organization-logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.organization-details {
+  flex: 1;
+}
+
+.organization-details h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.date-info {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.item-description, .item-details {
+  margin-bottom: 16px;
+}
+
+.item-description p,
+.item-details p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.item-skills h4,
+.item-details h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.my-3 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+/* Segéd osztályok */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Reszponzív stílusok */
+@media (max-width: 768px) {
+  .timeline-container {
+    flex-direction: column;
+  }
+
+  .timeline-column {
+    flex: none;
+    width: 100%;
+  }
+
+  .timeline-center {
+    flex: none;
+    width: 100%;
+    height: 80px;
+    order: -1;
+  }
+
+  .timeline-line {
+    width: 100%;
+    height: 4px;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .timeline-years {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .timeline-year {
+    width: 20%;  /* Alapértelmezetten 5 év, amit majd a TypeScript felülír */
+    height: 100%;
+  }
+
+  .year-marker {
+    width: 2px;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .timeline-months {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .month-marker {
+    height: 100%;
+    width: calc(100% / 12);
+    border-top: none;
+    border-left: 1px dashed rgba(0, 0, 0, 0.12);
+  }
+
+  .timeline-card {
+    position: relative;
+    width: 100%;
+    margin: 16px 0;
+    left: 0 !important;
+    right: 0 !important;
+  }
+
+  .timeline-left .timeline-card::after,
+  .timeline-right .timeline-card::after {
+    display: none;
+  }
+
+  .timeline-controls {
+    flex-direction: column;
+    padding-bottom: 16px;
+  }
+
+  .timeline-controls .search-field,
+  .timeline-controls .year-field,
+  .timeline-controls mat-button-toggle-group {
+    margin: 8px 0;
+    width: 100%;
+  }
+}
+
+/* Print stílusok */
+@media print {
+  .timeline-controls {
+    display: none;
+  }
+
+  .timeline-container {
+    overflow: visible;
+    height: auto;
+    max-height: none;
+  }
+
+  .timeline-card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+
+  .mat-elevation-z1,
+  .mat-elevation-z3 {
+    box-shadow: none !important;
+  }
+}
