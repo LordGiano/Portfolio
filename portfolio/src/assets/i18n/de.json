@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "experience": "Erfahrung",
+    "studies": "Ausbildung",
+    "projects": "Projekte",
+    "skills": "Fähigkeiten",
+    "documents": "Dokumente",
+    "contact": "Kontakt"
+  },
+  "home": {
+    "greeting": "Hallo, ich bin",
+    "name": "Norbert Szabó",
+    "subtitle": "Full Stack Entwickler & Angular Spezialist",
+    "description": "Ich entwickle elegante Lösungen für komplexe Probleme mit modernen Webtechnologien. Spezialisiert auf skalierbare Anwendungen mit sauberem, wartbarem Code.",
+    "viewWork": "Meine Arbeit ansehen",
+    "getInTouch": "Kontakt aufnehmen",
+    "technicalExpertise": "Technische Expertise",
+    "frontend": "Frontend-Entwicklung",
+    "frontendDesc": "Erstellung responsiver, leistungsstarker Webanwendungen",
+    "backend": "Backend-Entwicklung",
+    "backendDesc": "Entwurf skalierbarer Server-Architekturen",
+    "computerVision": "Computer Vision",
+    "computerVisionDesc": "Implementierung KI-gestützter visueller Lösungen",
+    "featuredProjects": "Ausgewählte Projekte",
+    "letsConnect": "Lass uns verbinden"
+  },
+  "experience": {
+    "pageTitle": "Erfahrung & Ausbildung",
+    "workExperience": "Berufserfahrung",
+    "education": "Ausbildung",
+    "present": "Aktuell",
+    "technologies": "Technologien",
+    "achievements": "Erfolge"
+  },
+  "projects": {
+    "pageTitle": "Projekte",
+    "searchPlaceholder": "Projekte suchen...",
+    "allCategories": "Alle",
+    "featured": "Ausgewählt",
+    "viewDetails": "Details ansehen",
+    "liveDemo": "Live-Demo",
+    "sourceCode": "Quellcode",
+    "noResults": "Keine Ergebnisse gefunden"
+  },
+  "skills": {
+    "pageTitle": "Fähigkeiten & Kompetenzen",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "tools": "Werkzeuge",
+    "soft": "Soft Skills"
+  },
+  "documents": {
+    "pageTitle": "Dokumente",
+    "download": "Herunterladen",
+    "preview": "Vorschau"
+  },
+  "contact": {
+    "pageTitle": "Kontakt",
+    "nameLabel": "Name",
+    "emailLabel": "E-Mail-Adresse",
+    "subjectLabel": "Betreff",
+    "messageLabel": "Nachricht",
+    "sendButton": "Nachricht senden",
+    "successMessage": "Nachricht erfolgreich gesendet!",
+    "errorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+  },
+  "common": {
+    "readMore": "Weiterlesen",
+    "close": "Schließen",
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "backToTop": "Nach oben"
+  }
+}

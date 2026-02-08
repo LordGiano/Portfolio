@@ -1,109 +1,233 @@
+<!-- ============================================================
+     HOME COMPONENT – Portfolio Landing Page
+     Szabó Norbert – Szoftverfejlesztő
+     ============================================================ -->
+
 <div class="home-container">
-  <!-- Hero Section with gradient background -->
-  <section class="hero-section gradient-section">
-    <div class="hero-content">
-      <mat-card class="hero-card">
-        <mat-card-header>
-          <mat-card-title>
-            Hi, I'm <span style="color: var(--primary-blue);">Norbert Szabó</span>
-          </mat-card-title>
-          <mat-card-subtitle>
-            Full Stack Developer & Angular Specialist
-          </mat-card-subtitle>
-        </mat-card-header>
 
-        <mat-card-content>
-          <p class="hero-description">
-            I craft elegant solutions to complex problems using modern web technologies.
-            Specializing in creating scalable applications with clean, maintainable code.
-          </p>
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="hero-section">
+    <canvas #particleCanvas class="particle-canvas"></canvas>
 
-          <div class="tech-stack">
-            <span class="tech-badge">Angular</span>
-            <span class="tech-badge">TypeScript</span>
-            <span class="tech-badge">Python</span>
-            <span class="tech-badge">Firebase</span>
-          </div>
-        </mat-card-content>
+    <div class="hero-overlay"></div>
 
-        <mat-card-actions>
-          <button mat-raised-button color="primary">
-            <mat-icon>folder_open</mat-icon>
-            <span>View My Work</span>
-          </button>
-          <button mat-raised-button color="accent">
-            <mat-icon>mail_outline</mat-icon>
-            <span>Get in Touch</span>
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
-  </section>
+    <div class="hero-content" [class.visible]="true">
+      <!-- Decorative geometric shapes -->
+      <div class="geo-shape geo-1"></div>
+      <div class="geo-shape geo-2"></div>
+      <div class="geo-shape geo-3"></div>
 
-  <!-- Skills Section with white background -->
-  <section class="skills-section section">
-    <div class="container">
-      <h2 class="section-title">Technical Expertise</h2>
-      <div class="section-divider"></div>
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Nyitott új lehetőségekre
+      </div>
 
-      <div class="skills-grid">
-        <mat-card class="skill-card">
-          <div class="icon-container">
-            <mat-icon>code</mat-icon>
-          </div>
-          <h3>Frontend Development</h3>
-          <p>Building responsive, performant web applications</p>
-          <div class="tech-stack">
-            <span class="tech-badge">Angular</span>
-            <span class="tech-badge">React</span>
-            <span class="tech-badge">TypeScript</span>
-          </div>
-        </mat-card>
+      <h1 class="hero-title">
+        <span class="greeting">Szia, én</span>
+        <span class="name-highlight">Szabó Norbert</span>
+        <span class="role-line">vagyok</span>
+      </h1>
 
-        <mat-card class="skill-card">
-          <div class="icon-container">
-            <mat-icon>dns</mat-icon>
-          </div>
-          <h3>Backend Development</h3>
-          <p>Designing scalable server architectures</p>
-          <div class="tech-stack">
-            <span class="tech-badge">Node.js</span>
-            <span class="tech-badge">Python</span>
-            <span class="tech-badge">Firebase</span>
-          </div>
-        </mat-card>
+      <div class="typing-container">
+        <span class="typed-text">{{ typedText }}</span>
+        <span class="cursor">|</span>
+      </div>
 
-        <mat-card class="skill-card">
-          <div class="icon-container">
-            <mat-icon>psychology</mat-icon>
-          </div>
-          <h3>Computer Vision</h3>
-          <p>Implementing AI-powered visual solutions</p>
-          <div class="tech-stack">
-            <span class="tech-badge">OpenCV</span>
-            <span class="tech-badge">TensorFlow</span>
-            <span class="tech-badge">PyTorch</span>
-          </div>
-        </mat-card>
+      <p class="hero-subtitle">
+        Full stack fejlesztő <strong>2+ év</strong> tapasztalattal, programtervező informatikus
+        <strong>(MSc)</strong> végzettséggel. Képfeldolgozási projekteken és QA folyamatokban
+        egyaránt jártas, modern technológiák iránt elkötelezett szakember.
+      </p>
+
+      <div class="hero-actions">
+        <a routerLink="/projects" class="btn-primary">
+          <mat-icon>rocket_launch</mat-icon>
+          Projektjeim
+        </a>
+        <a routerLink="/contact" class="btn-secondary">
+          <mat-icon>mail_outline</mat-icon>
+          Kapcsolat
+        </a>
+        <a href="https://github.com/LordGiano" target="_blank" rel="noopener" class="btn-ghost">
+          <mat-icon>code</mat-icon>
+          GitHub
+        </a>
+      </div>
+
+      <div class="scroll-indicator" (click)="scrollToSection('stats-section')">
+        <div class="scroll-mouse">
+          <div class="scroll-wheel"></div>
+        </div>
+        <span>Görgess lejjebb</span>
       </div>
     </div>
   </section>
 
-  <!-- Featured Projects with accent background -->
-  <section class="projects-section accent-section section">
+  <!-- ==================== STATS SECTION ==================== -->
+  <section class="stats-section" id="stats-section"
+           data-section="stats"
+           [class.visible]="isSectionVisible('stats')">
     <div class="container">
-      <h2 class="section-title">Featured Projects</h2>
-      <div class="section-divider"></div>
-      <!-- Projects content here -->
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number">{{ yearsExperience }}+</span>
+          <span class="stat-label">Év tapasztalat</span>
+          <div class="stat-bar" style="--bar-width: 75%"></div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{{ projectsCompleted }}+</span>
+          <span class="stat-label">Befejezett projekt</span>
+          <div class="stat-bar" style="--bar-width: 85%"></div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{{ technologiesUsed }}+</span>
+          <span class="stat-label">Technológia</span>
+          <div class="stat-bar" style="--bar-width: 90%"></div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{{ languagesSpoken }}</span>
+          <span class="stat-label">Nyelv (HU, EN, DE, ES)</span>
+          <div class="stat-bar" style="--bar-width: 70%"></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Contact Section with dark background -->
-  <section class="contact-section dark-section section">
+  <!-- ==================== COMPETENCIES SECTION ==================== -->
+  <section class="competencies-section"
+           data-section="competencies"
+           [class.visible]="isSectionVisible('competencies')">
     <div class="container">
-      <h2 class="section-title" style="color: var(--text-on-dark);">Let's Connect</h2>
-      <div class="section-divider"></div>
-      <!-- Contact content here -->
+      <div class="section-header">
+        <span class="section-tag">Szakterületek</span>
+        <h2 class="section-title">Szakmai kompetenciák</h2>
+        <p class="section-desc">
+          Széles spektrumú technológiai tudás, a frontend fejlesztéstől a képfeldolgozásig
+        </p>
+      </div>
+
+      <div class="competency-grid">
+        <div class="competency-card"
+             *ngFor="let comp of competencies; let i = index"
+             [style.--accent]="comp.color"
+             [style.--card-gradient]="comp.gradient"
+             [style.animation-delay]="(i * 0.1) + 's'">
+          <div class="card-accent-line"></div>
+          <div class="card-icon">
+            <mat-icon>{{ comp.icon }}</mat-icon>
+          </div>
+          <h3>{{ comp.title }}</h3>
+          <p>{{ comp.description }}</p>
+          <div class="card-techs">
+            <span class="card-tech" *ngFor="let tech of comp.techs">{{ tech }}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- ==================== EXPERIENCE HIGHLIGHTS ==================== -->
+  <section class="experience-section"
+           data-section="experience"
+           [class.visible]="isSectionVisible('experience')">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Karrierút</span>
+        <h2 class="section-title">Szakmai tapasztalat</h2>
+        <p class="section-desc">
+          Budapesti technológiai cégeknél szerzett full stack fejlesztői tapasztalat
+        </p>
+      </div>
+
+      <div class="experience-timeline">
+        <div class="timeline-line"></div>
+
+        <div class="timeline-item"
+             *ngFor="let exp of experienceHighlights; let i = index"
+             [style.animation-delay]="(i * 0.15) + 's'">
+          <div class="timeline-dot">
+            <div class="dot-inner"></div>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div class="timeline-company">{{ exp.company }}</div>
+              <span class="timeline-type" [attr.data-type]="exp.type">
+                {{ exp.type === 'full-time' ? 'Teljes munkaidős' :
+                   exp.type === 'contract' ? 'Projekt alapú' :
+                   exp.type === 'internship' ? 'Gyakornok' : exp.type }}
+              </span>
+            </div>
+            <div class="timeline-role">{{ exp.role }}</div>
+            <div class="timeline-period">{{ exp.period }}</div>
+            <div class="timeline-techs">
+              <span *ngFor="let tech of exp.techs" class="timeline-tech">{{ tech }}</span>
+            </div>
+          </div>
+        </div>
+
+        <a routerLink="/experience" class="timeline-cta">
+          Részletes tapasztalat & tanulmányok
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== EDUCATION BANNER ==================== -->
+  <section class="education-banner"
+           data-section="education"
+           [class.visible]="isSectionVisible('education')">
+    <div class="container">
+      <div class="edu-grid">
+        <div class="edu-item">
+          <mat-icon>school</mat-icon>
+          <div>
+            <strong>Programtervező informatikus MSc</strong>
+            <span>Szegedi Tudományegyetem · 2025</span>
+          </div>
+        </div>
+        <div class="edu-divider"></div>
+        <div class="edu-item">
+          <mat-icon>engineering</mat-icon>
+          <div>
+            <strong>Mérnökinformatikus BSc</strong>
+            <span>Dunaújvárosi Egyetem · 2022</span>
+          </div>
+        </div>
+        <div class="edu-divider"></div>
+        <div class="edu-item">
+          <mat-icon>public</mat-icon>
+          <div>
+            <strong>Erasmus+ csereprogram</strong>
+            <span>Universidad del País Vasco, Bilbao · 2020–2021</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CTA SECTION ==================== -->
+  <section class="cta-section"
+           data-section="cta"
+           [class.visible]="isSectionVisible('cta')">
+    <div class="cta-bg-pattern"></div>
+    <div class="container cta-content">
+      <h2>Dolgozzunk együtt!</h2>
+      <p>
+        Ha érdekel a profilom és szívesen megbeszélnél velem egy projektet
+        vagy álláslehetőséget, keress bátran.
+      </p>
+      <div class="cta-actions">
+        <a routerLink="/contact" class="btn-primary btn-lg">
+          <mat-icon>send</mat-icon>
+          Írj nekem
+        </a>
+        <a routerLink="/documents" class="btn-secondary btn-lg">
+          <mat-icon>description</mat-icon>
+          Önéletrajz letöltése
+        </a>
+      </div>
+    </div>
+  </section>
+
 </div>

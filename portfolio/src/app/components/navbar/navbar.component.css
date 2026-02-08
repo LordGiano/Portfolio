@@ -1,4 +1,3 @@
-/* Enhanced Navbar Styles */
 .mat-toolbar {
   background: rgba(30, 41, 59, 0.95) !important;
   backdrop-filter: blur(10px);
@@ -12,7 +11,11 @@
   transition: all 0.3s ease;
 }
 
-/* Logo Styling */
+.mat-toolbar.scrolled {
+  background: rgba(30, 41, 59, 0.98) !important;
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.3) !important;
+}
+
 .logo a {
   font-size: 1.5rem;
   font-weight: 700;
@@ -25,11 +28,10 @@
 }
 
 .logo a:hover {
-  color: #60A5FA !important; /* Világosabb kék hover-kor */
+  color: #60A5FA !important;
   transform: scale(1.05);
 }
 
-/* Add gradient accent to logo */
 .logo a::after {
   content: '.';
   color: #60A5FA;
@@ -42,7 +44,6 @@
   flex: 1 1 auto;
 }
 
-/* Navigation Links - Better contrast */
 .mat-toolbar a.mat-mdc-button {
   color: rgba(255, 255, 255, 0.95) !important;
   padding: 0.5rem 1rem;
@@ -59,7 +60,6 @@
   transform: translateY(-2px);
 }
 
-/* Active Link - More visible */
 .mat-toolbar a.mat-mdc-button.active {
   background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%) !important;
   color: white !important;
@@ -67,7 +67,6 @@
   box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
 }
 
-/* Material Icons in Navbar */
 .mat-toolbar mat-icon {
   font-size: 20px;
   width: 20px;
@@ -81,7 +80,6 @@
   color: rgba(255, 255, 255, 0.95);
 }
 
-/* Nav button content for combined Experience & Studies button */
 .nav-button-content {
   display: flex;
   align-items: center;
@@ -93,24 +91,18 @@
   opacity: 0.7;
 }
 
-/* Scroll Effect */
-.mat-toolbar.scrolled {
-  background: rgba(30, 41, 59, 0.98) !important;
-  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Mobile Menu Button */
 .menu-button {
   display: none;
   color: white;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
+@media (max-width: 968px) {
   .mat-toolbar {
     padding: 0 1rem;
   }
+}
 
+@media (max-width: 768px) {
   .nav-text {
     display: none;
   }

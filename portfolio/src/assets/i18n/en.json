@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Home",
+    "experience": "Experience",
+    "studies": "Studies",
+    "projects": "Projects",
+    "skills": "Skills",
+    "documents": "Documents",
+    "contact": "Contact"
+  },
+  "home": {
+    "greeting": "Hi, I'm",
+    "name": "Norbert Szabó",
+    "subtitle": "Full Stack Developer & Angular Specialist",
+    "description": "I craft elegant solutions to complex problems using modern web technologies. Specializing in creating scalable applications with clean, maintainable code.",
+    "viewWork": "View My Work",
+    "getInTouch": "Get in Touch",
+    "technicalExpertise": "Technical Expertise",
+    "frontend": "Frontend Development",
+    "frontendDesc": "Building responsive, performant web applications",
+    "backend": "Backend Development",
+    "backendDesc": "Designing scalable server architectures",
+    "computerVision": "Computer Vision",
+    "computerVisionDesc": "Implementing AI-powered visual solutions",
+    "featuredProjects": "Featured Projects",
+    "letsConnect": "Let's Connect"
+  },
+  "experience": {
+    "pageTitle": "Experience & Education",
+    "workExperience": "Work Experience",
+    "education": "Education",
+    "present": "Present",
+    "technologies": "Technologies",
+    "achievements": "Achievements"
+  },
+  "projects": {
+    "pageTitle": "Projects",
+    "searchPlaceholder": "Search projects...",
+    "allCategories": "All",
+    "featured": "Featured",
+    "viewDetails": "View Details",
+    "liveDemo": "Live Demo",
+    "sourceCode": "Source Code",
+    "noResults": "No results found"
+  },
+  "skills": {
+    "pageTitle": "Skills & Competencies",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "tools": "Tools",
+    "soft": "Soft Skills"
+  },
+  "documents": {
+    "pageTitle": "Documents",
+    "download": "Download",
+    "preview": "Preview"
+  },
+  "contact": {
+    "pageTitle": "Contact",
+    "nameLabel": "Name",
+    "emailLabel": "Email address",
+    "subjectLabel": "Subject",
+    "messageLabel": "Message",
+    "sendButton": "Send Message",
+    "successMessage": "Message sent successfully!",
+    "errorMessage": "An error occurred. Please try again later."
+  },
+  "common": {
+    "readMore": "Read more",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "backToTop": "Back to top"
+  }
+}

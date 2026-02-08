@@ -8,39 +8,41 @@
   <div class="nav-links">
     <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>home</mat-icon>
-      <span class="nav-text">Főoldal</span>
+      <span class="nav-text">{{ 'nav.home' | translate }}</span>
     </a>
 
     <a mat-button routerLink="/experience" routerLinkActive="active">
       <div class="nav-button-content">
         <mat-icon>work</mat-icon>
-        <span class="nav-text">Tapasztalat</span>
+        <span class="nav-text">{{ 'nav.experience' | translate }}</span>
         <span class="nav-divider">|</span>
         <mat-icon>school</mat-icon>
-        <span class="nav-text">Tanulmányok</span>
+        <span class="nav-text">{{ 'nav.studies' | translate }}</span>
       </div>
     </a>
 
     <a mat-button routerLink="/projects" routerLinkActive="active">
       <mat-icon>code</mat-icon>
-      <span class="nav-text">Projektek</span>
+      <span class="nav-text">{{ 'nav.projects' | translate }}</span>
     </a>
 
     <a mat-button routerLink="/skills" routerLinkActive="active">
       <mat-icon>psychology</mat-icon>
-      <span class="nav-text">Skillek</span>
+      <span class="nav-text">{{ 'nav.skills' | translate }}</span>
     </a>
 
     <a mat-button routerLink="/documents" routerLinkActive="active">
       <mat-icon>description</mat-icon>
-      <span class="nav-text">Dokumentumok</span>
+      <span class="nav-text">{{ 'nav.documents' | translate }}</span>
     </a>
 
     <a mat-button routerLink="/contact" routerLinkActive="active">
       <mat-icon>contact_mail</mat-icon>
-      <span class="nav-text">Kapcsolat</span>
+      <span class="nav-text">{{ 'nav.contact' | translate }}</span>
     </a>
   </div>
+
+  <app-language-switcher></app-language-switcher>
 
   <button mat-icon-button class="menu-button" (click)="toggleMenu()">
     <mat-icon>menu</mat-icon>

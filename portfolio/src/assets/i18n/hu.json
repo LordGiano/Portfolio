@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Főoldal",
+    "experience": "Tapasztalat",
+    "studies": "Tanulmányok",
+    "projects": "Projektek",
+    "skills": "Skillek",
+    "documents": "Dokumentumok",
+    "contact": "Kapcsolat"
+  },
+  "home": {
+    "greeting": "Szia, én",
+    "name": "Szabó Norbert",
+    "subtitle": "Full Stack Fejlesztő & Angular Specialista",
+    "description": "Elegáns megoldásokat alkotok komplex problémákra modern webes technológiákkal. Skálázható alkalmazások készítésére specializálódtam tiszta, karbantartható kóddal.",
+    "viewWork": "Munkáim megtekintése",
+    "getInTouch": "Kapcsolatfelvétel",
+    "technicalExpertise": "Technikai szaktudás",
+    "frontend": "Frontend Fejlesztés",
+    "frontendDesc": "Reszponzív, teljesítmény-orientált webalkalmazások építése",
+    "backend": "Backend Fejlesztés",
+    "backendDesc": "Skálázható szerver architektúrák tervezése",
+    "computerVision": "Számítógépes Látás",
+    "computerVisionDesc": "AI-alapú vizuális megoldások implementálása",
+    "featuredProjects": "Kiemelt Projektek",
+    "letsConnect": "Lépj kapcsolatba velem"
+  },
+  "experience": {
+    "pageTitle": "Tapasztalat & Tanulmányok",
+    "workExperience": "Munkatapasztalat",
+    "education": "Tanulmányok",
+    "present": "Jelenleg",
+    "technologies": "Technológiák",
+    "achievements": "Eredmények"
+  },
+  "projects": {
+    "pageTitle": "Projektek",
+    "searchPlaceholder": "Projekt keresése...",
+    "allCategories": "Összes",
+    "featured": "Kiemelt",
+    "viewDetails": "Részletek",
+    "liveDemo": "Élő Demo",
+    "sourceCode": "Forráskód",
+    "noResults": "Nincs találat"
+  },
+  "skills": {
+    "pageTitle": "Készségek & Kompetenciák",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "tools": "Eszközök",
+    "soft": "Szoft skillek"
+  },
+  "documents": {
+    "pageTitle": "Dokumentumok",
+    "download": "Letöltés",
+    "preview": "Előnézet"
+  },
+  "contact": {
+    "pageTitle": "Kapcsolat",
+    "nameLabel": "Név",
+    "emailLabel": "Email cím",
+    "subjectLabel": "Tárgy",
+    "messageLabel": "Üzenet",
+    "sendButton": "Üzenet küldése",
+    "successMessage": "Üzenet sikeresen elküldve!",
+    "errorMessage": "Hiba történt. Próbáld újra később."
+  },
+  "common": {
+    "readMore": "Tovább olvasom",
+    "close": "Bezárás",
+    "loading": "Betöltés...",
+    "error": "Hiba történt",
+    "backToTop": "Vissza a tetejére"
+  }
+}

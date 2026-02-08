@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "experience": "Experiencia",
+    "studies": "Estudios",
+    "projects": "Proyectos",
+    "skills": "Habilidades",
+    "documents": "Documentos",
+    "contact": "Contacto"
+  },
+  "home": {
+    "greeting": "Hola, soy",
+    "name": "Norbert Szabó",
+    "subtitle": "Desarrollador Full Stack & Especialista en Angular",
+    "description": "Creo soluciones elegantes para problemas complejos usando tecnologías web modernas. Especializado en aplicaciones escalables con código limpio y mantenible.",
+    "viewWork": "Ver mi trabajo",
+    "getInTouch": "Contáctame",
+    "technicalExpertise": "Experiencia Técnica",
+    "frontend": "Desarrollo Frontend",
+    "frontendDesc": "Construcción de aplicaciones web responsivas y de alto rendimiento",
+    "backend": "Desarrollo Backend",
+    "backendDesc": "Diseño de arquitecturas de servidor escalables",
+    "computerVision": "Visión por Computadora",
+    "computerVisionDesc": "Implementación de soluciones visuales impulsadas por IA",
+    "featuredProjects": "Proyectos Destacados",
+    "letsConnect": "Conectemos"
+  },
+  "experience": {
+    "pageTitle": "Experiencia & Educación",
+    "workExperience": "Experiencia Laboral",
+    "education": "Educación",
+    "present": "Presente",
+    "technologies": "Tecnologías",
+    "achievements": "Logros"
+  },
+  "projects": {
+    "pageTitle": "Proyectos",
+    "searchPlaceholder": "Buscar proyectos...",
+    "allCategories": "Todos",
+    "featured": "Destacados",
+    "viewDetails": "Ver Detalles",
+    "liveDemo": "Demo en Vivo",
+    "sourceCode": "Código Fuente",
+    "noResults": "No se encontraron resultados"
+  },
+  "skills": {
+    "pageTitle": "Habilidades & Competencias",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "tools": "Herramientas",
+    "soft": "Habilidades Blandas"
+  },
+  "documents": {
+    "pageTitle": "Documentos",
+    "download": "Descargar",
+    "preview": "Vista previa"
+  },
+  "contact": {
+    "pageTitle": "Contacto",
+    "nameLabel": "Nombre",
+    "emailLabel": "Correo electrónico",
+    "subjectLabel": "Asunto",
+    "messageLabel": "Mensaje",
+    "sendButton": "Enviar Mensaje",
+    "successMessage": "¡Mensaje enviado con éxito!",
+    "errorMessage": "Ha ocurrido un error. Inténtelo de nuevo más tarde."
+  },
+  "common": {
+    "readMore": "Leer más",
+    "close": "Cerrar",
+    "loading": "Cargando...",
+    "error": "Ha ocurrido un error",
+    "backToTop": "Volver arriba"
+  }
+}
