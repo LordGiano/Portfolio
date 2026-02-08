@@ -1,179 +1,262 @@
-<div class="experience-container">
-  <!-- Hero Section -->
-  <section class="experience-hero">
+<div class="exp-page">
+
+  <!-- ===== CINEMATIC HERO ===== -->
+  <section class="cinematic-hero" data-section="hero"
+           [class.visible]="isSectionVisible('hero')">
+    <div class="hero-noise"></div>
+    <div class="hero-gradient-mesh"></div>
+    <div class="hero-lines">
+      <div class="h-line" *ngFor="let l of [1,2,3,4,5]"></div>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-line"></span>
+        <span class="eyebrow-text">{{ 'exp.hero_badge' | translate }}</span>
+        <span class="eyebrow-line"></span>
+      </div>
+
+      <h1 class="hero-massive">
+        {{ 'exp.hero_title' | translate }}
+      </h1>
+
+      <p class="hero-lead">{{ 'exp.hero_subtitle' | translate }}</p>
+    </div>
+  </section>
+
+  <!-- ===== COUNTER STRIP ===== -->
+  <section class="counter-strip" data-section="hero-stats"
+           [class.visible]="isSectionVisible('hero-stats')">
+    <div class="counter-item">
+      <span class="counter-num">{{ yearsExperience }}+</span>
+      <span class="counter-label">{{ 'exp.stat_years' | translate }}</span>
+    </div>
+    <div class="counter-divider"></div>
+    <div class="counter-item">
+      <span class="counter-num">{{ projectsCompleted }}+</span>
+      <span class="counter-label">{{ 'exp.stat_projects' | translate }}</span>
+    </div>
+    <div class="counter-divider"></div>
+    <div class="counter-item">
+      <span class="counter-num">{{ technologiesUsed }}+</span>
+      <span class="counter-label">{{ 'exp.stat_technologies' | translate }}</span>
+    </div>
+    <div class="counter-divider"></div>
+    <div class="counter-item">
+      <span class="counter-num">{{ spokenLanguages }}</span>
+      <span class="counter-label">{{ 'exp.stat_languages' | translate }}</span>
+    </div>
+  </section>
+
+  <!-- ===== HORIZONTAL SCROLL TIMELINE ===== -->
+  <section class="timeline-section" data-section="timeline"
+           [class.visible]="isSectionVisible('timeline')">
     <div class="container">
-      <h1 class="section-title">Studies & Work Experience</h1>
-      <div class="section-divider"></div>
-      <p class="hero-subtitle">
-        A comprehensive overview of my professional journey and educational background
-      </p>
-    </div>
-  </section>
-
-  <!-- Vertical Timeline Section -->
-  <section class="vertical-timeline-section">
-    <div class="timeline-container">
-      <!-- Timeline with years and months -->
-      <div class="timeline-track">
-        <div *ngFor="let year of timelineYears" class="timeline-year">
-          <div class="year-marker">
-            <span class="year-label">{{year.year}}</span>
-          </div>
-          <div class="month-marks">
-            <div *ngFor="let month of year.months" class="month-mark"></div>
-          </div>
-        </div>
+      <div class="section-head">
+        <span class="section-label">{{ 'exp.work_tag' | translate }}</span>
+        <h2>{{ 'experience.workExperience' | translate }}</h2>
+        <p class="section-sub">{{ 'exp.timeline_hint' | translate }}</p>
       </div>
+    </div>
 
-      <!-- Experiences on both sides -->
-      <div class="experiences-container">
-        <!-- Work experiences on the left -->
-        <div class="timeline-left">
-          <h2 class="section-heading">
-            <mat-icon>work</mat-icon>
-            Work Experience
-          </h2>
-          <div *ngFor="let exp of workExperiences"
-               class="experience-card-wrapper"
-               [ngStyle]="getVerticalPositionStyle(exp)">
-            <mat-card class="experience-card work-card">
-              <mat-card-header>
-                <div mat-card-avatar class="experience-icon work-icon">
-                  <mat-icon>business</mat-icon>
-                </div>
-                <mat-card-title>{{exp.title}}</mat-card-title>
-                <mat-card-subtitle>
-                  {{exp.company}} | {{exp.period}}
-                  <br>
-                  {{exp.location}}
-                </mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                <div class="description-list">
-                  <ul>
-                    <li *ngFor="let desc of exp.description">{{desc}}</li>
-                  </ul>
-                </div>
-                <div class="technologies" *ngIf="exp.technologies">
-                  <h4>Technologies:</h4>
-                  <div class="tech-stack">
-                    <span class="tech-badge" *ngFor="let tech of exp.technologies">
-                      {{tech}}
-                    </span>
-                  </div>
-                </div>
-                <div class="achievements" *ngIf="exp.achievements">
-                  <h4>Key Achievements:</h4>
-                  <ul>
-                    <li *ngFor="let achievement of exp.achievements">
-                      <mat-icon class="achievement-icon">check_circle</mat-icon>
-                      {{achievement}}
-                    </li>
-                  </ul>
-                </div>
-              </mat-card-content>
-            </mat-card>
-            <div class="connection-line"></div>
+    <!-- Progress bar -->
+    <div class="timeline-progress-track">
+      <div class="timeline-progress-fill" [style.width.%]="timelineScrollProgress"></div>
+    </div>
+
+    <!-- Horizontal scroll container -->
+    <div class="timeline-scroll" (scroll)="onTimelineScroll($event)" #timelineTrack>
+      <div class="timeline-rail">
+        <div class="timeline-line-h"></div>
+
+        <div class="tl-card" *ngFor="let job of workExperiences; let i = index"
+             [style.--card-color]="job.color"
+             [style.--card-gradient]="job.gradient">
+          <div class="tl-dot">
+            <div class="tl-dot-inner"></div>
           </div>
-        </div>
+          <div class="tl-card-body">
+            <div class="tl-card-accent"></div>
+            <div class="tl-icon-wrap">
+              <mat-icon>{{ job.icon }}</mat-icon>
+            </div>
+            <span class="tl-type" [attr.data-type]="job.type">
+              {{ getTypeLabel(job.type) }}
+            </span>
+            <h3 class="tl-company">{{ job.company }}</h3>
+            <p class="tl-role">{{ job.role }}</p>
+            <span class="tl-period">{{ job.period }}</span>
+            <span class="tl-location">📍 {{ job.location }} · {{ job.mode }}</span>
 
-        <!-- Education experiences on the right -->
-        <div class="timeline-right">
-          <h2 class="section-heading">
-            <mat-icon>school</mat-icon>
-            Education
-          </h2>
-          <div *ngFor="let exp of educationExperiences"
-               class="experience-card-wrapper"
-               [ngStyle]="getVerticalPositionStyle(exp)">
-            <div class="connection-line"></div>
-            <mat-card class="experience-card education-card">
-              <mat-card-header>
-                <div mat-card-avatar class="experience-icon education-icon">
-                  <mat-icon>school</mat-icon>
-                </div>
-                <mat-card-title>{{exp.title}}</mat-card-title>
-                <mat-card-subtitle>
-                  {{exp.institution}} | {{exp.period}}
-                  <br>
-                  {{exp.location}}
-                </mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                <div class="description-list">
-                  <ul>
-                    <li *ngFor="let desc of exp.description">{{desc}}</li>
-                  </ul>
-                </div>
-                <div class="achievements" *ngIf="exp.achievements">
-                  <h4>Achievements:</h4>
-                  <ul>
-                    <li *ngFor="let achievement of exp.achievements">
-                      <mat-icon class="achievement-icon">emoji_events</mat-icon>
-                      {{achievement}}
-                    </li>
-                  </ul>
-                </div>
-              </mat-card-content>
-            </mat-card>
+            <div class="tl-highlight" *ngIf="job.highlight">
+              ⚡ {{ job.highlight }}
+            </div>
+
+            <ul class="tl-descs">
+              <li *ngFor="let d of job.descriptions">
+                <span class="tl-arrow" [style.color]="job.color">▹</span>{{ d }}
+              </li>
+            </ul>
+
+            <div class="tl-techs">
+              <span class="tl-tech" *ngFor="let tech of job.technologies">{{ tech }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Skills Summary Section -->
-  <section class="skills-summary">
+  <!-- ===== 3D BOOK — EDUCATION ===== -->
+  <section class="book-section" data-section="book"
+           [class.visible]="isSectionVisible('book')">
     <div class="container">
-      <h2 class="section-title">Technical Skills Summary</h2>
-      <div class="section-divider"></div>
+      <div class="section-head">
+        <span class="section-label">{{ 'exp.edu_tag' | translate }}</span>
+        <h2>{{ 'experience.education' | translate }}</h2>
+      </div>
 
-      <div class="skills-grid">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Programming Languages</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <div class="skill-tags">
-              <span class="skill-tag">TypeScript</span>
-              <span class="skill-tag">JavaScript</span>
-              <span class="skill-tag">Python</span>
-              <span class="skill-tag">Java</span>
-              <span class="skill-tag">C++</span>
-            </div>
-          </mat-card-content>
-        </mat-card>
+      <div class="book-3d">
+        <!-- Book spine -->
+        <div class="book-spine"></div>
 
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Frameworks & Libraries</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <div class="skill-tags">
-              <span class="skill-tag">Angular</span>
-              <span class="skill-tag">React</span>
-              <span class="skill-tag">Node.js</span>
-              <span class="skill-tag">TensorFlow</span>
-              <span class="skill-tag">Firebase</span>
-            </div>
-          </mat-card-content>
-        </mat-card>
+        <!-- Page navigation -->
+        <div class="book-nav">
+          <button class="book-nav-btn" (click)="prevPage()" [disabled]="activeEduPage === 0">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <div class="book-dots">
+            <span *ngFor="let edu of educations; let i = index"
+                  class="book-dot"
+                  [class.active]="activeEduPage === i"
+                  (click)="goToPage(i)"></span>
+          </div>
+          <button class="book-nav-btn" (click)="nextPage()" [disabled]="activeEduPage === educations.length - 1">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
 
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Tools & Technologies</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <div class="skill-tags">
-              <span class="skill-tag">Git</span>
-              <span class="skill-tag">Docker</span>
-              <span class="skill-tag">AWS</span>
-              <span class="skill-tag">Jenkins</span>
-              <span class="skill-tag">MongoDB</span>
+        <!-- Pages -->
+        <div class="book-pages">
+          <div class="book-page" *ngFor="let edu of educations; let i = index"
+               [class.active]="activeEduPage === i"
+               [class.prev]="i < activeEduPage"
+               [class.next]="i > activeEduPage"
+               [style.--page-color]="edu.color"
+               [style.--page-gradient]="edu.gradient">
+
+            <div class="page-left">
+              <div class="page-icon-big" [style.background]="edu.gradient">
+                <mat-icon>{{ edu.icon }}</mat-icon>
+              </div>
+              <h3 class="page-degree">{{ edu.degree }}</h3>
+              <p class="page-spec">{{ edu.specialization }}</p>
+              <div class="page-institution">{{ edu.institution }}</div>
+              <div class="page-meta">
+                <span>📅 {{ edu.period }}</span>
+                <span>📍 {{ edu.location }}</span>
+              </div>
+              <div class="page-grade" *ngIf="edu.grade">
+                {{ 'exp.grade' | translate }}: {{ edu.grade }}
+              </div>
             </div>
-          </mat-card-content>
-        </mat-card>
+
+            <div class="page-right">
+              <div class="page-subjects" *ngIf="edu.subjects">
+                <h4>{{ 'exp.comp_tag' | translate }}</h4>
+                <div class="subject-cloud">
+                  <span class="subject-tag" *ngFor="let s of edu.subjects"
+                        [style.--tag-color]="edu.color">{{ s }}</span>
+                </div>
+              </div>
+              <div class="page-activities" *ngIf="edu.activities">
+                <h4>{{ 'exp.activities' | translate }}</h4>
+                <p>{{ edu.activities }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+
+  <!-- ===== COMPETENCIES — Floating Orbs ===== -->
+  <section class="orbs-section" data-section="orbs"
+           [class.visible]="isSectionVisible('orbs')">
+    <div class="orbs-bg"></div>
+    <div class="container">
+      <div class="section-head section-head-light">
+        <span class="section-label section-label-light">{{ 'exp.comp_tag' | translate }}</span>
+        <h2>{{ 'exp.comp_title' | translate }}</h2>
+      </div>
+
+      <div class="orbs-grid">
+        <div class="orb-card" *ngFor="let comp of competencies; let i = index"
+             [style.--orb-color]="comp.color"
+             [style.--orb-gradient]="comp.gradient"
+             [style.animation-delay]="(i * 0.1) + 's'">
+          <div class="orb-glow"></div>
+          <div class="orb-icon">
+            <mat-icon>{{ comp.matIcon }}</mat-icon>
+          </div>
+          <h3>{{ comp.title }}</h3>
+          <div class="orb-items">
+            <span *ngFor="let item of comp.items">{{ item }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LANGUAGES — Circular Progress ===== -->
+  <section class="rings-section" data-section="rings"
+           [class.visible]="isSectionVisible('rings')">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-label">{{ 'exp.lang_tag' | translate }}</span>
+        <h2>{{ 'exp.lang_title' | translate }}</h2>
+      </div>
+
+      <div class="rings-grid">
+        <div class="ring-card" *ngFor="let lang of languages; let i = index"
+             [style.animation-delay]="(i * 0.15) + 's'">
+          <div class="ring-visual">
+            <svg viewBox="0 0 120 120" class="ring-svg">
+              <circle cx="60" cy="60" r="52" class="ring-bg"/>
+              <circle cx="60" cy="60" r="52" class="ring-fill"
+                      [style.stroke]="lang.color"
+                      [style.--ring-percent]="lang.percent"
+                      [style.stroke-dasharray]="(lang.percent / 100) * 327 + ' ' + 327"/>
+            </svg>
+            <span class="ring-flag">{{ lang.flag }}</span>
+          </div>
+          <div class="ring-info">
+            <span class="ring-name">{{ lang.name }}</span>
+            <span class="ring-level" [style.color]="lang.color">{{ lang.level }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="exp-cta" data-section="cta"
+           [class.visible]="isSectionVisible('cta')">
+    <div class="cta-mesh"></div>
+    <div class="container cta-inner">
+      <h2>{{ 'exp.cta_title' | translate }}</h2>
+      <p>{{ 'exp.cta_subtitle' | translate }}</p>
+      <div class="cta-btns">
+        <a routerLink="/contact" class="cta-btn-primary">
+          <mat-icon>send</mat-icon>
+          {{ 'exp.cta_contact' | translate }}
+        </a>
+        <a routerLink="/documents" class="cta-btn-outline">
+          <mat-icon>description</mat-icon>
+          {{ 'exp.cta_cv' | translate }}
+        </a>
+      </div>
+    </div>
+  </section>
+
 </div>

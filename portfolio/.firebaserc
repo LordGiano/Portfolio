@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "portfolio-df936"
-  }
+    "default": "norbert-szabo-portfolio",
+    "live-portfolio": "norbert-szabo-portfolio"
+  },
+  "targets": {},
+  "etags": {}
 }
