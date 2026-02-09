@@ -8,18 +8,13 @@
     <div class="hero-lines">
       <div class="h-line" *ngFor="let l of [1,2,3,4,5]"></div>
     </div>
-
     <div class="hero-inner">
       <div class="hero-eyebrow">
         <span class="eyebrow-line"></span>
         <span class="eyebrow-text">{{ 'exp.hero_badge' | translate }}</span>
         <span class="eyebrow-line"></span>
       </div>
-
-      <h1 class="hero-massive">
-        {{ 'exp.hero_title' | translate }}
-      </h1>
-
+      <h1 class="hero-massive">{{ 'exp.hero_title' | translate }}</h1>
       <p class="hero-lead">{{ 'exp.hero_subtitle' | translate }}</p>
     </div>
   </section>
@@ -48,58 +43,70 @@
     </div>
   </section>
 
-  <!-- ===== HORIZONTAL SCROLL TIMELINE ===== -->
+  <!-- ===== VERTICAL INTERACTIVE TIMELINE ===== -->
   <section class="timeline-section" data-section="timeline"
            [class.visible]="isSectionVisible('timeline')">
     <div class="container">
       <div class="section-head">
         <span class="section-label">{{ 'exp.work_tag' | translate }}</span>
         <h2>{{ 'experience.workExperience' | translate }}</h2>
-        <p class="section-sub">{{ 'exp.timeline_hint' | translate }}</p>
       </div>
-    </div>
 
-    <!-- Progress bar -->
-    <div class="timeline-progress-track">
-      <div class="timeline-progress-fill" [style.width.%]="timelineScrollProgress"></div>
-    </div>
+      <div class="v-timeline">
+        <div class="v-timeline-line"></div>
 
-    <!-- Horizontal scroll container -->
-    <div class="timeline-scroll" (scroll)="onTimelineScroll($event)" #timelineTrack>
-      <div class="timeline-rail">
-        <div class="timeline-line-h"></div>
+        <div class="v-tl-item" *ngFor="let job of workExperiences; let i = index"
+             [class.expanded]="expandedJob === i"
+             [style.--c]="job.color"
+             [style.--g]="job.gradient"
+             [style.animation-delay]="(i * 0.12) + 's'">
 
-        <div class="tl-card" *ngFor="let job of workExperiences; let i = index"
-             [style.--card-color]="job.color"
-             [style.--card-gradient]="job.gradient">
-          <div class="tl-dot">
-            <div class="tl-dot-inner"></div>
+          <!-- Dot on the line -->
+          <div class="v-tl-dot" (click)="toggleJob(i)">
+            <div class="v-tl-dot-ring"></div>
+            <mat-icon class="v-tl-dot-icon">{{ job.icon }}</mat-icon>
           </div>
-          <div class="tl-card-body">
-            <div class="tl-card-accent"></div>
-            <div class="tl-icon-wrap">
-              <mat-icon>{{ job.icon }}</mat-icon>
+
+          <!-- Card -->
+          <div class="v-tl-card" (click)="toggleJob(i)">
+            <div class="v-tl-accent"></div>
+
+            <!-- Always visible header -->
+            <div class="v-tl-header">
+              <div class="v-tl-left">
+                <h3 class="v-tl-company">{{ job.company }}</h3>
+                <p class="v-tl-role">{{ job.role }}</p>
+              </div>
+              <div class="v-tl-right">
+                <span class="v-tl-type" [attr.data-type]="job.type">{{ getTypeLabel(job.type) }}</span>
+                <span class="v-tl-period">{{ job.period }}</span>
+              </div>
             </div>
-            <span class="tl-type" [attr.data-type]="job.type">
-              {{ getTypeLabel(job.type) }}
-            </span>
-            <h3 class="tl-company">{{ job.company }}</h3>
-            <p class="tl-role">{{ job.role }}</p>
-            <span class="tl-period">{{ job.period }}</span>
-            <span class="tl-location">📍 {{ job.location }} · {{ job.mode }}</span>
 
-            <div class="tl-highlight" *ngIf="job.highlight">
-              ⚡ {{ job.highlight }}
+            <!-- Expandable body -->
+            <div class="v-tl-body" [class.open]="expandedJob === i">
+              <div class="v-tl-meta">
+                <span>📍 {{ job.location }} · {{ job.mode }}</span>
+              </div>
+
+              <div class="v-tl-highlight" *ngIf="job.highlight">
+                ⚡ {{ job.highlight }}
+              </div>
+
+              <ul class="v-tl-descs">
+                <li *ngFor="let d of job.descriptions">
+                  <span class="v-tl-arrow" [style.color]="job.color">▹</span>{{ d }}
+                </li>
+              </ul>
+
+              <div class="v-tl-techs">
+                <span class="v-tl-tech" *ngFor="let tech of job.technologies">{{ tech }}</span>
+              </div>
             </div>
 
-            <ul class="tl-descs">
-              <li *ngFor="let d of job.descriptions">
-                <span class="tl-arrow" [style.color]="job.color">▹</span>{{ d }}
-              </li>
-            </ul>
-
-            <div class="tl-techs">
-              <span class="tl-tech" *ngFor="let tech of job.technologies">{{ tech }}</span>
+            <!-- Expand hint -->
+            <div class="v-tl-expand-hint">
+              <mat-icon>{{ expandedJob === i ? 'expand_less' : 'expand_more' }}</mat-icon>
             </div>
           </div>
         </div>
@@ -116,63 +123,57 @@
         <h2>{{ 'experience.education' | translate }}</h2>
       </div>
 
-      <div class="book-3d">
-        <!-- Book spine -->
-        <div class="book-spine"></div>
-
-        <!-- Page navigation -->
-        <div class="book-nav">
-          <button class="book-nav-btn" (click)="prevPage()" [disabled]="activeEduPage === 0">
-            <mat-icon>chevron_left</mat-icon>
-          </button>
-          <div class="book-dots">
-            <span *ngFor="let edu of educations; let i = index"
+      <!-- Navigation -->
+      <div class="book-nav">
+        <button class="book-nav-btn" (click)="prevEdu()" [disabled]="activeEduPage === 0">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <div class="book-dots">
+          <button *ngFor="let edu of educations; let i = index"
                   class="book-dot"
                   [class.active]="activeEduPage === i"
-                  (click)="goToPage(i)"></span>
-          </div>
-          <button class="book-nav-btn" (click)="nextPage()" [disabled]="activeEduPage === educations.length - 1">
-            <mat-icon>chevron_right</mat-icon>
+                  (click)="goToEduPage(i)">
+            <mat-icon>{{ edu.icon }}</mat-icon>
           </button>
         </div>
+        <button class="book-nav-btn" (click)="nextEdu()" [disabled]="activeEduPage === educations.length - 1">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
 
-        <!-- Pages -->
-        <div class="book-pages">
-          <div class="book-page" *ngFor="let edu of educations; let i = index"
-               [class.active]="activeEduPage === i"
-               [class.prev]="i < activeEduPage"
-               [class.next]="i > activeEduPage"
-               [style.--page-color]="edu.color"
-               [style.--page-gradient]="edu.gradient">
+      <!-- Book wrapper -->
+      <div class="book-wrapper">
+        <div class="book-page" *ngFor="let edu of educations; let i = index"
+             [class.page-active]="activeEduPage === i"
+             [class.page-left]="i < activeEduPage"
+             [class.page-right]="i > activeEduPage"
+             [style.--pc]="edu.color"
+             [style.--pg]="edu.gradient">
 
-            <div class="page-left">
-              <div class="page-icon-big" [style.background]="edu.gradient">
-                <mat-icon>{{ edu.icon }}</mat-icon>
-              </div>
-              <h3 class="page-degree">{{ edu.degree }}</h3>
-              <p class="page-spec">{{ edu.specialization }}</p>
-              <div class="page-institution">{{ edu.institution }}</div>
-              <div class="page-meta">
-                <span>📅 {{ edu.period }}</span>
-                <span>📍 {{ edu.location }}</span>
-              </div>
-              <div class="page-grade" *ngIf="edu.grade">
-                {{ 'exp.grade' | translate }}: {{ edu.grade }}
+          <div class="bp-left">
+            <div class="bp-icon" [style.background]="edu.gradient">
+              <mat-icon>{{ edu.icon }}</mat-icon>
+            </div>
+            <h3>{{ edu.degree }}</h3>
+            <p class="bp-spec">{{ edu.specialization }}</p>
+            <p class="bp-inst">{{ edu.institution }}</p>
+            <div class="bp-meta">
+              <span>📅 {{ edu.period }}</span>
+              <span>📍 {{ edu.location }}</span>
+            </div>
+            <span class="bp-grade" *ngIf="edu.grade">{{ 'exp.grade' | translate }}: {{ edu.grade }}</span>
+          </div>
+
+          <div class="bp-right">
+            <div class="bp-subjects" *ngIf="edu.subjects">
+              <h4>{{ 'exp.comp_tag' | translate }}</h4>
+              <div class="bp-tag-cloud">
+                <span class="bp-tag" *ngFor="let s of edu.subjects">{{ s }}</span>
               </div>
             </div>
-
-            <div class="page-right">
-              <div class="page-subjects" *ngIf="edu.subjects">
-                <h4>{{ 'exp.comp_tag' | translate }}</h4>
-                <div class="subject-cloud">
-                  <span class="subject-tag" *ngFor="let s of edu.subjects"
-                        [style.--tag-color]="edu.color">{{ s }}</span>
-                </div>
-              </div>
-              <div class="page-activities" *ngIf="edu.activities">
-                <h4>{{ 'exp.activities' | translate }}</h4>
-                <p>{{ edu.activities }}</p>
-              </div>
+            <div class="bp-activities" *ngIf="edu.activities">
+              <h4>{{ 'exp.activities' | translate }}</h4>
+              <p>{{ edu.activities }}</p>
             </div>
           </div>
         </div>
@@ -180,20 +181,18 @@
     </div>
   </section>
 
-  <!-- ===== COMPETENCIES — Floating Orbs ===== -->
+  <!-- ===== COMPETENCIES ===== -->
   <section class="orbs-section" data-section="orbs"
            [class.visible]="isSectionVisible('orbs')">
     <div class="orbs-bg"></div>
     <div class="container">
-      <div class="section-head section-head-light">
-        <span class="section-label section-label-light">{{ 'exp.comp_tag' | translate }}</span>
+      <div class="section-head">
+        <span class="section-label">{{ 'exp.comp_tag' | translate }}</span>
         <h2>{{ 'exp.comp_title' | translate }}</h2>
       </div>
-
       <div class="orbs-grid">
         <div class="orb-card" *ngFor="let comp of competencies; let i = index"
-             [style.--orb-color]="comp.color"
-             [style.--orb-gradient]="comp.gradient"
+             [style.--orb-color]="comp.color" [style.--orb-gradient]="comp.gradient"
              [style.animation-delay]="(i * 0.1) + 's'">
           <div class="orb-glow"></div>
           <div class="orb-icon">
@@ -208,7 +207,7 @@
     </div>
   </section>
 
-  <!-- ===== LANGUAGES — Circular Progress ===== -->
+  <!-- ===== LANGUAGES — Fixed SVG Rings ===== -->
   <section class="rings-section" data-section="rings"
            [class.visible]="isSectionVisible('rings')">
     <div class="container">
@@ -221,19 +220,19 @@
         <div class="ring-card" *ngFor="let lang of languages; let i = index"
              [style.animation-delay]="(i * 0.15) + 's'">
           <div class="ring-visual">
-            <svg viewBox="0 0 120 120" class="ring-svg">
-              <circle cx="60" cy="60" r="52" class="ring-bg"/>
-              <circle cx="60" cy="60" r="52" class="ring-fill"
+            <svg viewBox="0 0 140 140" class="ring-svg">
+              <!-- Background circle -->
+              <circle cx="70" cy="70" r="58" class="ring-track"/>
+              <!-- Filled arc — starts from top, goes clockwise -->
+              <circle cx="70" cy="70" r="58" class="ring-progress"
                       [style.stroke]="lang.color"
-                      [style.--ring-percent]="lang.percent"
-                      [style.stroke-dasharray]="(lang.percent / 100) * 327 + ' ' + 327"/>
+                      [attr.stroke-dasharray]="getRingDash(lang.percent)"
+                      stroke-dashoffset="0"/>
             </svg>
             <span class="ring-flag">{{ lang.flag }}</span>
           </div>
-          <div class="ring-info">
-            <span class="ring-name">{{ lang.name }}</span>
-            <span class="ring-level" [style.color]="lang.color">{{ lang.level }}</span>
-          </div>
+          <span class="ring-name">{{ lang.name }}</span>
+          <span class="ring-level" [style.color]="lang.color">{{ lang.level }}</span>
         </div>
       </div>
     </div>
@@ -248,12 +247,10 @@
       <p>{{ 'exp.cta_subtitle' | translate }}</p>
       <div class="cta-btns">
         <a routerLink="/contact" class="cta-btn-primary">
-          <mat-icon>send</mat-icon>
-          {{ 'exp.cta_contact' | translate }}
+          <mat-icon>send</mat-icon> {{ 'exp.cta_contact' | translate }}
         </a>
         <a routerLink="/documents" class="cta-btn-outline">
-          <mat-icon>description</mat-icon>
-          {{ 'exp.cta_cv' | translate }}
+          <mat-icon>description</mat-icon> {{ 'exp.cta_cv' | translate }}
         </a>
       </div>
     </div>
