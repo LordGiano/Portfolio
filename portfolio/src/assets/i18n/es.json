@@ -4,8 +4,6 @@
     "experience": "Experiencia",
     "studies": "Estudios",
     "projects": "Proyectos",
-    "skills": "Habilidades",
-    "documents": "Documentos",
     "contact": "Contacto"
   },
   "home": {
@@ -110,6 +108,50 @@
     "cta_contact": "Contacto",
     "cta_cv": "Descargar CV"
   },
+  "proj": {
+    "badge": "Portafolio",
+    "hero_title": "Proyectos",
+    "hero_subtitle": "Una selección de mis proyectos universitarios y personales. Procesamiento de imágenes, visión por computadora y desarrollo de aplicaciones.",
+    "cat_all": "Todos",
+    "featured_label": "Proyectos destacados",
+    "featured_title": "Trabajos principales",
+    "other_label": "Más proyectos",
+    "other_title": "Otros proyectos",
+    "status_completed": "Completado",
+    "status_inprogress": "En progreso",
+    "status_planned": "Planificado",
+    "thesis_title": "Tesis MSc",
+    "thesis_subtitle": "Segmentación automática de objetos en movimiento con oclusión parcial",
+    "thesis_desc": "Desarrollo de algoritmos de procesamiento de imágenes para el seguimiento automático y segmentación de ratas en grabaciones de video en jaulas, manejando oclusiones parciales.",
+    "thesis_h1": "Sustracción de fondo y segmentación basada en Alpha Shape",
+    "thesis_h2": "Detección de puntos clave para resolver oclusiones parciales",
+    "thesis_h3": "Seguimiento automático de objetos en grabaciones de video",
+    "vmouse_title": "Ratón Virtual",
+    "vmouse_subtitle": "Control de ratón sin contacto basado en gestos manuales",
+    "vmouse_desc": "Seguimiento de manos en tiempo real y reconocimiento de gestos para control de ratón sin contacto con procesamiento multi-hilo.",
+    "vmouse_h1": "Seguimiento de manos en tiempo real con MediaPipe",
+    "vmouse_h2": "Reconocimiento de gestos (clic, desplazamiento, arrastre)",
+    "vmouse_h3": "Arquitectura multi-hilo para tiempo de respuesta rápido",
+    "cell_title": "Segmentación de Núcleos Celulares",
+    "cell_subtitle": "Detección y clasificación automática de núcleos celulares",
+    "cell_desc": "Detección automática, clasificación por color marrón y visualización de contornos de núcleos celulares en imágenes microscópicas.",
+    "cell_h1": "Clasificación basada en color (rojo, naranja, limón, azul)",
+    "cell_h2": "Detección automática de contornos y visualización",
+    "cell_h3": "Módulo Python con rutas de entrada/salida configurables",
+    "spendlens_subtitle": "Rastreador de gastos inteligente basado en escaneo de recibos",
+    "spendlens_desc": "Aplicación Android que reconoce automáticamente productos de fotos de recibos, los categoriza y genera informes mensuales sobre hábitos de gasto.",
+    "spendlens_h1": "Reconocimiento OCR de recibos usando ML Kit",
+    "spendlens_h2": "Categorización automática (comida, bebidas, limpieza, etc.)",
+    "spendlens_h3": "Informes mensuales y visualización de tendencias de gastos",
+    "portfolio_title": "Sitio Web de Portafolio",
+    "portfolio_subtitle": "Portafolio Angular moderno en 4 idiomas",
+    "portfolio_desc": "¡Este sitio web! Una aplicación Angular moderna con tema oscuro, soporte para 4 idiomas, animaciones y elementos interactivos.",
+    "portfolio_h1": "Arquitectura de componentes standalone Angular 17+",
+    "portfolio_h2": "Sistema i18n personalizado con 4 idiomas (HU, EN, DE, ES)",
+    "portfolio_h3": "Animaciones personalizadas, efectos 3D y elementos interactivos",
+    "cta_title": "¿Tienes una idea?",
+    "cta_subtitle": "Si te interesa mi trabajo y quieres colaborar en un proyecto, ¡no dudes en contactarme!"
+  },
   "projects": {
     "pageTitle": "Proyectos",
     "searchPlaceholder": "Buscar proyectos...",
@@ -119,18 +161,6 @@
     "liveDemo": "Demo en Vivo",
     "sourceCode": "Código Fuente",
     "noResults": "No se encontraron resultados"
-  },
-  "skills": {
-    "pageTitle": "Habilidades & Competencias",
-    "frontend": "Frontend",
-    "backend": "Backend",
-    "tools": "Herramientas",
-    "soft": "Habilidades Blandas"
-  },
-  "documents": {
-    "pageTitle": "Documentos",
-    "download": "Descargar",
-    "preview": "Vista previa"
   },
   "contact": {
     "pageTitle": "Contacto",
