@@ -1,193 +1,201 @@
-<div class="contact-container">
-  <!-- Hero Section -->
+<div class="contact-page">
+
+  <!-- ===== ANIMATED BACKGROUND ===== -->
+  <div class="bg-layer">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="gradient-orb orb-4"></div>
+    <div class="noise-overlay"></div>
+    <div class="grid-pattern"></div>
+  </div>
+
+  <!-- ===== COMPACT HERO + 3D CUBE ===== -->
   <section class="contact-hero">
-    <div class="container">
-      <h1 class="section-title">Kapcsolat</h1>
-      <div class="section-divider"></div>
-      <p class="hero-subtitle">
-        Lépj velem kapcsolatba és dolgozzunk együtt a következő nagyszerű projekteden!
-      </p>
+    <div class="hero-layout">
+      <div class="hero-text">
+        <div class="hero-badge">
+          <span class="badge-pulse"></span>
+          {{ 'cnt.badge' | translate }}
+        </div>
+
+        <h1 class="hero-title">
+          <span class="title-muted">{{ 'cnt.title_1' | translate }}</span>
+          <br>
+          <span class="gradient-text">{{ 'cnt.title_2' | translate }}</span>
+        </h1>
+
+        <p class="hero-desc">{{ 'cnt.hero_desc' | translate }}</p>
+
+        <div class="hero-availability">
+          <span class="avail-dot"></span>
+          {{ 'cnt.available' | translate }}
+        </div>
+      </div>
+
+      <!-- 3D Cube -->
+      <div class="cube-wrapper"
+           (mousemove)="onCubeMouseMove($event)"
+           (mouseleave)="resetCubeRotation()">
+        <div class="cube-glow"></div>
+        <div class="cube-scene">
+          <div class="cube"
+               [style.transform]="'rotateX(' + cubeRotX + 'deg) rotateY(' + cubeRotY + 'deg)'">
+            <div class="cube-face front">✉</div>
+            <div class="cube-face back">☎</div>
+            <div class="cube-face right">⟨/⟩</div>
+            <div class="cube-face left">in</div>
+            <div class="cube-face top">◆</div>
+            <div class="cube-face bottom">◇</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Contact Methods Section -->
-  <section class="contact-methods-section">
-    <div class="contact-grid">
-      <!-- Email Card -->
-      <mat-card class="contact-card">
-        <div class="icon-wrapper email-icon">
-          <mat-icon>mail</mat-icon>
-        </div>
-        <h3 class="contact-card-title">Email</h3>
-        <p class="contact-card-subtitle">Írj, ha van egy projektötleted!</p>
+  <!-- ===== 4-COLUMN CHANNEL CARDS ===== -->
+  <section class="channels-section">
+    <div class="container">
+      <div class="channels-grid-4">
 
-        <p class="contact-info-value">bfcnorbi11&#64;gmail.com</p>
-
-        <div class="availability">
-          <mat-icon>schedule</mat-icon>
-          <span>24 órán belül válaszolok</span>
-        </div>
-
-        <a href="mailto:bfcnorbi11@gmail.com" mat-raised-button class="contact-button">
-          <mat-icon>send</mat-icon>
-          Írj emailt
+        <a href="mailto:bfcnorbi11@gmail.com" class="channel-card"
+           [class.active]="hoveredCard === 'email'"
+           (mouseenter)="hoveredCard = 'email'" (mouseleave)="hoveredCard = null">
+          <div class="card-accent" style="--accent: var(--blue)"></div>
+          <div class="card-icon-wrap" style="--icon-bg: var(--blue-dim); --icon-color: var(--blue)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>
+          </div>
+          <h3 class="card-title">{{ 'cnt.email_title' | translate }}</h3>
+          <p class="card-value">bfcnorbi11&#64;gmail.com</p>
+          <span class="card-hint">{{ 'cnt.email_hint' | translate }}</span>
+          <span class="card-arrow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
         </a>
-      </mat-card>
 
-      <!-- Phone Card -->
-      <mat-card class="contact-card">
-        <div class="icon-wrapper phone-icon">
-          <mat-icon>phone</mat-icon>
-        </div>
-        <h3 class="contact-card-title">Telefon</h3>
-        <p class="contact-card-subtitle">Hívj fel egy gyors beszélgetésre!</p>
-
-        <p class="contact-info-value">+36 70 503 3601</p>
-
-        <div class="availability">
-          <mat-icon>schedule</mat-icon>
-          <span>H-P: 9:00-17:00</span>
-        </div>
-
-        <a href="tel:+36705033601" mat-raised-button class="contact-button">
-          <mat-icon>call</mat-icon>
-          Hívj fel
+        <a href="https://www.linkedin.com/in/norbert-szab%C3%B3-5b6642202/" target="_blank" rel="noopener"
+           class="channel-card"
+           [class.active]="hoveredCard === 'linkedin'"
+           (mouseenter)="hoveredCard = 'linkedin'" (mouseleave)="hoveredCard = null">
+          <div class="card-accent" style="--accent: #3888D8"></div>
+          <div class="card-icon-wrap" style="--icon-bg: rgba(56,136,216,0.1); --icon-color: #3888D8">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </div>
+          <h3 class="card-title">LinkedIn</h3>
+          <p class="card-value">{{ 'cnt.linkedin_desc' | translate }}</p>
+          <span class="card-hint">{{ 'cnt.linkedin_hint' | translate }}</span>
+          <span class="card-arrow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
         </a>
-      </mat-card>
 
-      <!-- Meeting Card -->
-      <mat-card class="contact-card">
-        <div class="icon-wrapper meeting-icon">
-          <mat-icon>video_call</mat-icon>
-        </div>
-        <h3 class="contact-card-title">Online találkozó</h3>
-        <p class="contact-card-subtitle">Foglalj időpontot konzultációra</p>
-
-        <p class="contact-info-value">30 perces konzultáció</p>
-
-        <div class="availability">
-          <mat-icon>event_available</mat-icon>
-          <span>Calendly naptár</span>
-        </div>
-
-        <a href="https://calendly.com/norbert_szabo" target="_blank" mat-raised-button class="contact-button">
-          <mat-icon>calendar_today</mat-icon>
-          Időpont foglalás
+        <a href="https://github.com/LordGiano" target="_blank" rel="noopener"
+           class="channel-card"
+           [class.active]="hoveredCard === 'github'"
+           (mouseenter)="hoveredCard = 'github'" (mouseleave)="hoveredCard = null">
+          <div class="card-accent" style="--accent: var(--purple)"></div>
+          <div class="card-icon-wrap" style="--icon-bg: var(--purple-dim); --icon-color: var(--purple)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </div>
+          <h3 class="card-title">GitHub</h3>
+          <p class="card-value">{{ 'cnt.github_desc' | translate }}</p>
+          <span class="card-hint">{{ 'cnt.github_hint' | translate }}</span>
+          <span class="card-arrow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
         </a>
-      </mat-card>
 
-      <!-- LinkedIn Card -->
-      <mat-card class="contact-card">
-        <div class="icon-wrapper linkedin-icon">
-          <mat-icon>business</mat-icon>
-        </div>
-        <h3 class="contact-card-title">LinkedIn</h3>
-        <p class="contact-card-subtitle">Csatlakozz a szakmai hálózatomhoz</p>
-
-        <p class="contact-info-value">linkedin.com/in/norbert-szabó-5b6642202/</p>
-
-        <div class="availability">
-          <mat-icon>people</mat-icon>
-          <span>Szakmai kapcsolatok</span>
-        </div>
-
-        <a href="https://www.linkedin.com/in/norbert-szab%C3%B3-5b6642202/" target="_blank" mat-raised-button class="contact-button">
-          <mat-icon>link</mat-icon>
-          Profil megtekintése
+        <a href="tel:+36705033601" class="channel-card"
+           [class.active]="hoveredCard === 'phone'"
+           (mouseenter)="hoveredCard = 'phone'" (mouseleave)="hoveredCard = null">
+          <div class="card-accent" style="--accent: var(--green)"></div>
+          <div class="card-icon-wrap" style="--icon-bg: var(--green-dim); --icon-color: var(--green)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <h3 class="card-title">{{ 'cnt.phone_title' | translate }}</h3>
+          <p class="card-value">+36 70 503 3601</p>
+          <span class="card-hint">{{ 'cnt.phone_hint' | translate }}</span>
+          <span class="card-arrow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
         </a>
-      </mat-card>
 
-      <!-- GitHub Card -->
-      <mat-card class="contact-card">
-        <div class="icon-wrapper github-icon">
-          <mat-icon>code</mat-icon>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FORM SECTION ===== -->
+  <section class="form-section">
+    <div class="container">
+      <div class="form-layout">
+
+        <div class="form-info">
+          <span class="info-tag">// {{ 'cnt.form_tag' | translate }}</span>
+          <h2 class="info-title">
+            {{ 'cnt.form_title_prefix' | translate }}
+            <span class="accent-blue">{{ 'cnt.form_title_accent' | translate }}</span>
+          </h2>
+          <p class="info-desc">{{ 'cnt.form_desc' | translate }}</p>
+
+          <div class="info-details">
+            <div class="detail-row orange-left">
+              <span>📍</span>
+              <span>Budapest, {{ 'cnt.location' | translate }}</span>
+            </div>
+            <div class="detail-row blue-left">
+              <span>🌐</span>
+              <span>{{ 'cnt.timezone' | translate }}</span>
+            </div>
+            <div class="detail-row green-left">
+              <span>⚡</span>
+              <span>{{ 'cnt.response_time' | translate }}</span>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <span class="code-purple">const</span>
+            <span class="code-blue"> developer</span>
+            <span class="code-muted"> = </span>&#123;<br>
+            &nbsp;&nbsp;<span class="code-green">name</span>: <span class="code-orange">"Szabó Norbert"</span>,<br>
+            &nbsp;&nbsp;<span class="code-green">stack</span>: <span class="code-orange">["Angular", "Python", "CV"]</span>,<br>
+            &nbsp;&nbsp;<span class="code-green">status</span>: <span class="code-orange">"available"</span>
+            <span class="status-dot-inline"></span><br>
+            &#125;;
+          </div>
         </div>
-        <h3 class="contact-card-title">GitHub</h3>
-        <p class="contact-card-subtitle">Nézd meg a projektjeimet</p>
 
-        <p class="contact-info-value">github.com/LordGiano</p>
+        <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label for="name">{{ 'cnt.label_name' | translate }}</label>
+              <input id="name" type="text" formControlName="name" [placeholder]="'cnt.ph_name' | translate">
+            </div>
+            <div class="form-group">
+              <label for="email">{{ 'cnt.label_email' | translate }}</label>
+              <input id="email" type="email" formControlName="email" [placeholder]="'cnt.ph_email' | translate">
+            </div>
+          </div>
 
-        <div class="availability">
-          <mat-icon>folder_open</mat-icon>
-          <span>Open source projektek</span>
-        </div>
+          <div class="form-group">
+            <label for="subject">{{ 'cnt.label_subject' | translate }}</label>
+            <input id="subject" type="text" formControlName="subject" [placeholder]="'cnt.ph_subject' | translate">
+          </div>
 
-        <a href="https://github.com/LordGiano" target="_blank" mat-raised-button class="contact-button">
-          <mat-icon>explore</mat-icon>
-          Kód megtekintése
-        </a>
-      </mat-card>
+          <div class="form-group">
+            <label for="message">{{ 'cnt.label_message' | translate }}</label>
+            <textarea id="message" rows="5" formControlName="message" [placeholder]="'cnt.ph_message' | translate"></textarea>
+          </div>
 
-      <!-- Newsletter Card -->
-      <mat-card class="contact-card">
-        <div class="icon-wrapper newsletter-icon">
-          <mat-icon>mail_outline</mat-icon>
-        </div>
-        <h3 class="contact-card-title">Hírlevél</h3>
-        <p class="contact-card-subtitle">Iratkozz fel a hírlevelemre</p>
-
-        <form [formGroup]="newsletterForm" (ngSubmit)="subscribeNewsletter()">
-          <mat-form-field appearance="outline" class="newsletter-input">
-            <mat-label>Email címed</mat-label>
-            <input matInput type="email" formControlName="email">
-            <mat-icon matPrefix>email</mat-icon>
-          </mat-form-field>
-
-          <button mat-raised-button class="contact-button" type="submit" [disabled]="!newsletterForm.valid">
-            <mat-icon>notifications_active</mat-icon>
-            Feliratkozás
+          <button type="submit" class="submit-btn" [class.success]="submitSuccess"
+                  [disabled]="!contactForm.valid || isSubmitting">
+            <span class="btn-text" *ngIf="!isSubmitting && !submitSuccess">
+              {{ 'cnt.send_btn' | translate }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </span>
+            <span class="btn-text" *ngIf="isSubmitting">
+              <span class="spinner"></span>{{ 'cnt.sending' | translate }}
+            </span>
+            <span class="btn-text" *ngIf="submitSuccess">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              {{ 'cnt.sent' | translate }}
+            </span>
           </button>
         </form>
-      </mat-card>
+
+      </div>
     </div>
   </section>
 
-  <!-- Message Form Section -->
-  <section class="message-section">
-    <div class="container">
-      <h2 class="section-title">Küldj üzenetet</h2>
-      <div class="section-divider"></div>
-
-      <mat-card class="message-form-card">
-        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
-          <div class="form-row">
-            <mat-form-field appearance="outline">
-              <mat-label>Név</mat-label>
-              <input matInput formControlName="name" placeholder="A neved">
-              <mat-icon matPrefix>person</mat-icon>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Email</mat-label>
-              <input matInput type="email" formControlName="email" placeholder="Email címed">
-              <mat-icon matPrefix>email</mat-icon>
-            </mat-form-field>
-          </div>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Tárgy</mat-label>
-            <input matInput formControlName="subject" placeholder="Üzenet tárgya">
-            <mat-icon matPrefix>subject</mat-icon>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Üzenet</mat-label>
-            <textarea matInput rows="3" formControlName="message" placeholder="Írd le részletesen az üzeneted..."></textarea>
-            <mat-icon matPrefix>message</mat-icon>
-          </mat-form-field>
-
-          <div class="form-footer">
-            <div class="response-info">
-              <mat-icon>access_time</mat-icon>
-              <span>48 órán belül válaszolok</span>
-            </div>
-            <button mat-raised-button class="submit-button" type="submit" [disabled]="!contactForm.valid">
-              <mat-icon>send</mat-icon>
-              <span>Üzenet küldése</span>
-            </button>
-          </div>
-        </form>
-      </mat-card>
-    </div>
-  </section>
 </div>
