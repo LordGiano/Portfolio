@@ -1,125 +1,217 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '../../pipes/translate.pipe';
+import { TranslationService } from '../../services/translation.service';
+import { Subscription } from 'rxjs';
 
 interface Project {
-  id: number;
+  id: string;
   title: string;
-  shortDescription: string;
+  subtitle: string;
   description: string;
-  imageUrl: string;
   technologies: string[];
   category: string;
-  demoUrl?: string;
-  githubUrl?: string;
+  status: 'completed' | 'in-progress' | 'planned';
   featured: boolean;
+  icon: string;
+  color: string;
+  gradient: string;
   date: string;
+  githubUrl?: string;
+  highlights?: string[];
 }
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
-    RouterLink
-  ],
+  imports: [CommonModule, MatIconModule, FormsModule, RouterLink, TranslatePipe],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.css'
 })
-export class ProjectListComponent {
-  searchText: string = '';
-  selectedCategory: string = 'all';
+export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  categories: string[] = ['all', 'Web', 'Mobile', 'AI/ML', 'Desktop'];
+  private langSub!: Subscription;
+  visibleSections = new Set<string>();
+  selectedCategory = 'all';
+  expandedProject: string | null = null;
 
-  projects: Project[] = [
-    {
-      id: 1,
-      title: 'E-commerce Platform',
-      shortDescription: 'Modern e-commerce solution with Angular frontend',
-      description: 'A full-featured e-commerce platform built with Angular and Firebase. Includes real-time inventory management, user authentication, payment integration, and admin dashboard.',
-      imageUrl: 'https://via.placeholder.com/800x400/e2e8f0/2563eb?text=E-commerce+Platform',
-      technologies: ['Angular', 'Firebase', 'TypeScript', 'Material UI', 'Stripe'],
-      category: 'Web',
-      demoUrl: 'https://demo.example.com/ecommerce',
-      githubUrl: 'https://github.com/yourusername/ecommerce',
-      featured: true,
-      date: '2024-03'
-    },
-    {
-      id: 2,
-      title: 'AI Image Recognition',
-      shortDescription: 'Computer vision application for object detection',
-      description: 'Machine learning project using TensorFlow for real-time object detection and classification. Includes web interface for image upload and analysis.',
-      imageUrl: 'https://via.placeholder.com/800x400/dbeafe/3b82f6?text=AI+Image+Recognition',
-      technologies: ['Python', 'TensorFlow', 'OpenCV', 'Flask', 'React'],
-      category: 'AI/ML',
-      githubUrl: 'https://github.com/yourusername/ai-vision',
-      featured: true,
-      date: '2024-01'
-    },
-    {
-      id: 3,
-      title: 'Task Management App',
-      shortDescription: 'Cross-platform task management solution',
-      description: 'A productivity app built with React Native for iOS and Android. Features task organization, reminders, team collaboration, and cloud synchronization.',
-      imageUrl: 'https://via.placeholder.com/800x400/fae8ff/a855f7?text=Task+Management',
-      technologies: ['React Native', 'TypeScript', 'Redux', 'Firebase'],
-      category: 'Mobile',
-      demoUrl: 'https://demo.example.com/taskapp',
-      featured: false,
-      date: '2023-11'
-    },
-    {
-      id: 4,
-      title: 'Portfolio Website',
-      shortDescription: 'Personal portfolio and blog platform',
-      description: 'Modern portfolio website built with Angular, featuring project showcase, blog functionality, and contact form with email integration.',
-      imageUrl: 'https://via.placeholder.com/800x400/f0fdf4/22c55e?text=Portfolio+Website',
-      technologies: ['Angular', 'TypeScript', 'SCSS', 'Firebase'],
-      category: 'Web',
-      demoUrl: 'https://yourportfolio.com',
-      githubUrl: 'https://github.com/yourusername/portfolio',
-      featured: false,
-      date: '2023-09'
+  categories = ['all', 'Computer Vision', 'Mobile', 'Web'];
+  projects: Project[] = [];
+
+  constructor(private translationService: TranslationService) {}
+
+  ngOnInit(): void {
+    this.langSub = this.translationService.language$.subscribe(() => this.loadData());
+    this.loadData();
+  }
+
+  ngAfterViewInit(): void {
+    this.setupIntersectionObserver();
+  }
+
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
+  }
+
+  private setupIntersectionObserver(): void {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('data-section');
+            if (id) this.visibleSections.add(id);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    setTimeout(() => {
+      document.querySelectorAll('[data-section]').forEach(el => observer.observe(el));
+    }, 100);
+  }
+
+  isSectionVisible(name: string): boolean {
+    return this.visibleSections.has(name);
+  }
+
+  selectCategory(cat: string): void {
+    this.selectedCategory = cat;
+  }
+
+  toggleProject(id: string): void {
+    this.expandedProject = this.expandedProject === id ? null : id;
+  }
+
+  get filteredProjects(): Project[] {
+    if (this.selectedCategory === 'all') return this.projects;
+    return this.projects.filter(p => p.category === this.selectedCategory);
+  }
+
+  get featuredProjects(): Project[] {
+    return this.filteredProjects.filter(p => p.featured);
+  }
+
+  get otherProjects(): Project[] {
+    return this.filteredProjects.filter(p => !p.featured);
+  }
+
+  getStatusLabel(status: string): string {
+    const t = (key: string) => this.translationService.translate(key);
+    switch (status) {
+      case 'completed': return t('proj.status_completed');
+      case 'in-progress': return t('proj.status_inprogress');
+      case 'planned': return t('proj.status_planned');
+      default: return status;
     }
-  ];
-
-  get filteredProjects() {
-    return this.projects.filter(project => {
-      const matchesSearch = project.title.toLowerCase().includes(this.searchText.toLowerCase()) ||
-                          project.shortDescription.toLowerCase().includes(this.searchText.toLowerCase()) ||
-                          project.technologies.some(tech => tech.toLowerCase().includes(this.searchText.toLowerCase()));
-
-      const matchesCategory = this.selectedCategory === 'all' || project.category === this.selectedCategory;
-
-      return matchesSearch && matchesCategory;
-    });
   }
 
-  get featuredProjects() {
-    return this.filteredProjects.filter(project => project.featured);
+  getCategoryLabel(cat: string): string {
+    if (cat === 'all') return this.translationService.translate('proj.cat_all');
+    return cat;
   }
 
-  get hasFeaturedProjects() {
-    return this.featuredProjects.length > 0;
-  }
+  private loadData(): void {
+    const t = (key: string) => this.translationService.translate(key);
 
-  selectCategory(category: string) {
-    this.selectedCategory = category;
+    this.projects = [
+      {
+        id: 'thesis',
+        title: t('proj.thesis_title'),
+        subtitle: t('proj.thesis_subtitle'),
+        description: t('proj.thesis_desc'),
+        technologies: ['Python', 'OpenCV', 'NumPy', 'Alpha Shape', 'Background Subtraction', 'Keypoint Detection'],
+        category: 'Computer Vision',
+        status: 'completed',
+        featured: true,
+        icon: 'biotech',
+        color: '#7C3AED',
+        gradient: 'linear-gradient(135deg, #7C3AED, #8B5CF6)',
+        date: '2025',
+        highlights: [
+          t('proj.thesis_h1'),
+          t('proj.thesis_h2'),
+          t('proj.thesis_h3')
+        ]
+      },
+      {
+        id: 'virtual-mouse',
+        title: t('proj.vmouse_title'),
+        subtitle: t('proj.vmouse_subtitle'),
+        description: t('proj.vmouse_desc'),
+        technologies: ['Python', 'OpenCV', 'MediaPipe', 'Threading'],
+        category: 'Computer Vision',
+        status: 'completed',
+        featured: true,
+        icon: 'mouse',
+        color: '#2563EB',
+        gradient: 'linear-gradient(135deg, #2563EB, #3B82F6)',
+        date: '2024',
+        highlights: [
+          t('proj.vmouse_h1'),
+          t('proj.vmouse_h2'),
+          t('proj.vmouse_h3')
+        ]
+      },
+      {
+        id: 'cell-segmentation',
+        title: t('proj.cell_title'),
+        subtitle: t('proj.cell_subtitle'),
+        description: t('proj.cell_desc'),
+        technologies: ['Python', 'OpenCV', 'Image Processing'],
+        category: 'Computer Vision',
+        status: 'completed',
+        featured: false,
+        icon: 'blur_on',
+        color: '#059669',
+        gradient: 'linear-gradient(135deg, #059669, #10B981)',
+        date: '2024',
+        highlights: [
+          t('proj.cell_h1'),
+          t('proj.cell_h2'),
+          t('proj.cell_h3')
+        ]
+      },
+      {
+        id: 'spendlens',
+        title: 'SpendLens',
+        subtitle: t('proj.spendlens_subtitle'),
+        description: t('proj.spendlens_desc'),
+        technologies: ['Android', 'Kotlin', 'ML Kit', 'Room DB', 'Jetpack Compose'],
+        category: 'Mobile',
+        status: 'planned',
+        featured: true,
+        icon: 'receipt_long',
+        color: '#D97706',
+        gradient: 'linear-gradient(135deg, #D97706, #F59E0B)',
+        date: '2025',
+        highlights: [
+          t('proj.spendlens_h1'),
+          t('proj.spendlens_h2'),
+          t('proj.spendlens_h3')
+        ]
+      },
+      {
+        id: 'portfolio',
+        title: t('proj.portfolio_title'),
+        subtitle: t('proj.portfolio_subtitle'),
+        description: t('proj.portfolio_desc'),
+        technologies: ['Angular', 'TypeScript', 'CSS3', 'i18n'],
+        category: 'Web',
+        status: 'in-progress',
+        featured: false,
+        icon: 'web',
+        color: '#0891B2',
+        gradient: 'linear-gradient(135deg, #0891B2, #06B6D4)',
+        date: '2025',
+        highlights: [
+          t('proj.portfolio_h1'),
+          t('proj.portfolio_h2'),
+          t('proj.portfolio_h3')
+        ]
+      }
+    ];
   }
 }

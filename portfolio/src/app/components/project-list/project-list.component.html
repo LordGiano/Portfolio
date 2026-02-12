@@ -1,140 +1,161 @@
-<div class="projects-container">
-  <!-- Hero Section -->
-  <section class="projects-hero">
-    <div class="container">
-      <h1 class="section-title">Projektek</h1>
-      <div class="section-divider"></div>
-      <p class="hero-subtitle">
-        Íme néhány projekt, amelyeken dolgoztam. Minden projekt egy-egy kihívás volt, amelyből sokat tanultam.
-      </p>
+<div class="proj-page">
+
+  <!-- ===== HERO ===== -->
+  <section class="proj-hero" data-section="hero"
+           [class.visible]="isSectionVisible('hero')">
+    <div class="hero-noise"></div>
+    <div class="hero-mesh"></div>
+    <div class="hero-lines">
+      <div class="h-line" *ngFor="let l of [1,2,3,4,5]"></div>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-line"></span>
+        <span class="eyebrow-text">{{ 'proj.badge' | translate }}</span>
+        <span class="eyebrow-line"></span>
+      </div>
+      <h1 class="hero-massive">{{ 'proj.hero_title' | translate }}</h1>
+      <p class="hero-lead">{{ 'proj.hero_subtitle' | translate }}</p>
     </div>
   </section>
 
-  <!-- Search and Filter Section -->
-  <section class="filter-section">
-    <div class="container">
-      <div class="search-filter-wrapper">
-        <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Keresés projektekben</mat-label>
-          <input matInput [(ngModel)]="searchText" placeholder="Projekt neve, technológia...">
-          <mat-icon matPrefix>search</mat-icon>
-        </mat-form-field>
+  <!-- ===== CATEGORY FILTER ===== -->
+  <section class="filter-strip" data-section="filter"
+           [class.visible]="isSectionVisible('filter')">
+    <div class="filter-inner">
+      <button class="filter-pill" *ngFor="let cat of categories"
+              [class.active]="selectedCategory === cat"
+              (click)="selectCategory(cat)">
+        {{ getCategoryLabel(cat) }}
+      </button>
+    </div>
+  </section>
 
-        <div class="category-chips">
-          <mat-chip-set>
-            <mat-chip
-              *ngFor="let category of categories"
-              [class.selected]="selectedCategory === category"
-              (click)="selectCategory(category)">
-              {{category === 'all' ? 'Összes' : category}}
-            </mat-chip>
-          </mat-chip-set>
+  <!-- ===== FEATURED PROJECTS ===== -->
+  <section class="featured-section" data-section="featured"
+           [class.visible]="isSectionVisible('featured')"
+           *ngIf="featuredProjects.length > 0">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-label">{{ 'proj.featured_label' | translate }}</span>
+        <h2>{{ 'proj.featured_title' | translate }}</h2>
+      </div>
+
+      <div class="featured-grid">
+        <div class="feat-card" *ngFor="let proj of featuredProjects; let i = index"
+             [style.--pc]="proj.color"
+             [style.--pg]="proj.gradient"
+             [style.animation-delay]="(i * 0.15) + 's'"
+             [class.expanded]="expandedProject === proj.id"
+             (click)="toggleProject(proj.id)">
+
+          <div class="feat-glow"></div>
+          <div class="feat-accent"></div>
+
+          <div class="feat-top">
+            <div class="feat-icon" [style.background]="proj.gradient">
+              <mat-icon>{{ proj.icon }}</mat-icon>
+            </div>
+            <div class="feat-status" [attr.data-status]="proj.status">
+              {{ getStatusLabel(proj.status) }}
+            </div>
+          </div>
+
+          <h3 class="feat-title">{{ proj.title }}</h3>
+          <p class="feat-subtitle">{{ proj.subtitle }}</p>
+          <p class="feat-desc">{{ proj.description }}</p>
+
+          <!-- Expandable highlights -->
+          <div class="feat-expand" [class.open]="expandedProject === proj.id">
+            <div class="feat-highlights" *ngIf="proj.highlights">
+              <div class="feat-hl" *ngFor="let hl of proj.highlights">
+                <span class="hl-arrow" [style.color]="proj.color">▹</span>
+                {{ hl }}
+              </div>
+            </div>
+          </div>
+
+          <div class="feat-techs">
+            <span class="feat-tech" *ngFor="let tech of proj.technologies">{{ tech }}</span>
+          </div>
+
+          <div class="feat-footer">
+            <span class="feat-date">{{ proj.date }}</span>
+            <span class="feat-cat">{{ proj.category }}</span>
+            <mat-icon class="feat-arrow">{{ expandedProject === proj.id ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Featured Projects Section -->
-  <section class="featured-section" *ngIf="hasFeaturedProjects">
+  <!-- ===== OTHER PROJECTS ===== -->
+  <section class="other-section" data-section="other"
+           [class.visible]="isSectionVisible('other')"
+           *ngIf="otherProjects.length > 0">
     <div class="container">
-      <h2 class="subsection-title">Kiemelt projektek</h2>
-      <div class="projects-grid featured-grid">
-        <mat-card class="project-card featured-card" *ngFor="let project of featuredProjects | slice:0:2">
-          <div class="project-image" [style.background-image]="'url(' + project.imageUrl + ')'">
-            <div class="project-overlay">
-              <mat-chip class="category-chip">{{project.category}}</mat-chip>
+      <div class="section-head">
+        <span class="section-label">{{ 'proj.other_label' | translate }}</span>
+        <h2>{{ 'proj.other_title' | translate }}</h2>
+      </div>
+
+      <div class="other-grid">
+        <div class="other-card" *ngFor="let proj of otherProjects; let i = index"
+             [style.--pc]="proj.color"
+             [style.--pg]="proj.gradient"
+             [style.animation-delay]="(i * 0.12) + 's'"
+             [class.expanded]="expandedProject === proj.id"
+             (click)="toggleProject(proj.id)">
+
+          <div class="other-accent"></div>
+
+          <div class="other-top">
+            <div class="other-icon">
+              <mat-icon [style.color]="proj.color">{{ proj.icon }}</mat-icon>
+            </div>
+            <div class="other-meta">
+              <span class="other-status" [attr.data-status]="proj.status">{{ getStatusLabel(proj.status) }}</span>
+              <span class="other-date">{{ proj.date }}</span>
             </div>
           </div>
 
-          <mat-card-header>
-            <mat-card-title>{{project.title}}</mat-card-title>
-            <mat-card-subtitle>{{project.date | date:'yyyy MMMM'}}</mat-card-subtitle>
-          </mat-card-header>
+          <h3>{{ proj.title }}</h3>
+          <p class="other-subtitle">{{ proj.subtitle }}</p>
+          <p class="other-desc">{{ proj.description }}</p>
 
-          <mat-card-content>
-            <p class="project-description">{{project.shortDescription}}</p>
-
-            <div class="tech-stack">
-              <mat-chip *ngFor="let tech of project.technologies | slice:0:3">
-                {{tech}}
-              </mat-chip>
-              <mat-chip *ngIf="project.technologies.length > 3" class="more-chip">
-                +{{project.technologies.length - 3}}
-              </mat-chip>
+          <div class="other-expand" [class.open]="expandedProject === proj.id">
+            <div class="other-highlights" *ngIf="proj.highlights">
+              <div class="other-hl" *ngFor="let hl of proj.highlights">
+                <span class="hl-arrow" [style.color]="proj.color">▹</span>{{ hl }}
+              </div>
             </div>
-          </mat-card-content>
+          </div>
 
-          <mat-card-actions>
-            <a mat-button [routerLink]="['/projects', project.id]">
-              <mat-icon>info</mat-icon>
-              Részletek
-            </a>
-            <a mat-button *ngIf="project.demoUrl" [href]="project.demoUrl" target="_blank">
-              <mat-icon>launch</mat-icon>
-              Demo
-            </a>
-            <a mat-button *ngIf="project.githubUrl" [href]="project.githubUrl" target="_blank">
-              <mat-icon>code</mat-icon>
-              GitHub
-            </a>
-          </mat-card-actions>
-        </mat-card>
+          <div class="other-techs">
+            <span class="other-tech" *ngFor="let tech of proj.technologies">{{ tech }}</span>
+          </div>
+
+          <div class="other-footer">
+            <mat-icon class="other-arrow">{{ expandedProject === proj.id ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- All Projects Section -->
-  <section class="all-projects-section">
-    <div class="container">
-      <h2 class="subsection-title">Összes projekt</h2>
-      <div class="projects-grid">
-        <mat-card class="project-card" *ngFor="let project of filteredProjects">
-          <div class="project-image" [style.background-image]="'url(' + project.imageUrl + ')'">
-            <div class="project-overlay">
-              <mat-chip class="category-chip">{{project.category}}</mat-chip>
-            </div>
-          </div>
-
-          <mat-card-header>
-            <mat-card-title>{{project.title}}</mat-card-title>
-            <mat-card-subtitle>{{project.date | date:'yyyy MMMM'}}</mat-card-subtitle>
-          </mat-card-header>
-
-          <mat-card-content>
-            <p class="project-description">{{project.shortDescription}}</p>
-
-            <div class="tech-stack">
-              <mat-chip *ngFor="let tech of project.technologies | slice:0:3">
-                {{tech}}
-              </mat-chip>
-              <mat-chip *ngIf="project.technologies.length > 3" class="more-chip">
-                +{{project.technologies.length - 3}}
-              </mat-chip>
-            </div>
-          </mat-card-content>
-
-          <mat-card-actions>
-            <a mat-button [routerLink]="['/projects', project.id]">
-              <mat-icon>info</mat-icon>
-              Részletek
-            </a>
-            <a mat-button *ngIf="project.demoUrl" [href]="project.demoUrl" target="_blank">
-              <mat-icon>launch</mat-icon>
-              Demo
-            </a>
-            <a mat-button *ngIf="project.githubUrl" [href]="project.githubUrl" target="_blank">
-              <mat-icon>code</mat-icon>
-              GitHub
-            </a>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-
-      <div class="no-results" *ngIf="filteredProjects.length === 0">
-        <mat-icon>search_off</mat-icon>
-        <h3>Nincs találat</h3>
-        <p>Próbálj más keresési feltételekkel vagy kategóriával.</p>
+  <!-- ===== CTA ===== -->
+  <section class="proj-cta" data-section="cta"
+           [class.visible]="isSectionVisible('cta')">
+    <div class="cta-mesh"></div>
+    <div class="container cta-inner">
+      <h2>{{ 'proj.cta_title' | translate }}</h2>
+      <p>{{ 'proj.cta_subtitle' | translate }}</p>
+      <div class="cta-btns">
+        <a routerLink="/contact" class="cta-btn-primary">
+          <mat-icon>send</mat-icon> {{ 'exp.cta_contact' | translate }}
+        </a>
       </div>
     </div>
   </section>
+
 </div>
