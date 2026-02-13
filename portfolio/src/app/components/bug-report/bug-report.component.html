@@ -9,16 +9,13 @@
   [attr.aria-label]="'bug.tooltip' | translate">
   <span class="fab-icon">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M8 2l1.88 1.88"/>
-      <path d="M14.12 3.88L16 2"/>
+      <path d="M8 2l1.88 1.88"/><path d="M14.12 3.88L16 2"/>
       <path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/>
       <path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/>
       <path d="M12 20v-9"/>
-      <path d="M6.53 9C4.6 8.8 3 7.1 3 5"/>
-      <path d="M6 13H2"/>
+      <path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/>
       <path d="M3 21c0-2.1 1.7-3.9 3.8-4"/>
-      <path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/>
-      <path d="M22 13h-4"/>
+      <path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/>
       <path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/>
     </svg>
   </span>
@@ -29,13 +26,13 @@
 <div class="modal-overlay" *ngIf="isExpanded" (click)="toggleExpand()">
   <div class="modal-container" (click)="$event.stopPropagation()" [class.glitch-active]="glitchActive">
 
-    <!-- Bug Rain Canvas Background -->
-    <canvas #bugCanvas class="bug-rain-bg"></canvas>
+    <!-- Bug Hex Grid Canvas -->
+    <canvas #bugCanvas class="bug-hex-bg"></canvas>
 
     <!-- Decorative Grid -->
     <div class="grid-overlay"></div>
 
-    <!-- Floating Orbs (bug-themed: red/orange) -->
+    <!-- Floating Orbs -->
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
@@ -45,16 +42,13 @@
       <div class="header-left">
         <div class="bug-icon-wrapper">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 2l1.88 1.88"/>
-            <path d="M14.12 3.88L16 2"/>
+            <path d="M8 2l1.88 1.88"/><path d="M14.12 3.88L16 2"/>
             <path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/>
             <path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/>
             <path d="M12 20v-9"/>
-            <path d="M6.53 9C4.6 8.8 3 7.1 3 5"/>
-            <path d="M6 13H2"/>
+            <path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/>
             <path d="M3 21c0-2.1 1.7-3.9 3.8-4"/>
-            <path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/>
-            <path d="M22 13h-4"/>
+            <path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/>
             <path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/>
           </svg>
         </div>
@@ -65,8 +59,7 @@
       </div>
       <button class="close-btn" (click)="toggleExpand()" [attr.aria-label]="'common.close' | translate">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </button>
     </div>
@@ -96,113 +89,75 @@
     <div class="modal-body" *ngIf="!submitSuccess">
       <form [formGroup]="bugReportForm" (ngSubmit)="onSubmit()">
 
-        <!-- Step 1: Category & Severity -->
+        <!-- Step 1 -->
         <div class="step-panel" [class.active]="currentStep === 1">
-          <div class="section-title">
-            {{ 'bug.step1_title' | translate }}
-          </div>
+          <div class="section-title">{{ 'bug.step1_title' | translate }}</div>
           <div class="category-grid">
-            <button *ngFor="let cat of bugCategories"
-                    type="button"
-                    class="category-card"
-                    [class.selected]="selectedCategory === cat.value"
-                    (click)="selectCategory(cat.value)">
+            <button *ngFor="let cat of bugCategories" type="button" class="category-card"
+              [class.selected]="selectedCategory === cat.value" (click)="selectCategory(cat.value)">
               <span class="cat-icon">{{ cat.icon }}</span>
               <span class="cat-label">{{ cat.key | translate }}</span>
               <span class="cat-check" *ngIf="selectedCategory === cat.value">✓</span>
             </button>
           </div>
-          <div class="section-title severity-title">
-            {{ 'bug.severity_label' | translate }}
-          </div>
+          <div class="section-title severity-title">{{ 'bug.severity_label' | translate }}</div>
           <div class="severity-row">
-            <button *ngFor="let sev of severityLevels"
-                    type="button"
-                    class="severity-chip"
-                    [class.selected]="(selectedSeverity || 'medium') === sev.value"
-                    [style.--sev-color]="sev.color"
-                    (click)="selectSeverity(sev.value)">
+            <button *ngFor="let sev of severityLevels" type="button" class="severity-chip"
+              [class.selected]="(selectedSeverity || 'medium') === sev.value" [style.--sev-color]="sev.color"
+              (click)="selectSeverity(sev.value)">
               <span class="sev-dot" [style.background]="sev.color"></span>
               {{ sev.key | translate }}
             </button>
           </div>
         </div>
 
-        <!-- Step 2: Details -->
+        <!-- Step 2 -->
         <div class="step-panel" [class.active]="currentStep === 2">
-          <div class="section-title">
-            {{ 'bug.step2_title' | translate }}
-          </div>
+          <div class="section-title">{{ 'bug.step2_title' | translate }}</div>
           <div class="form-group">
-            <label class="form-label" for="bugTitle">
-              {{ 'bug.title_label' | translate }} <span class="required">*</span>
-            </label>
-            <input id="bugTitle" type="text" class="form-input"
-              formControlName="title"
+            <label class="form-label" for="bugTitle">{{ 'bug.title_label' | translate }} <span class="required">*</span></label>
+            <input id="bugTitle" type="text" class="form-input" formControlName="title"
               [placeholder]="'bug.title_placeholder' | translate"
               [class.error]="bugReportForm.get('title')?.invalid && bugReportForm.get('title')?.touched">
-            <span class="input-error" *ngIf="bugReportForm.get('title')?.invalid && bugReportForm.get('title')?.touched">
-              {{ 'bug.title_error' | translate }}
-            </span>
+            <span class="input-error" *ngIf="bugReportForm.get('title')?.invalid && bugReportForm.get('title')?.touched">{{ 'bug.title_error' | translate }}</span>
           </div>
           <div class="form-group">
-            <label class="form-label" for="bugDesc">
-              {{ 'bug.desc_label' | translate }} <span class="required">*</span>
-            </label>
+            <label class="form-label" for="bugDesc">{{ 'bug.desc_label' | translate }} <span class="required">*</span></label>
             <textarea id="bugDesc" class="form-textarea" formControlName="description" rows="4"
               [placeholder]="'bug.desc_placeholder' | translate"
-              [class.error]="bugReportForm.get('description')?.invalid && bugReportForm.get('description')?.touched">
-            </textarea>
+              [class.error]="bugReportForm.get('description')?.invalid && bugReportForm.get('description')?.touched"></textarea>
             <div class="textarea-footer">
-              <span class="input-error" *ngIf="bugReportForm.get('description')?.invalid && bugReportForm.get('description')?.touched">
-                {{ 'bug.desc_error' | translate }}
-              </span>
+              <span class="input-error" *ngIf="bugReportForm.get('description')?.invalid && bugReportForm.get('description')?.touched">{{ 'bug.desc_error' | translate }}</span>
               <span class="char-counter" [class.warn]="charCount > 800">{{ charCount }} / 1000</span>
             </div>
           </div>
         </div>
 
-        <!-- Step 3: Additional Info -->
+        <!-- Step 3 -->
         <div class="step-panel" [class.active]="currentStep === 3">
-          <div class="section-title">
-            {{ 'bug.step3_title' | translate }}
-          </div>
+          <div class="section-title">{{ 'bug.step3_title' | translate }}</div>
           <div class="form-group">
-            <label class="form-label" for="bugSteps">
-              {{ 'bug.steps_label' | translate }}
-              <span class="optional-badge">{{ 'bug.optional' | translate }}</span>
-            </label>
+            <label class="form-label" for="bugSteps">{{ 'bug.steps_label' | translate }} <span class="optional-badge">{{ 'bug.optional' | translate }}</span></label>
             <textarea id="bugSteps" class="form-textarea" formControlName="reproduceSteps" rows="3"
               [placeholder]="'bug.steps_placeholder' | translate"></textarea>
           </div>
           <div class="form-group">
-            <label class="form-label" for="bugEmail">
-              {{ 'bug.email_label' | translate }}
-              <span class="optional-badge">{{ 'bug.optional' | translate }}</span>
-            </label>
+            <label class="form-label" for="bugEmail">{{ 'bug.email_label' | translate }} <span class="optional-badge">{{ 'bug.optional' | translate }}</span></label>
             <div class="input-with-icon">
               <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
               </svg>
-              <input id="bugEmail" type="email" class="form-input with-icon"
-                formControlName="email"
+              <input id="bugEmail" type="email" class="form-input with-icon" formControlName="email"
                 [placeholder]="'bug.email_placeholder' | translate"
                 [class.error]="bugReportForm.get('email')?.invalid && bugReportForm.get('email')?.touched">
             </div>
-            <span class="input-error" *ngIf="bugReportForm.get('email')?.invalid && bugReportForm.get('email')?.touched">
-              {{ 'bug.email_error' | translate }}
-            </span>
+            <span class="input-error" *ngIf="bugReportForm.get('email')?.invalid && bugReportForm.get('email')?.touched">{{ 'bug.email_error' | translate }}</span>
           </div>
-          <!-- Summary Preview -->
           <div class="summary-card" *ngIf="selectedCategory">
             <div class="summary-title">{{ 'bug.summary' | translate }}</div>
             <div class="summary-row">
               <span class="summary-label">{{ 'bug.step1_label' | translate }}:</span>
-              <span class="summary-value cat-badge">
-                {{ getCategoryIcon() }}
-                {{ getCategoryTranslationKey() | translate }}
-              </span>
+              <span class="summary-value cat-badge">{{ getCategoryIcon() }} {{ getCategoryTranslationKey() | translate }}</span>
             </div>
             <div class="summary-row" *ngIf="bugReportForm.get('title')?.value">
               <span class="summary-label">{{ 'bug.title_label' | translate }}:</span>
@@ -211,7 +166,7 @@
           </div>
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Actions -->
         <div class="modal-actions">
           <button *ngIf="currentStep > 1" type="button" class="btn btn-ghost" (click)="prevStep()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -239,7 +194,7 @@
       </form>
     </div>
 
-    <!-- Success State -->
+    <!-- Success -->
     <div class="success-panel" *ngIf="submitSuccess">
       <div class="success-icon-wrapper">
         <svg class="success-check" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -252,6 +207,5 @@
         <span *ngFor="let i of [1,2,3,4,5,6,7,8]" class="confetti" [style.--i]="i"></span>
       </div>
     </div>
-
   </div>
 </div>
