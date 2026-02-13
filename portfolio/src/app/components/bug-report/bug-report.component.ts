@@ -10,10 +10,20 @@ interface HexCell {
   x: number;
   y: number;
   hasSymbol: boolean;
-  symbol: string;        // 'BUG_ICON' | '404' | 'ERROR' | 'NULL' | ''
+  symbol: string;
+  // Visibility: symbols fade in and out slowly
+  visible: boolean;
+  fadeValue: number;       // 0 = invisible, 1 = fully visible (at baseSymbolOp)
+  fadeSpeed: number;       // how fast it fades in/out per frame
+  fadeDirection: number;   // 1 = fading in, -1 = fading out
+  holdTimer: number;       // how long to stay visible before fading out
+  holdDuration: number;
+  cooldown: number;        // time before next appearance
+  // Flash (red pulse on top of visibility)
   flashTimer: number;
   flashDur: number;
   nextFlash: number;
+  // Base opacities
   baseHexOp: number;
   baseSymbolOp: number;
 }
@@ -40,17 +50,18 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
   submitSuccess = false;
   buttonPulse = true;
 
-  // Hex grid canvas
+  // Hex grid
   private hexes: HexCell[] = [];
+  private symbolHexes: HexCell[] = [];  // only hexes that have symbols
   private animFrameId: number = 0;
   private ctx!: CanvasRenderingContext2D;
   private readonly HEX_SIZE = 26;
+  private readonly MAX_VISIBLE = 4;     // max symbols visible at once
 
   // Glitch scanline
   glitchActive = false;
   private glitchInterval: any;
 
-  // Translation
   private langSub!: Subscription;
 
   bugCategories = [
@@ -88,7 +99,6 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.langSub = this.translationService.language$.subscribe(() => {});
 
-    // Subtle glitch scanline every 5s
     this.glitchInterval = setInterval(() => {
       if (this.isExpanded) {
         this.glitchActive = true;
@@ -103,6 +113,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
     if (this.glitchInterval) clearInterval(this.glitchInterval);
     if (this.langSub) this.langSub.unsubscribe();
+    document.body.style.overflow = '';
   }
 
   toggleExpand(): void {
@@ -110,10 +121,14 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     this.buttonPulse = false;
 
     if (this.isExpanded) {
+      // Lock background scroll
+      document.body.style.overflow = 'hidden';
       this.currentStep = 1;
       this.submitSuccess = false;
       setTimeout(() => this.initHexGrid(), 100);
     } else {
+      // Unlock background scroll
+      document.body.style.overflow = '';
       if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
       if (this.bugReportForm.dirty && !this.isSubmitting) {
         this.bugReportForm.reset({ severity: 'medium' });
@@ -164,6 +179,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
           this.isExpanded = false;
           this.submitSuccess = false;
           this.buttonPulse = true;
+          document.body.style.overflow = '';
         }, 3000);
       }, 2000);
     }
@@ -194,7 +210,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.bugCategories.find(c => c.value === this.selectedCategory)?.key || '';
   }
 
-  // ── Bug Hex Grid Background ──
+  // ── Bug Hex Grid ──
 
   private initHexGrid(): void {
     const canvas = this.canvasRef?.nativeElement;
@@ -206,23 +222,42 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     const sz = this.HEX_SIZE;
     const hH = sz * Math.sqrt(3);
     const hW = sz * 2;
-    const symbols = ['BUG_ICON', '404', 'ERROR', 'NULL'];
+    // Weighted symbol pool: 404, NULL, ⚠ appear more often; BUG_ICON and ERROR less
+    const weightedSymbols = [
+      '404', '404', '404',
+      'NULL', 'NULL', 'NULL',
+      'WARN', 'WARN', 'WARN',
+      'BUG_ICON', 'BUG_ICON',
+      'ERROR', 'ERROR'
+    ];
 
     this.hexes = [];
+    this.symbolHexes = [];
+
     for (let row = -1; row < canvas.height / hH + 1; row++) {
       for (let col = -1; col < canvas.width / (hW * 0.75) + 1; col++) {
         const hasSymbol = Math.random() < 0.14;
-        this.hexes.push({
+        const hex: HexCell = {
           x: col * hW * 0.75,
           y: row * hH + (col % 2 === 0 ? 0 : hH / 2),
           hasSymbol,
-          symbol: hasSymbol ? symbols[Math.floor(Math.random() * symbols.length)] : '',
+          symbol: hasSymbol ? weightedSymbols[Math.floor(Math.random() * weightedSymbols.length)] : '',
+          // Start invisible, with a random cooldown before first appearance
+          visible: false,
+          fadeValue: 0,
+          fadeSpeed: 0.004 + Math.random() * 0.004,  // slow fade: ~4-6 seconds to fully appear
+          fadeDirection: 0, // 0 = waiting
+          holdTimer: 0,
+          holdDuration: 4 + Math.random() * 6,        // stay visible 4-10 seconds
+          cooldown: 2 + Math.random() * 12,            // wait 2-12 seconds before appearing
           flashTimer: 0,
-          flashDur: 1.2 + Math.random() * 1.5,
-          nextFlash: 1 + Math.random() * 6,
+          flashDur: 1.5 + Math.random() * 2,
+          nextFlash: 3 + Math.random() * 8,
           baseHexOp: 0.03 + Math.random() * 0.02,
-          baseSymbolOp: 0.04 + Math.random() * 0.03
-        });
+          baseSymbolOp: 0.05 + Math.random() * 0.03
+        };
+        this.hexes.push(hex);
+        if (hasSymbol) this.symbolHexes.push(hex);
       }
     }
 
@@ -254,8 +289,6 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
     c.globalAlpha = alpha;
     c.fillStyle = color;
-    c.strokeStyle = color;
-    c.lineWidth = 1.2;
     c.lineCap = 'round';
 
     // Body
@@ -270,8 +303,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Center line
     c.beginPath();
-    c.moveTo(0, -4);
-    c.lineTo(0, 7);
+    c.moveTo(0, -4); c.lineTo(0, 7);
     c.strokeStyle = `rgba(11,17,32,${0.3 + intensity * 0.2})`;
     c.lineWidth = 1;
     c.stroke();
@@ -279,7 +311,6 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     // Antennae + legs
     c.strokeStyle = color;
     c.lineWidth = 1.2;
-
     c.beginPath();
     c.moveTo(-1.5, -6.5); c.lineTo(-3.5, -9);
     c.moveTo(1.5, -6.5);  c.lineTo(3.5, -9);
@@ -304,62 +335,106 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const c = this.ctx;
     const sz = this.HEX_SIZE;
+    const dt = 0.016; // ~60fps frame time
+
     c.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (const hex of this.hexes) {
-      // Symbol flash timing
-      if (hex.hasSymbol) {
-        hex.nextFlash -= 0.016;
-        if (hex.nextFlash <= 0) {
-          hex.flashTimer = hex.flashDur;
-          hex.nextFlash = 3 + Math.random() * 8;
+    // Count currently visible symbols
+    let visibleCount = 0;
+    for (const hex of this.symbolHexes) {
+      if (hex.fadeValue > 0) visibleCount++;
+    }
+
+    // Update symbol visibility state machine
+    for (const hex of this.symbolHexes) {
+      if (hex.fadeDirection === 0 && hex.fadeValue === 0) {
+        // Waiting to appear
+        hex.cooldown -= dt;
+        if (hex.cooldown <= 0 && visibleCount < this.MAX_VISIBLE) {
+          hex.fadeDirection = 1; // start fading in
+          hex.visible = true;
+          visibleCount++;
         }
-        if (hex.flashTimer > 0) hex.flashTimer -= 0.016;
+      } else if (hex.fadeDirection === 1) {
+        // Fading in
+        hex.fadeValue = Math.min(1, hex.fadeValue + hex.fadeSpeed);
+        if (hex.fadeValue >= 1) {
+          hex.fadeDirection = 0;
+          hex.holdTimer = hex.holdDuration;
+        }
+      } else if (hex.fadeDirection === 0 && hex.fadeValue >= 1) {
+        // Holding visible
+        hex.holdTimer -= dt;
+        if (hex.holdTimer <= 0) {
+          hex.fadeDirection = -1; // start fading out
+        }
+      } else if (hex.fadeDirection === -1) {
+        // Fading out
+        hex.fadeValue = Math.max(0, hex.fadeValue - hex.fadeSpeed);
+        if (hex.fadeValue <= 0) {
+          hex.fadeDirection = 0;
+          hex.visible = false;
+          hex.cooldown = 4 + Math.random() * 14; // wait 4-18s before next appearance
+          hex.holdDuration = 4 + Math.random() * 6;
+        }
       }
 
-      const flashing = hex.hasSymbol && hex.flashTimer > 0;
-      const intensity = flashing ? Math.sin((hex.flashTimer / hex.flashDur) * Math.PI) : 0;
+      // Red flash timing (only when visible enough)
+      if (hex.fadeValue > 0.5) {
+        hex.nextFlash -= dt;
+        if (hex.nextFlash <= 0) {
+          hex.flashTimer = hex.flashDur;
+          hex.nextFlash = 5 + Math.random() * 10;
+        }
+        if (hex.flashTimer > 0) hex.flashTimer -= dt;
+      }
+    }
 
+    // Draw all hexes
+    for (const hex of this.hexes) {
       // Hex outline — always static
       this.drawHex(hex.x, hex.y, sz);
       c.strokeStyle = `rgba(148,163,184,${hex.baseHexOp})`;
       c.lineWidth = 0.5;
       c.stroke();
 
-      // Symbol rendering
-      if (hex.hasSymbol) {
-        const symAlpha = flashing ? hex.baseSymbolOp + intensity * 0.55 : hex.baseSymbolOp;
+      // Symbol (only if has one and fadeValue > 0)
+      if (hex.hasSymbol && hex.fadeValue > 0) {
+        const flashing = hex.flashTimer > 0;
+        const intensity = flashing ? Math.sin((hex.flashTimer / hex.flashDur) * Math.PI) : 0;
+        const symAlpha = hex.baseSymbolOp * hex.fadeValue + (flashing ? intensity * 0.55 * hex.fadeValue : 0);
 
         if (hex.symbol === 'BUG_ICON') {
-          this.drawBugIcon(hex.x, hex.y, 1.1, symAlpha, intensity);
+          this.drawBugIcon(hex.x, hex.y, 1.1, symAlpha, intensity * hex.fadeValue);
 
-          // Rectangular glow
           if (flashing && intensity > 0.4) {
             c.save();
-            c.globalAlpha = intensity * 0.07;
+            c.globalAlpha = intensity * 0.07 * hex.fadeValue;
             c.fillStyle = '#EF4444';
             c.fillRect(hex.x - 10, hex.y - 12, 20, 24);
             c.restore();
           }
         } else {
-          // Text symbols: 404, ERROR, NULL
           c.save();
           c.textAlign = 'center';
           c.textBaseline = 'middle';
 
+          const fade = hex.fadeValue;
           const r = flashing ? Math.round(148 + (239 - 148) * intensity) : 148;
           const g = flashing ? Math.round(163 - 95 * intensity) : 163;
           const b = flashing ? Math.round(184 - 116 * intensity) : 184;
           c.globalAlpha = symAlpha;
-          c.font = `bold ${sz * 0.34}px 'Courier New', monospace`;
+          const displayText = hex.symbol === 'WARN' ? '⚠' : hex.symbol;
+          c.font = hex.symbol === 'WARN'
+            ? `${sz * 0.5}px sans-serif`
+            : `bold ${sz * 0.34}px 'Courier New', monospace`;
           c.fillStyle = `rgb(${r},${g},${b})`;
-          c.fillText(hex.symbol, hex.x, hex.y + 1);
+          c.fillText(displayText, hex.x, hex.y + 1);
 
-          // Rectangular glow
           if (flashing && intensity > 0.4) {
-            const tw = c.measureText(hex.symbol).width;
+            const tw = c.measureText(displayText).width;
             const pad = 4;
-            c.globalAlpha = intensity * 0.07;
+            c.globalAlpha = intensity * 0.07 * fade;
             c.fillStyle = '#EF4444';
             c.fillRect(hex.x - tw / 2 - pad, hex.y - sz * 0.22 - pad, tw + pad * 2, sz * 0.44 + pad * 2);
           }

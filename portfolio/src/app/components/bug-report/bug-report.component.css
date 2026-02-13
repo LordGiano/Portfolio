@@ -101,14 +101,14 @@
   box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 1px rgba(148,163,184,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
   animation: modal-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
   perspective: 1000px;
-  scrollbar-width: none; -ms-overflow-style: none;
+  /* Scrollbar always invisible */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.modal-container::-webkit-scrollbar { width: 0; background: transparent; }
-.modal-container:hover { scrollbar-width: thin; }
-.modal-container:hover::-webkit-scrollbar { width: 4px; }
-.modal-container:hover::-webkit-scrollbar-track { background: transparent; }
-.modal-container:hover::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.15); border-radius: 2px; }
+.modal-container::-webkit-scrollbar {
+  display: none;
+}
 
 @keyframes modal-in {
   0% { opacity: 0; transform: scale(0.9) translateY(30px) rotateX(5deg); }
@@ -173,39 +173,32 @@
 
 .header-text { display: flex; flex-direction: column; gap: 2px; }
 
-/* ── Glitch title effect ── */
+/* ── Glitch title effect — only during glitch-active scanline ── */
 .modal-title {
   font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700;
   color: var(--br-text); margin: 0; letter-spacing: -0.01em;
+  position: relative;
 }
 
-.glitch-text {
-  position: relative; display: inline-block;
-  animation: glitch-skew 4s infinite linear alternate-reverse;
+.glitch-active .modal-title::before,
+.glitch-active .modal-title::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
-.glitch-text::before, .glitch-text::after {
-  content: attr(data-text); position: absolute; top: 0; left: 0;
-  width: 100%; height: 100%; overflow: hidden;
-}
-
-.glitch-text::before {
+.glitch-active .modal-title::before {
   color: #ff0040;
-  animation: glitch-before 3s infinite linear alternate-reverse;
-  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
-  z-index: -1;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  transform: translate(-2px, 0);
 }
 
-.glitch-text::after {
+.glitch-active .modal-title::after {
   color: #00e5ff;
-  animation: glitch-after 2s infinite linear alternate-reverse;
-  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
-  z-index: -1;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  transform: translate(2px, 0);
 }
-
-@keyframes glitch-before { 0%{transform:translate(0)} 20%{transform:translate(-2px,1px)} 40%{transform:translate(2px,-1px)} 60%{transform:translate(-1px,0)} 80%{transform:translate(1px,1px)} 100%{transform:translate(0)} }
-@keyframes glitch-after { 0%{transform:translate(0)} 25%{transform:translate(2px,-1px)} 50%{transform:translate(-2px,1px)} 75%{transform:translate(1px,0)} 100%{transform:translate(0)} }
-@keyframes glitch-skew { 0%{transform:skew(0)} 2%{transform:skew(0.4deg)} 4%{transform:skew(0)} 48%{transform:skew(0)} 50%{transform:skew(-0.3deg)} 52%{transform:skew(0)} 100%{transform:skew(0)} }
 
 .modal-subtitle { font-size: 0.8rem; color: var(--br-text-dim); margin: 0; font-weight: 400; }
 
