@@ -1,6 +1,6 @@
 <div class="exp-page">
 
-  <!-- ===== CINEMATIC HERO ===== -->
+  <!-- ===== COMPACT HERO WITH 3D TECH CUBE ===== -->
   <section class="cinematic-hero" data-section="hero"
            [class.visible]="isSectionVisible('hero')">
     <div class="hero-noise"></div>
@@ -9,13 +9,70 @@
       <div class="h-line" *ngFor="let l of [1,2,3,4,5]"></div>
     </div>
     <div class="hero-inner">
-      <div class="hero-eyebrow">
-        <span class="eyebrow-line"></span>
-        <span class="eyebrow-text">{{ 'exp.hero_badge' | translate }}</span>
-        <span class="eyebrow-line"></span>
+      <!-- Left: Text -->
+      <div class="hero-text">
+        <div class="hero-eyebrow">
+          <span class="eyebrow-line"></span>
+          <span class="eyebrow-text">{{ 'exp.hero_badge' | translate }}</span>
+          <span class="eyebrow-line"></span>
+        </div>
+        <h1 class="hero-massive">{{ 'exp.hero_title' | translate }}</h1>
+        <p class="hero-lead">{{ 'exp.hero_subtitle' | translate }}</p>
       </div>
-      <h1 class="hero-massive">{{ 'exp.hero_title' | translate }}</h1>
-      <p class="hero-lead">{{ 'exp.hero_subtitle' | translate }}</p>
+
+      <!-- Right: 3D Tech Cube -->
+      <div class="hero-cube-area">
+        <div class="cube-glow"></div>
+        <div class="cube-scene">
+          <div class="cube-wrapper" #cubeWrapper
+               (mouseenter)="cubeHovered = true"
+               (mouseleave)="cubeHovered = false"
+               [class.paused]="cubeHovered">
+            <div class="cube-face front">
+              <div class="face-icon" style="background:rgba(59,130,246,.15);color:#3B82F6">
+                <mat-icon>web</mat-icon>
+              </div>
+              <span class="face-label">Frontend</span>
+              <span class="face-tech">Angular · TypeScript</span>
+            </div>
+            <div class="cube-face back">
+              <div class="face-icon" style="background:rgba(16,185,129,.15);color:#10B981">
+                <mat-icon>terminal</mat-icon>
+              </div>
+              <span class="face-label">Backend</span>
+              <span class="face-tech">Python · C# · .NET</span>
+            </div>
+            <div class="cube-face right">
+              <div class="face-icon" style="background:rgba(217,119,6,.15);color:#F59E0B">
+                <mat-icon>storage</mat-icon>
+              </div>
+              <span class="face-label">Database</span>
+              <span class="face-tech">MSSQL · MySQL</span>
+            </div>
+            <div class="cube-face left">
+              <div class="face-icon" style="background:rgba(220,38,38,.15);color:#EF4444">
+                <mat-icon>bug_report</mat-icon>
+              </div>
+              <span class="face-label">Testing</span>
+              <span class="face-tech">ISTQB · QA</span>
+            </div>
+            <div class="cube-face top">
+              <div class="face-icon" style="background:rgba(139,92,246,.15);color:#8B5CF6">
+                <mat-icon>visibility</mat-icon>
+              </div>
+              <span class="face-label">Vision</span>
+              <span class="face-tech">OpenCV · MediaPipe</span>
+            </div>
+            <div class="cube-face bottom">
+              <div class="face-icon" style="background:rgba(8,145,178,.15);color:#06B6D4">
+                <mat-icon>rocket_launch</mat-icon>
+              </div>
+              <span class="face-label">DevOps</span>
+              <span class="face-tech">Docker · Git</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -43,7 +100,7 @@
     </div>
   </section>
 
-  <!-- ===== VERTICAL INTERACTIVE TIMELINE ===== -->
+  <!-- ===== VERTICAL INTERACTIVE TIMELINE WITH 3D TILT ===== -->
   <section class="timeline-section" data-section="timeline"
            [class.visible]="isSectionVisible('timeline')">
     <div class="container">
@@ -67,46 +124,53 @@
             <mat-icon class="v-tl-dot-icon">{{ job.icon }}</mat-icon>
           </div>
 
-          <!-- Card -->
-          <div class="v-tl-card" (click)="toggleJob(i)">
+          <!-- Card with 3D tilt -->
+          <div class="v-tl-card"
+               (click)="toggleJob(i)"
+               (mousemove)="onCardTilt($event)"
+               (mouseleave)="onCardTiltReset($event)">
             <div class="v-tl-accent"></div>
+            <div class="v-tl-holo-shimmer"></div>
+            <div class="v-tl-light-dot"></div>
 
-            <!-- Always visible header -->
-            <div class="v-tl-header">
-              <div class="v-tl-left">
-                <h3 class="v-tl-company">{{ job.company }}</h3>
-                <p class="v-tl-role">{{ job.role }}</p>
-              </div>
-              <div class="v-tl-right">
-                <span class="v-tl-type" [attr.data-type]="job.type">{{ getTypeLabel(job.type) }}</span>
-                <span class="v-tl-period">{{ job.period }}</span>
-              </div>
-            </div>
-
-            <!-- Expandable body -->
-            <div class="v-tl-body" [class.open]="expandedJob === i">
-              <div class="v-tl-meta">
-                <span>📍 {{ job.location }} · {{ job.mode }}</span>
+            <div class="v-tl-card-inner">
+              <!-- Always visible header -->
+              <div class="v-tl-header">
+                <div class="v-tl-left">
+                  <h3 class="v-tl-company">{{ job.company }}</h3>
+                  <p class="v-tl-role">{{ job.role }}</p>
+                </div>
+                <div class="v-tl-right">
+                  <span class="v-tl-type" [attr.data-type]="job.type">{{ getTypeLabel(job.type) }}</span>
+                  <span class="v-tl-period">{{ job.period }}</span>
+                </div>
               </div>
 
-              <div class="v-tl-highlight" *ngIf="job.highlight">
-                ⚡ {{ job.highlight }}
+              <!-- Expandable body -->
+              <div class="v-tl-body" [class.open]="expandedJob === i">
+                <div class="v-tl-meta">
+                  <span>📍 {{ job.location }} · {{ job.mode }}</span>
+                </div>
+
+                <div class="v-tl-highlight" *ngIf="job.highlight">
+                  ⚡ {{ job.highlight }}
+                </div>
+
+                <ul class="v-tl-descs">
+                  <li *ngFor="let d of job.descriptions">
+                    <span class="v-tl-arrow" [style.color]="job.color">▹</span>{{ d }}
+                  </li>
+                </ul>
+
+                <div class="v-tl-techs">
+                  <span class="v-tl-tech" *ngFor="let tech of job.technologies">{{ tech }}</span>
+                </div>
               </div>
 
-              <ul class="v-tl-descs">
-                <li *ngFor="let d of job.descriptions">
-                  <span class="v-tl-arrow" [style.color]="job.color">▹</span>{{ d }}
-                </li>
-              </ul>
-
-              <div class="v-tl-techs">
-                <span class="v-tl-tech" *ngFor="let tech of job.technologies">{{ tech }}</span>
+              <!-- Expand hint -->
+              <div class="v-tl-expand-hint">
+                <mat-icon>{{ expandedJob === i ? 'expand_less' : 'expand_more' }}</mat-icon>
               </div>
-            </div>
-
-            <!-- Expand hint -->
-            <div class="v-tl-expand-hint">
-              <mat-icon>{{ expandedJob === i ? 'expand_less' : 'expand_more' }}</mat-icon>
             </div>
           </div>
         </div>
@@ -221,9 +285,7 @@
              [style.animation-delay]="(i * 0.15) + 's'">
           <div class="ring-visual">
             <svg viewBox="0 0 140 140" class="ring-svg">
-              <!-- Background circle -->
               <circle cx="70" cy="70" r="58" class="ring-track"/>
-              <!-- Filled arc — starts from top, goes clockwise -->
               <circle cx="70" cy="70" r="58" class="ring-progress"
                       [style.stroke]="lang.color"
                       [attr.stroke-dasharray]="getRingDash(lang.percent)"

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -54,6 +54,9 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
   // Expanded timeline card
   expandedJob = -1;
 
+  // 3D Cube hover state
+  cubeHovered = false;
+
   workExperiences: WorkExperience[] = [];
   educations: Education[] = [];
   competencies: Competency[] = [];
@@ -69,7 +72,7 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void { this.setupIntersectionObserver(); }
   ngOnDestroy(): void { this.langSub?.unsubscribe(); }
 
-  // ── Intersection Observer ──
+  // —— Intersection Observer ——
   private setupIntersectionObserver(): void {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -93,7 +96,7 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isSectionVisible(name: string): boolean { return this.visibleSections.has(name); }
 
-  // ── Counter ──
+  // —— Counter ——
   private animateCounters(): void {
     this.animateValue('yearsExperience', 0, 3, 1500);
     this.animateValue('projectsCompleted', 0, 10, 1800);
@@ -113,12 +116,45 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
     requestAnimationFrame(animate);
   }
 
-  // ── Timeline expand ──
+  // —— Timeline expand ——
   toggleJob(index: number): void {
     this.expandedJob = this.expandedJob === index ? -1 : index;
   }
 
-  // ── Book pagination ──
+  // —— 3D Tilt for timeline cards ——
+  onCardTilt(event: MouseEvent): void {
+    const card = (event.currentTarget as HTMLElement);
+    const rect = card.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -6;
+    const rotateY = ((x - centerX) / centerX) * 6;
+
+    const inner = card.querySelector('.v-tl-card-inner') as HTMLElement;
+    if (inner) {
+      inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(8px)`;
+    }
+
+    // Move light dot
+    const lightDot = card.querySelector('.v-tl-light-dot') as HTMLElement;
+    if (lightDot) {
+      lightDot.style.left = x + 'px';
+      lightDot.style.top = y + 'px';
+    }
+  }
+
+  onCardTiltReset(event: MouseEvent): void {
+    const card = (event.currentTarget as HTMLElement);
+    const inner = card.querySelector('.v-tl-card-inner') as HTMLElement;
+    if (inner) {
+      inner.style.transform = 'rotateX(0) rotateY(0) translateZ(0)';
+    }
+  }
+
+  // —— Book pagination ——
   goToEduPage(index: number): void {
     if (this.bookAnimating || index === this.activeEduPage) return;
     this.bookAnimating = true;
@@ -134,9 +170,9 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.activeEduPage > 0) this.goToEduPage(this.activeEduPage - 1);
   }
 
-  // ── Ring circumference helper ──
+  // —— Ring circumference helper ——
   getRingDash(percent: number): string {
-    const circumference = 2 * Math.PI * 52; // r=52 → ~326.73
+    const circumference = 2 * Math.PI * 52;
     const filled = (percent / 100) * circumference;
     return `${filled} ${circumference}`;
   }
@@ -151,7 +187,7 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // ── Data ──
+  // —— Data ——
   private loadData(): void {
     const t = (key: string) => this.translationService.translate(key);
 
@@ -198,7 +234,7 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
     ];
 
     this.languages = [
-      { name: t('exp.lang_hu'), level: t('exp.lang_native'), flag: '🇭🇺', percent: 115, color: '#22C55E' },
+      { name: t('exp.lang_hu'), level: t('exp.lang_native'), flag: '🇭🇺', percent: 100, color: '#22C55E' },
       { name: t('exp.lang_en'), level: 'C1', flag: '🇬🇧', percent: 85, color: '#2563EB' },
       { name: t('exp.lang_de'), level: 'B2', flag: '🇩🇪', percent: 65, color: '#D97706' },
       { name: t('exp.lang_es'), level: 'B1', flag: '🇪🇸', percent: 50, color: '#DC2626' }
