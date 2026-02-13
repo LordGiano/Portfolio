@@ -1,19 +1,34 @@
 // bug-report.component.ts
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { TranslationService } from '../../services/translation.service';
 import { Subscription } from 'rxjs';
 
-interface Particle {
+/** A single falling column in the "bug rain" */
+interface RainDrop {
+  x: number;
+  y: number;
+  speed: number;
+  chars: string[];
+  charIndex: number;
+  fontSize: number;
+  opacity: number;
+  hue: number; // color hue (red-ish for bugs)
+}
+
+/** A floating bug icon drifting across the background */
+interface FloatingBug {
   x: number;
   y: number;
   vx: number;
   vy: number;
   size: number;
-  alpha: number;
-  color: string;
+  rotation: number;
+  rotSpeed: number;
+  opacity: number;
+  symbol: string;
 }
 
 @Component({
@@ -28,7 +43,7 @@ interface Particle {
   styleUrl: './bug-report.component.css'
 })
 export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('particleCanvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('bugCanvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
 
   bugReportForm!: FormGroup;
   isSubmitting = false;
@@ -37,15 +52,14 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
   totalSteps = 3;
   submitSuccess = false;
   buttonPulse = true;
-  mouseX = 0;
-  mouseY = 0;
 
-  // Particle system
-  private particles: Particle[] = [];
+  // Bug rain canvas
+  private drops: RainDrop[] = [];
+  private floatingBugs: FloatingBug[] = [];
   private animFrameId: number = 0;
   private ctx!: CanvasRenderingContext2D;
 
-  // Glitch effect
+  // Glitch effect — subtle scanline only
   glitchActive = false;
   private glitchInterval: any;
 
@@ -61,10 +75,10 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   severityLevels = [
-    { value: 'low', key: 'bug.sev_low', color: '#22C55E', icon: '●' },
-    { value: 'medium', key: 'bug.sev_medium', color: '#F59E0B', icon: '●' },
-    { value: 'high', key: 'bug.sev_high', color: '#EF4444', icon: '●' },
-    { value: 'critical', key: 'bug.sev_critical', color: '#DC2626', icon: '◆' }
+    { value: 'low', key: 'bug.sev_low', color: '#22C55E' },
+    { value: 'medium', key: 'bug.sev_medium', color: '#F59E0B' },
+    { value: 'high', key: 'bug.sev_high', color: '#EF4444' },
+    { value: 'critical', key: 'bug.sev_critical', color: '#DC2626' }
   ];
 
   selectedCategory = '';
@@ -87,13 +101,13 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.langSub = this.translationService.language$.subscribe(() => {});
 
-    // Glitch effect interval
+    // Subtle glitch scanline
     this.glitchInterval = setInterval(() => {
       if (this.isExpanded) {
         this.glitchActive = true;
-        setTimeout(() => this.glitchActive = false, 150);
+        setTimeout(() => this.glitchActive = false, 200);
       }
-    }, 4000);
+    }, 5000);
   }
 
   ngAfterViewInit(): void {}
@@ -104,12 +118,6 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.langSub) this.langSub.unsubscribe();
   }
 
-  @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent): void {
-    this.mouseX = event.clientX;
-    this.mouseY = event.clientY;
-  }
-
   toggleExpand(): void {
     this.isExpanded = !this.isExpanded;
     this.buttonPulse = false;
@@ -117,7 +125,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isExpanded) {
       this.currentStep = 1;
       this.submitSuccess = false;
-      setTimeout(() => this.initParticles(), 100);
+      setTimeout(() => this.initBugRain(), 100);
     } else {
       if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
       if (this.bugReportForm.dirty && !this.isSubmitting) {
@@ -161,15 +169,13 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSubmit(): void {
-    if (this.bugReportForm.valid || (this.currentStep === 3 && this.selectedCategory && this.bugReportForm.get('title')?.valid && this.bugReportForm.get('description')?.valid)) {
+    if (this.selectedCategory && this.bugReportForm.get('title')?.valid && this.bugReportForm.get('description')?.valid) {
       this.isSubmitting = true;
 
-      // Simulate API call
       setTimeout(() => {
         this.isSubmitting = false;
         this.submitSuccess = true;
 
-        // Auto close after success
         setTimeout(() => {
           this.bugReportForm.reset({ severity: 'medium' });
           this.selectedCategory = '';
@@ -199,8 +205,17 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.bugReportForm.get('description')?.value?.length || 0;
   }
 
-  // Particle system
-  private initParticles(): void {
+  getCategoryIcon(): string {
+    return this.bugCategories.find(c => c.value === this.selectedCategory)?.icon || '';
+  }
+
+  getCategoryTranslationKey(): string {
+    return this.bugCategories.find(c => c.value === this.selectedCategory)?.key || '';
+  }
+
+  // ── Bug Rain Canvas — Matrix-style falling code with bug symbols ──
+
+  private initBugRain(): void {
     const canvas = this.canvasRef?.nativeElement;
     if (!canvas) return;
 
@@ -208,67 +223,115 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     canvas.height = canvas.offsetHeight;
     this.ctx = canvas.getContext('2d')!;
 
-    this.particles = [];
-    const count = 40;
-    const colors = ['#2563EB', '#7C3AED', '#06B6D4', '#22C55E', '#F59E0B'];
+    // Bug-themed characters: code fragments, error symbols, hex values
+    const bugChars = [
+      '0', '1', '{', '}', ';', '/', '\\', '<', '>', '!',
+      'E', 'R', 'R', 'x', 'F', 'F', 'null', '⚠', '✗',
+      '404', '500', '0x', 'NaN', '∅', '⊘', '×', '‽'
+    ];
 
-    for (let i = 0; i < count; i++) {
-      this.particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 2 + 1,
-        alpha: Math.random() * 0.5 + 0.1,
-        color: colors[Math.floor(Math.random() * colors.length)]
+    // Create rain drops (columns)
+    this.drops = [];
+    const cols = Math.floor(canvas.width / 18);
+    for (let i = 0; i < cols; i++) {
+      this.drops.push({
+        x: i * 18 + 9,
+        y: Math.random() * canvas.height * -1,
+        speed: 0.3 + Math.random() * 1.2,
+        chars: bugChars,
+        charIndex: Math.floor(Math.random() * bugChars.length),
+        fontSize: 10 + Math.floor(Math.random() * 4),
+        opacity: 0.03 + Math.random() * 0.08,
+        hue: Math.random() > 0.7 ? 0 : (Math.random() > 0.5 ? 220 : 270) // red, blue, purple
       });
     }
 
-    this.animateParticles();
+    // Create floating bug symbols
+    this.floatingBugs = [];
+    const bugSymbols = ['🐛', '🪲', '🐞', '⚠', '✗', '⊘'];
+    for (let i = 0; i < 6; i++) {
+      this.floatingBugs.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: 12 + Math.random() * 10,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.01,
+        opacity: 0.06 + Math.random() * 0.08,
+        symbol: bugSymbols[Math.floor(Math.random() * bugSymbols.length)]
+      });
+    }
+
+    this.animateBugRain();
   }
 
-  private animateParticles(): void {
+  private animateBugRain(): void {
     if (!this.ctx || !this.isExpanded) return;
 
     const canvas = this.canvasRef?.nativeElement;
     if (!canvas) return;
 
-    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Fade trail effect instead of full clear
+    this.ctx.fillStyle = 'rgba(11, 17, 32, 0.15)';
+    this.ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    this.particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
+    // Draw rain drops
+    for (const drop of this.drops) {
+      drop.y += drop.speed;
 
-      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      this.ctx.fillStyle = p.color;
-      this.ctx.globalAlpha = p.alpha;
-      this.ctx.fill();
-    });
-
-    // Draw connections
-    this.ctx.globalAlpha = 0.05;
-    this.ctx.strokeStyle = '#2563EB';
-    this.ctx.lineWidth = 1;
-    for (let i = 0; i < this.particles.length; i++) {
-      for (let j = i + 1; j < this.particles.length; j++) {
-        const dx = this.particles[i].x - this.particles[j].x;
-        const dy = this.particles[i].y - this.particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          this.ctx.beginPath();
-          this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-          this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-          this.ctx.stroke();
-        }
+      // Reset when off screen
+      if (drop.y > canvas.height + 20) {
+        drop.y = -20;
+        drop.charIndex = Math.floor(Math.random() * drop.chars.length);
       }
+
+      // Cycle through characters
+      if (Math.random() < 0.05) {
+        drop.charIndex = (drop.charIndex + 1) % drop.chars.length;
+      }
+
+      const char = drop.chars[drop.charIndex];
+
+      this.ctx.save();
+      this.ctx.font = `${drop.fontSize}px 'JetBrains Mono', monospace`;
+      this.ctx.globalAlpha = drop.opacity;
+
+      // Head character is brighter
+      const headAlpha = drop.opacity * 3;
+      this.ctx.globalAlpha = Math.min(headAlpha, 0.35);
+      this.ctx.fillStyle = `hsl(${drop.hue}, 70%, 60%)`;
+      this.ctx.fillText(char, drop.x, drop.y);
+
+      // Trail character (dimmer, slightly above)
+      this.ctx.globalAlpha = drop.opacity;
+      this.ctx.fillStyle = `hsl(${drop.hue}, 50%, 40%)`;
+      this.ctx.fillText(char, drop.x, drop.y - drop.fontSize);
+
+      this.ctx.restore();
     }
 
-    this.ctx.globalAlpha = 1;
+    // Draw floating bug symbols
+    for (const bug of this.floatingBugs) {
+      bug.x += bug.vx;
+      bug.y += bug.vy;
+      bug.rotation += bug.rotSpeed;
 
-    this.animFrameId = requestAnimationFrame(() => this.animateParticles());
+      // Bounce off edges
+      if (bug.x < 0 || bug.x > canvas.width) bug.vx *= -1;
+      if (bug.y < 0 || bug.y > canvas.height) bug.vy *= -1;
+
+      this.ctx.save();
+      this.ctx.globalAlpha = bug.opacity;
+      this.ctx.translate(bug.x, bug.y);
+      this.ctx.rotate(bug.rotation);
+      this.ctx.font = `${bug.size}px sans-serif`;
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
+      this.ctx.fillText(bug.symbol, 0, 0);
+      this.ctx.restore();
+    }
+
+    this.animFrameId = requestAnimationFrame(() => this.animateBugRain());
   }
 }
