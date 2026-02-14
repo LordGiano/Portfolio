@@ -1,8 +1,5 @@
 import { Component, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
@@ -14,9 +11,6 @@ import { LanguageSwitcherComponent } from '../language-switcher/language-switche
     CommonModule,
     RouterLink,
     RouterLinkActive,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
     TranslatePipe,
     LanguageSwitcherComponent
   ],
@@ -25,13 +19,31 @@ import { LanguageSwitcherComponent } from '../language-switcher/language-switche
 })
 export class NavbarComponent {
   isScrolled = false;
+  isSidebarOpen = false;
 
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
-    this.isScrolled = window.scrollY > 50;
+    this.isScrolled = window.scrollY > 40;
   }
 
-  toggleMenu(): void {
-    // Mobil menü — később bővíthető
+  @HostListener('window:keydown.escape')
+  onEscapeKey(): void {
+    if (this.isSidebarOpen) {
+      this.closeSidebar();
+    }
+  }
+
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+    this.updateBodyScroll();
+  }
+
+  closeSidebar(): void {
+    this.isSidebarOpen = false;
+    this.updateBodyScroll();
+  }
+
+  private updateBodyScroll(): void {
+    document.body.style.overflow = this.isSidebarOpen ? 'hidden' : '';
   }
 }
