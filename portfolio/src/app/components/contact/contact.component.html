@@ -14,11 +14,6 @@
   <section class="contact-hero">
     <div class="hero-layout">
       <div class="hero-text">
-        <div class="hero-badge">
-          <span class="badge-pulse"></span>
-          {{ 'cnt.badge' | translate }}
-        </div>
-
         <h1 class="hero-title">
           <span class="title-muted">{{ 'cnt.title_1' | translate }}</span>
           <br>
@@ -125,8 +120,8 @@
         <a href="mailto:bfcnorbi11@gmail.com" class="channel-card"
            [class.active]="hoveredCard === 'email'"
            (mouseenter)="hoveredCard = 'email'" (mouseleave)="hoveredCard = null">
-          <div class="card-accent" style="--accent: var(--blue)"></div>
-          <div class="card-icon-wrap" style="--icon-bg: var(--blue-dim); --icon-color: var(--blue)">
+          <div class="card-accent" style="--accent: var(--orange)"></div>
+          <div class="card-icon-wrap" style="--icon-bg: var(--orange-dim); --icon-color: var(--orange)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>
           </div>
           <h3 class="card-title">{{ 'cnt.email_title' | translate }}</h3>
@@ -228,24 +223,48 @@
 
         <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
           <div class="form-row-2col">
-            <div class="form-group">
+            <div class="form-group" [class.has-error]="isFieldInvalid('name')">
               <label for="name">{{ 'cnt.label_name' | translate }}</label>
-              <input id="name" type="text" formControlName="name" [placeholder]="'cnt.ph_name' | translate">
+              <input id="name" type="text" formControlName="name" [placeholder]="'cnt.ph_name' | translate"
+                     [class.input-error]="isFieldInvalid('name')">
+              <div class="field-error" *ngIf="isFieldInvalid('name')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span *ngIf="contactForm.get('name')?.errors?.['required']">{{ 'cnt.err_name_required' | translate }}</span>
+                <span *ngIf="contactForm.get('name')?.errors?.['minlength']">{{ 'cnt.err_name_min' | translate }}</span>
+              </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" [class.has-error]="isFieldInvalid('email')">
               <label for="email">{{ 'cnt.label_email' | translate }}</label>
-              <input id="email" type="email" formControlName="email" [placeholder]="'cnt.ph_email' | translate">
+              <input id="email" type="email" formControlName="email" [placeholder]="'cnt.ph_email' | translate"
+                     [class.input-error]="isFieldInvalid('email')">
+              <div class="field-error" *ngIf="isFieldInvalid('email')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span *ngIf="contactForm.get('email')?.errors?.['required']">{{ 'cnt.err_email_required' | translate }}</span>
+                <span *ngIf="contactForm.get('email')?.errors?.['email']">{{ 'cnt.err_email_format' | translate }}</span>
+              </div>
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" [class.has-error]="isFieldInvalid('subject')">
             <label for="subject">{{ 'cnt.label_subject' | translate }}</label>
-            <input id="subject" type="text" formControlName="subject" [placeholder]="'cnt.ph_subject' | translate">
+            <input id="subject" type="text" formControlName="subject" [placeholder]="'cnt.ph_subject' | translate"
+                   [class.input-error]="isFieldInvalid('subject')">
+            <div class="field-error" *ngIf="isFieldInvalid('subject')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span *ngIf="contactForm.get('subject')?.errors?.['required']">{{ 'cnt.err_subject_required' | translate }}</span>
+              <span *ngIf="contactForm.get('subject')?.errors?.['minlength']">{{ 'cnt.err_subject_min' | translate }}</span>
+            </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" [class.has-error]="isFieldInvalid('message')">
             <label for="message">{{ 'cnt.label_message' | translate }}</label>
-            <textarea id="message" rows="5" formControlName="message" [placeholder]="'cnt.ph_message' | translate"></textarea>
+            <textarea id="message" rows="5" formControlName="message" [placeholder]="'cnt.ph_message' | translate"
+                      [class.input-error]="isFieldInvalid('message')"></textarea>
+            <div class="field-error" *ngIf="isFieldInvalid('message')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span *ngIf="contactForm.get('message')?.errors?.['required']">{{ 'cnt.err_msg_required' | translate }}</span>
+              <span *ngIf="contactForm.get('message')?.errors?.['minlength']">{{ 'cnt.err_msg_min' | translate }}</span>
+            </div>
           </div>
 
           <button type="submit" class="submit-btn" [class.success]="submitSuccess"

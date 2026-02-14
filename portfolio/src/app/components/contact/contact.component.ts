@@ -15,6 +15,7 @@ export class ContactComponent {
   hoveredCard: string | null = null;
   isSubmitting = false;
   submitSuccess = false;
+  formSubmitted = false;
 
   // 3D Scene parallax rotation
   sceneRotX = 5;
@@ -29,6 +30,16 @@ export class ContactComponent {
       subject: ['', [Validators.required, Validators.minLength(3)]],
       message: ['', [Validators.required, Validators.minLength(10)]]
     });
+  }
+
+  /**
+   * Returns true if a field should display its error state.
+   * Shows errors when the field has been touched/dirty OR the form has been submitted.
+   */
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.contactForm.get(fieldName);
+    if (!field) return false;
+    return field.invalid && (field.dirty || field.touched || this.formSubmitted);
   }
 
   onSceneMouseMove(event: MouseEvent): void {
@@ -48,7 +59,15 @@ export class ContactComponent {
   }
 
   onSubmit(): void {
-    if (!this.contactForm.valid || this.isSubmitting) return;
+    this.formSubmitted = true;
+
+    if (!this.contactForm.valid || this.isSubmitting) {
+      // Mark all fields as touched so errors appear
+      Object.keys(this.contactForm.controls).forEach(key => {
+        this.contactForm.get(key)?.markAsTouched();
+      });
+      return;
+    }
 
     this.isSubmitting = true;
 
@@ -57,6 +76,7 @@ export class ContactComponent {
       console.log('Contact form submitted:', this.contactForm.value);
       this.isSubmitting = false;
       this.submitSuccess = true;
+      this.formSubmitted = false;
       this.contactForm.reset();
 
       setTimeout(() => {

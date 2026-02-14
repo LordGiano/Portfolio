@@ -210,7 +210,15 @@
     "ph_message": "Describe tu mensaje en detalle...",
     "send_btn": "Enviar mensaje",
     "sending": "Enviando...",
-    "sent": "¡Enviado!"
+    "sent": "¡Enviado!",
+    "err_name_required": "El nombre es obligatorio",
+    "err_name_min": "El nombre debe tener al menos 2 caracteres",
+    "err_email_required": "El correo es obligatorio",
+    "err_email_format": "Por favor, introduce un correo válido",
+    "err_subject_required": "El asunto es obligatorio",
+    "err_subject_min": "El asunto debe tener al menos 3 caracteres",
+    "err_msg_required": "El mensaje es obligatorio",
+    "err_msg_min": "El mensaje debe tener al menos 10 caracteres"
   },
   "bug": {
     "tooltip": "Reportar un error",

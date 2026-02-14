@@ -210,7 +210,15 @@
     "ph_message": "Írd le részletesen az üzeneted...",
     "send_btn": "Üzenet küldése",
     "sending": "Küldés...",
-    "sent": "Elküldve!"
+    "sent": "Elküldve!",
+    "err_name_required": "A név megadása kötelező",
+    "err_name_min": "A név legalább 2 karakter legyen",
+    "err_email_required": "Az email megadása kötelező",
+    "err_email_format": "Kérlek adj meg egy érvényes email címet",
+    "err_subject_required": "A tárgy megadása kötelező",
+    "err_subject_min": "A tárgy legalább 3 karakter legyen",
+    "err_msg_required": "Az üzenet megadása kötelező",
+    "err_msg_min": "Az üzenet legalább 10 karakter legyen"
   },
   "bug": {
     "tooltip": "Hibabejelentés",

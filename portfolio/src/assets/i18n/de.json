@@ -210,7 +210,15 @@
     "ph_message": "Beschreiben Sie Ihre Nachricht...",
     "send_btn": "Nachricht senden",
     "sending": "Wird gesendet...",
-    "sent": "Gesendet!"
+    "sent": "Gesendet!",
+    "err_name_required": "Name ist erforderlich",
+    "err_name_min": "Name muss mindestens 2 Zeichen lang sein",
+    "err_email_required": "E-Mail ist erforderlich",
+    "err_email_format": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "err_subject_required": "Betreff ist erforderlich",
+    "err_subject_min": "Betreff muss mindestens 3 Zeichen lang sein",
+    "err_msg_required": "Nachricht ist erforderlich",
+    "err_msg_min": "Nachricht muss mindestens 10 Zeichen lang sein"
   },
   "bug": {
     "tooltip": "Fehler melden",

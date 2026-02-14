@@ -210,7 +210,15 @@
     "ph_message": "Describe your message in detail...",
     "send_btn": "Send message",
     "sending": "Sending...",
-    "sent": "Sent!"
+    "sent": "Sent!",
+    "err_name_required": "Name is required",
+    "err_name_min": "Name must be at least 2 characters",
+    "err_email_required": "Email is required",
+    "err_email_format": "Please enter a valid email address",
+    "err_subject_required": "Subject is required",
+    "err_subject_min": "Subject must be at least 3 characters",
+    "err_msg_required": "Message is required",
+    "err_msg_min": "Message must be at least 10 characters"
   },
   "bug": {
     "tooltip": "Report a Bug",
