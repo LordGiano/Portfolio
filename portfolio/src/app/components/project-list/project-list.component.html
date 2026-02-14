@@ -1,13 +1,12 @@
 <div class="proj-page">
 
-  <!-- ===== HERO ===== -->
+  <!-- ===== HERO: Text | Code | Viz ===== -->
   <section class="proj-hero" data-section="hero"
            [class.visible]="isSectionVisible('hero')">
     <div class="hero-noise"></div>
     <div class="hero-mesh"></div>
-    <div class="hero-lines">
-      <div class="h-line" *ngFor="let l of [1,2,3,4,5]"></div>
-    </div>
+
+    <!-- LEFT: Hero text -->
     <div class="hero-inner">
       <div class="hero-eyebrow">
         <span class="eyebrow-line"></span>
@@ -16,6 +15,52 @@
       </div>
       <h1 class="hero-massive">{{ 'proj.hero_title' | translate }}</h1>
       <p class="hero-lead">{{ 'proj.hero_subtitle' | translate }}</p>
+    </div>
+
+    <!-- CENTER + RIGHT: Code → Viz -->
+    <div class="code-viz-row">
+
+      <!-- Code Editor -->
+      <div class="code-editor">
+        <div class="editor-titlebar">
+          <div class="ed-dot"></div>
+          <div class="ed-dot"></div>
+          <div class="ed-dot"></div>
+          <span class="ed-filename">graph_builder.py</span>
+          <span class="ed-status">● running</span>
+        </div>
+        <div class="editor-body" id="heroEditorBody"></div>
+      </div>
+
+      <!-- Horizontal connector -->
+      <div class="h-connector">
+        <div class="hc-flow">
+          <div class="hc-dot"></div>
+          <div class="hc-dot"></div>
+          <div class="hc-dot"></div>
+          <div class="hc-dot"></div>
+          <div class="hc-dot"></div>
+        </div>
+        <span class="hc-label">stdout</span>
+      </div>
+
+      <!-- Viz output -->
+      <div class="viz-panel">
+        <div class="viz-titlebar">
+          <span class="viz-title">▸ output</span>
+          <div class="viz-live">
+            <div class="viz-live-dot"></div>
+            live
+          </div>
+        </div>
+        <div class="viz-canvas-wrap">
+          <canvas id="heroVizCanvas"></canvas>
+        </div>
+        <div class="viz-stats">
+          <div class="viz-stat">nodes: <span id="heroStatNodes">0</span></div>
+          <div class="viz-stat">edges: <span id="heroStatEdges">0</span></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -65,7 +110,6 @@
           <p class="feat-subtitle">{{ proj.subtitle }}</p>
           <p class="feat-desc">{{ proj.description }}</p>
 
-          <!-- Expandable highlights -->
           <div class="feat-expand" [class.open]="expandedProject === proj.id">
             <div class="feat-highlights" *ngIf="proj.highlights">
               <div class="feat-hl" *ngFor="let hl of proj.highlights">
