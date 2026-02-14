@@ -16,11 +16,11 @@ export class ContactComponent {
   isSubmitting = false;
   submitSuccess = false;
 
-  // 3D Cube rotation
-  cubeRotX = -20;
-  cubeRotY = 30;
-  private cubeBaseRotX = -20;
-  private cubeBaseRotY = 30;
+  // 3D Scene parallax rotation
+  sceneRotX = 5;
+  sceneRotY = -5;
+  private sceneBaseRotX = 5;
+  private sceneBaseRotY = -5;
 
   constructor(private fb: FormBuilder) {
     this.contactForm = this.fb.group({
@@ -31,18 +31,20 @@ export class ContactComponent {
     });
   }
 
-  onCubeMouseMove(event: MouseEvent): void {
+  onSceneMouseMove(event: MouseEvent): void {
     const target = event.currentTarget as HTMLElement;
     const rect = target.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-    this.cubeRotY = this.cubeBaseRotY + ((event.clientX - cx) / window.innerWidth) * 25;
-    this.cubeRotX = this.cubeBaseRotX + ((event.clientY - cy) / window.innerHeight) * -25;
+    const dx = (event.clientX - cx) / rect.width;
+    const dy = (event.clientY - cy) / rect.height;
+    this.sceneRotY = this.sceneBaseRotY + dx * 15;
+    this.sceneRotX = this.sceneBaseRotX + dy * -10;
   }
 
-  resetCubeRotation(): void {
-    this.cubeRotX = this.cubeBaseRotX;
-    this.cubeRotY = this.cubeBaseRotY;
+  resetScene(): void {
+    this.sceneRotX = this.sceneBaseRotX;
+    this.sceneRotY = this.sceneBaseRotY;
   }
 
   onSubmit(): void {

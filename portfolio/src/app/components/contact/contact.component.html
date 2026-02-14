@@ -10,7 +10,7 @@
     <div class="grid-pattern"></div>
   </div>
 
-  <!-- ===== COMPACT HERO + 3D CUBE ===== -->
+  <!-- ===== HERO WITH 3D MESSAGE JOURNEY ===== -->
   <section class="contact-hero">
     <div class="hero-layout">
       <div class="hero-text">
@@ -33,21 +33,85 @@
         </div>
       </div>
 
-      <!-- 3D Cube -->
-      <div class="cube-wrapper"
-           (mousemove)="onCubeMouseMove($event)"
-           (mouseleave)="resetCubeRotation()">
-        <div class="cube-glow"></div>
-        <div class="cube-scene">
-          <div class="cube"
-               [style.transform]="'rotateX(' + cubeRotX + 'deg) rotateY(' + cubeRotY + 'deg)'">
-            <div class="cube-face front">✉</div>
-            <div class="cube-face back">☎</div>
-            <div class="cube-face right">⟨/⟩</div>
-            <div class="cube-face left">in</div>
-            <div class="cube-face top">◆</div>
-            <div class="cube-face bottom">◇</div>
+      <!-- 3D Message Journey Animation -->
+      <div class="journey-wrapper"
+           (mousemove)="onSceneMouseMove($event)"
+           (mouseleave)="resetScene()">
+        <div class="journey-glow"></div>
+        <div class="journey-scene"
+             [style.transform]="'rotateX(' + sceneRotX + 'deg) rotateY(' + sceneRotY + 'deg)'">
+
+          <!-- Sender node -->
+          <div class="node node-sender">
+            <div class="node-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="node-ring"></div>
+            <span class="node-label">You</span>
           </div>
+
+          <!-- Animated path with particles -->
+          <div class="connection-path">
+            <svg class="path-svg" viewBox="0 0 200 60" preserveAspectRatio="none">
+              <path class="path-line" d="M 0,30 C 50,5 150,55 200,30" fill="none" stroke="url(#pathGrad)" stroke-width="2"/>
+              <defs>
+                <linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#63B3ED" stop-opacity="0.6"/>
+                  <stop offset="50%" stop-color="#B794F4" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#68D391" stop-opacity="0.6"/>
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <!-- Flying envelope -->
+            <div class="flying-envelope">
+              <div class="envelope-3d">
+                <div class="env-body">
+                  <svg viewBox="0 0 32 24" fill="none">
+                    <rect x="1" y="1" width="30" height="22" rx="3" fill="rgba(99,179,237,0.15)" stroke="#63B3ED" stroke-width="1.5"/>
+                    <polyline points="1,1 16,13 31,1" fill="none" stroke="#63B3ED" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="env-trail"></div>
+              </div>
+            </div>
+
+            <!-- Path particles -->
+            <div class="path-particle p1"></div>
+            <div class="path-particle p2"></div>
+            <div class="path-particle p3"></div>
+            <div class="path-particle p4"></div>
+            <div class="path-particle p5"></div>
+          </div>
+
+          <!-- Receiver node -->
+          <div class="node node-receiver">
+            <div class="node-icon receiver-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="node-ring receiver-ring"></div>
+            <span class="node-label">Me</span>
+            <!-- Success checkmark -->
+            <div class="success-check">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#68D391" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Floating decorative elements -->
+          <div class="float-element float-code">&lt;/&gt;</div>
+          <div class="float-element float-at">&#64;</div>
+          <div class="float-element float-hash">#</div>
+
         </div>
       </div>
     </div>
@@ -131,15 +195,21 @@
 
           <div class="info-details">
             <div class="detail-row orange-left">
-              <span>📍</span>
+              <span class="detail-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
               <span>Budapest, {{ 'cnt.location' | translate }}</span>
             </div>
             <div class="detail-row blue-left">
-              <span>🌐</span>
+              <span class="detail-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </span>
               <span>{{ 'cnt.timezone' | translate }}</span>
             </div>
             <div class="detail-row green-left">
-              <span>⚡</span>
+              <span class="detail-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </span>
               <span>{{ 'cnt.response_time' | translate }}</span>
             </div>
           </div>
