@@ -4,8 +4,16 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-:host {
+app-project-list {
   display: block;
+}
+
+.proj-page {
+  font-family: 'Sora', sans-serif;
+  color: var(--text-1);
+  background: var(--surface-1);
+  overflow-x: hidden;
+
   --surface-1: #0A0F1C;
   --surface-2: #111827;
   --surface-3: #1F2937;
@@ -20,13 +28,6 @@
   --border: rgba(255,255,255,.06);
   --r: 14px;
   --r-sm: 8px;
-}
-
-.proj-page {
-  font-family: 'Sora', sans-serif;
-  color: var(--text-1);
-  background: var(--surface-1);
-  overflow-x: hidden;
 }
 .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 
@@ -92,14 +93,14 @@
    CODE EDITOR (CENTER)
    ============================================================ */
 .code-editor {
-  background: rgba(10, 15, 28, .95);
-  border: 1px solid rgba(139,92,246,.2);
+  background: #2b2b2b;
+  border: 1px solid rgba(255,255,255,.08);
   border-radius: 12px;
   overflow: hidden;
   box-shadow:
-    0 20px 50px rgba(0,0,0,.4),
-    0 0 30px rgba(139,92,246,.06),
-    inset 0 1px 0 rgba(255,255,255,.04);
+    0 20px 50px rgba(0,0,0,.5),
+    0 0 20px rgba(0,0,0,.2),
+    inset 0 1px 0 rgba(255,255,255,.03);
   width: 340px;
   flex-shrink: 0;
   display: flex;
@@ -107,8 +108,8 @@
 }
 .editor-titlebar {
   display: flex; align-items: center; gap: 6px;
-  padding: 10px 14px;
-  background: rgba(255,255,255,.025);
+  padding: 8px 12px;
+  background: #3c3f41;
   border-bottom: 1px solid rgba(255,255,255,.06);
 }
 .ed-dot { width: 8px; height: 8px; border-radius: 50%; }
@@ -117,16 +118,16 @@
 .ed-dot:nth-child(3) { background: #22C55E; }
 .ed-filename {
   font-family: 'JetBrains Mono', monospace; font-size: .6rem;
-  color: var(--text-3); margin-left: 8px;
+  color: #A9B7C6; margin-left: 8px;
 }
 .ed-status {
   font-family: 'JetBrains Mono', monospace; font-size: .56rem;
-  color: var(--purple); margin-left: auto;
-  background: rgba(139,92,246,.1); padding: 2px 8px; border-radius: 4px;
+  color: #6A8759; margin-left: auto;
+  background: rgba(106,135,89,.12); padding: 2px 8px; border-radius: 4px;
 }
 
 .editor-body {
-  padding: 12px 0;
+  padding: 0;
   font-family: 'JetBrains Mono', monospace;
   font-size: .62rem;
   line-height: 1.9;
@@ -135,31 +136,38 @@
   overflow-y: auto;
   overflow-x: hidden;
   flex: 1;
+  background: #2b2b2b;
 }
 
-/* Scrollbar styling */
-.editor-body::-webkit-scrollbar { width: 4px; }
-.editor-body::-webkit-scrollbar-track { background: transparent; }
-.editor-body::-webkit-scrollbar-thumb { background: rgba(139,92,246,.2); border-radius: 2px; }
-.editor-body::-webkit-scrollbar-thumb:hover { background: rgba(139,92,246,.4); }
+/* Scrollbar styling — Darcula */
+.editor-body::-webkit-scrollbar { width: 6px; }
+.editor-body::-webkit-scrollbar-track { background: #2b2b2b; }
+.editor-body::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 3px; }
+.editor-body::-webkit-scrollbar-thumb:hover { background: #5a5a5a; }
 
 /* Code line */
 .code-line {
   display: flex;
-  padding: 0 14px;
   min-height: 1.9em;
+  padding: 0;
 }
-.code-line.active-line { background: rgba(139,92,246,.05); }
+.code-line.active-line { background: #323232; }
 
-/* Line number gutter */
+/* Line number gutter — PyCharm style */
 .line-num {
-  color: rgba(255,255,255,.18);
+  color: rgba(255,255,255,.22);
   user-select: none;
-  min-width: 22px;
+  min-width: 34px;
   text-align: right;
-  margin-right: 18px;
+  padding: 0 10px 0 8px;
   flex-shrink: 0;
   font-variant-numeric: tabular-nums;
+  background: rgba(255,255,255,.02);
+  border-right: 1px solid rgba(255,255,255,.06);
+}
+.code-line.active-line .line-num {
+  color: rgba(255,255,255,.5);
+  background: #2d2d2d;
 }
 
 /* Code content */
@@ -168,26 +176,27 @@
   position: relative;
   flex: 1;
   min-width: 0;
+  padding: 0 12px;
 }
 
 /* Typing cursor */
 .typing-cursor {
-  display: inline-block; width: 7px; height: 12px;
-  background: var(--purple); border-radius: 1px;
+  display: inline-block; width: 2px; height: 13px;
+  background: #A9B7C6; border-radius: 0;
   animation: cursor-blink 1s step-end infinite;
   vertical-align: text-bottom; margin-left: 1px;
 }
 @keyframes cursor-blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 
-/* Syntax highlighting */
-.s-kw { color: #C084FC; }
-.s-fn { color: #60A5FA; }
-.s-str { color: #34D399; }
-.s-cm { color: #4B5563; font-style: italic; }
-.s-op { color: #E5E7EB; }
-.s-num { color: #FBBF24; }
-.s-cls { color: #22D3EE; }
-.s-var { color: #E5E7EB; }
+/* Syntax highlighting — PyCharm Darcula */
+.s-kw { color: #CC7832; }          /* keywords: import, def, for, in — orange */
+.s-fn { color: #FFC66D; }          /* function/method names — yellow */
+.s-str { color: #6A8759; }         /* strings — muted green */
+.s-cm { color: #808080; font-style: italic; } /* comments — grey italic */
+.s-op { color: #A9B7C6; }          /* operators, brackets, punctuation */
+.s-num { color: #6897BB; }         /* numbers, booleans — blue */
+.s-cls { color: #A9B7C6; font-weight: 500; }  /* class/type names */
+.s-var { color: #A9B7C6; }         /* variables — default text */
 
 /* ============================================================
    HORIZONTAL CONNECTOR

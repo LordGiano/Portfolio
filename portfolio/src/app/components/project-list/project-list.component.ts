@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, NgZone, ElementRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
@@ -53,7 +53,8 @@ interface VizEdge {
   standalone: true,
   imports: [CommonModule, MatIconModule, FormsModule, RouterLink, TranslatePipe],
   templateUrl: './project-list.component.html',
-  styleUrl: './project-list.component.css'
+  styleUrl: './project-list.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -78,8 +79,14 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private translationService: TranslationService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private elRef: ElementRef
   ) {}
+
+  /** Scoped querySelector — works with Angular encapsulation */
+  private el(selector: string): HTMLElement | null {
+    return this.elRef.nativeElement.querySelector(selector);
+  }
 
   ngOnInit(): void {
     this.langSub = this.translationService.language$.subscribe(() => this.loadData());
@@ -120,7 +127,7 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
       { threshold: 0.1 }
     );
     setTimeout(() => {
-      document.querySelectorAll('[data-section]').forEach(el => observer.observe(el));
+      this.elRef.nativeElement.querySelectorAll('[data-section]').forEach((el: Element) => observer.observe(el));
     }, 100);
   }
 
@@ -317,7 +324,7 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   private initCanvas(): void {
-    const canvas = document.getElementById('heroVizCanvas') as HTMLCanvasElement;
+    const canvas = this.el('#heroVizCanvas') as HTMLCanvasElement;
     if (!canvas) return;
     const rect = canvas.parentElement!.getBoundingClientRect();
     canvas.width = rect.width * 2;
@@ -330,7 +337,7 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
   // 3D RENDERING
   // ====================
   private renderViz = (): void => {
-    const canvas = document.getElementById('heroVizCanvas') as HTMLCanvasElement;
+    const canvas = this.el('#heroVizCanvas') as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
     const w = canvas.width, h = canvas.height;
@@ -466,8 +473,8 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
 
-    const statNodes = document.getElementById('heroStatNodes');
-    const statEdges = document.getElementById('heroStatEdges');
+    const statNodes = this.el('#heroStatNodes');
+    const statEdges = this.el('#heroStatEdges');
     if (statNodes) statNodes.textContent = String(this.vizNodes.length);
     if (statEdges) statEdges.textContent = String(this.vizEdges.length);
 
@@ -526,7 +533,7 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private async typeLines(): Promise<void> {
-    const body = document.getElementById('heroEditorBody');
+    const body = this.el('#heroEditorBody');
     if (!body) return;
     body.innerHTML = '';
 
