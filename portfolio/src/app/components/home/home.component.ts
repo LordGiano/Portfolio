@@ -4,6 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { TranslationService, Language } from '../../services/translation.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 interface Particle {
   x: number;
@@ -23,7 +26,8 @@ interface Particle {
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    RouterLink
+    RouterLink,
+    TranslatePipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
@@ -33,17 +37,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Typing animation
   typedText = '';
-  fullTexts = [
-    'Full Stack Fejlesztő',
-    'Angular Szakértő',
-    'Python Fejlesztő',
-    'Computer Vision Kutató'
-  ];
+  private fullTexts: string[] = [];
   currentTextIndex = 0;
   charIndex = 0;
   isDeleting = false;
   typingSpeed = 80;
   private typingTimer: any;
+
+  // Language
+  showRoleSuffix = true;
+  private langSub!: Subscription;
 
   // Particle system
   private particles: Particle[] = [];
@@ -62,52 +65,52 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // Scroll reveal
   visibleSections = new Set<string>();
 
-  // Skills data
+  // Skills data — titleKey and descKey reference translation keys
   competencies = [
     {
       icon: 'web',
-      title: 'Frontend Fejlesztés',
-      description: 'Modern, reszponzív webalkalmazások fejlesztése enterprise szinten',
+      titleKey: 'home.comp_frontend',
+      descKey: 'home.comp_frontend_desc',
       techs: ['Angular', 'TypeScript', 'HTML5/CSS3', 'Material Design'],
       color: '#2563EB',
       gradient: 'linear-gradient(135deg, #2563EB, #3B82F6)'
     },
     {
       icon: 'terminal',
-      title: 'Backend Fejlesztés',
-      description: 'Skálázható szerver oldali alkalmazások és API-k tervezése',
+      titleKey: 'home.comp_backend',
+      descKey: 'home.comp_backend_desc',
       techs: ['Python', 'C#', '.NET', 'REST API'],
       color: '#059669',
       gradient: 'linear-gradient(135deg, #059669, #10B981)'
     },
     {
       icon: 'storage',
-      title: 'Adatbázis-kezelés',
-      description: 'Komplex adatbázis sémák tervezése és optimalizálása',
+      titleKey: 'home.comp_database',
+      descKey: 'home.comp_database_desc',
       techs: ['MSSQL', 'MySQL', 'Firebase', 'NoSQL'],
       color: '#D97706',
       gradient: 'linear-gradient(135deg, #D97706, #F59E0B)'
     },
     {
       icon: 'visibility',
-      title: 'Képfeldolgozás & CV',
-      description: 'Számítógépes látás és képelemzés kutatási szintű megvalósítása',
-      techs: ['OpenCV', 'MediaPipe', 'Python', 'Gépi tanulás'],
+      titleKey: 'home.comp_cv',
+      descKey: 'home.comp_cv_desc',
+      techs: ['OpenCV', 'MediaPipe', 'Python', this.getMLTechLabel()],
       color: '#7C3AED',
       gradient: 'linear-gradient(135deg, #7C3AED, #8B5CF6)'
     },
     {
       icon: 'bug_report',
-      title: 'QA & Tesztelés',
-      description: 'Szoftverminőség biztosítása ISTQB szabványok szerint',
-      techs: ['ISTQB', 'Manuális tesztelés', 'Agile/Scrum', 'CI/CD'],
+      titleKey: 'home.comp_qa',
+      descKey: 'home.comp_qa_desc',
+      techs: ['ISTQB', 'Manual Testing', 'Agile/Scrum', 'CI/CD'],
       color: '#DC2626',
       gradient: 'linear-gradient(135deg, #DC2626, #EF4444)'
     },
     {
       icon: 'devices',
-      title: 'DevOps & Eszközök',
-      description: 'Modern fejlesztői munkafolyamatok és eszközök használata',
+      titleKey: 'home.comp_devops',
+      descKey: 'home.comp_devops_desc',
       techs: ['Git', 'Docker', 'Firebase', 'VS Code'],
       color: '#0891B2',
       gradient: 'linear-gradient(135deg, #0891B2, #06B6D4)'
@@ -117,36 +120,44 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   experienceHighlights = [
     {
       company: 'Master Consulting Kft.',
-      role: 'Szoftverfejlesztő',
-      period: '2025 júl. – jelen',
+      roleKey: 'home.exp_role_1',
+      periodKey: 'home.exp_period_1',
       type: 'full-time',
+      typeKey: 'home.exp_type_fulltime',
       techs: ['Angular', 'Python', 'MSSQL']
     },
     {
       company: 'NetAdClick Kft.',
-      role: 'Szoftverfejlesztő',
-      period: '2025 jan. – máj.',
+      roleKey: 'home.exp_role_2',
+      periodKey: 'home.exp_period_2',
       type: 'contract',
+      typeKey: 'home.exp_type_contract',
       techs: ['Angular', 'Python', 'MySQL']
     },
     {
       company: 'Robert Bosch Kft.',
-      role: 'Fejlesztő & Tesztelő Gyakornok',
-      period: '2023 feb. – 2024 dec.',
+      roleKey: 'home.exp_role_3',
+      periodKey: 'home.exp_period_3',
       type: 'internship',
+      typeKey: 'home.exp_type_internship',
       techs: ['Angular', 'C#', 'MSSQL', 'ISTQB']
     },
     {
       company: 'e-track Informatikai Kft.',
-      role: 'Szoftverfejlesztő',
-      period: '2021 nov. – 2023 jan.',
+      roleKey: 'home.exp_role_4',
+      periodKey: 'home.exp_period_4',
       type: 'full-time',
+      typeKey: 'home.exp_type_fulltime',
       techs: ['C#', 'MSSQL', 'WinForms']
     }
   ];
 
+  constructor(private translationService: TranslationService) {}
+
   ngOnInit(): void {
-    this.startTypingAnimation();
+    this.langSub = this.translationService.language$.subscribe(lang => {
+      this.onLanguageChange(lang);
+    });
   }
 
   ngAfterViewInit(): void {
@@ -157,6 +168,65 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.typingTimer) clearTimeout(this.typingTimer);
     if (this.animationId) cancelAnimationFrame(this.animationId);
+    this.langSub?.unsubscribe();
+  }
+
+  private onLanguageChange(lang: Language): void {
+    // Only Hungarian shows "vagyok" after the name
+    this.showRoleSuffix = (lang === 'hu');
+
+    // Update typing animation texts from translations
+    this.fullTexts = [
+      this.translationService.translate('home.typed_1'),
+      this.translationService.translate('home.typed_2'),
+      this.translationService.translate('home.typed_3'),
+      this.translationService.translate('home.typed_4')
+    ];
+
+    // Restart typing animation
+    if (this.typingTimer) clearTimeout(this.typingTimer);
+    this.typedText = '';
+    this.currentTextIndex = 0;
+    this.charIndex = 0;
+    this.isDeleting = false;
+    this.startTypingAnimation();
+  }
+
+  // --- CV Download with language awareness ---
+  downloadCV(): void {
+    const lang = this.translationService.currentLang;
+
+    // Map of available CV files per language
+    // Files should be placed in: assets/documents/cv-{lang}.pdf
+    const cvFiles: Record<string, string> = {
+      'hu': '/assets/documents/cv-hu.pdf',
+      'en': '/assets/documents/cv-en.pdf',
+      'de': '/assets/documents/cv-de.pdf',
+      'es': '/assets/documents/cv-es.pdf'
+    };
+
+    // Use the current language's CV, fallback to English
+    const cvUrl = cvFiles[lang] || cvFiles['en'];
+
+    const fileNames: Record<string, string> = {
+      'hu': 'Szabó_Norbert_önéletrajz.pdf',
+      'en': 'Norbert_Szabó_CV.pdf',
+      'de': 'Norbert_Szabó_Lebenslauf.pdf',
+      'es': 'Norbert_Szabó_CV.pdf'
+    };
+
+    const link = document.createElement('a');
+    link.href = cvUrl;
+    link.download = fileNames[lang] || fileNames['en'];
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  private getMLTechLabel(): string {
+    // This is a static tech label, not translated dynamically
+    // since tech names typically remain in their original form
+    return 'ML';
   }
 
   @HostListener('window:resize')
@@ -176,6 +246,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // --- Typing animation ---
   private startTypingAnimation(): void {
+    if (!this.fullTexts.length) return;
+
     const currentFull = this.fullTexts[this.currentTextIndex];
 
     if (!this.isDeleting) {

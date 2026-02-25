@@ -12,7 +12,6 @@ app-project-list {
   font-family: 'Sora', sans-serif;
   color: var(--text-1);
   background: var(--surface-1);
-  overflow-x: hidden;
 
   --surface-1: #0A0F1C;
   --surface-2: #111827;

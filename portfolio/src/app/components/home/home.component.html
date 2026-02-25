@@ -1,6 +1,6 @@
 <!-- ============================================================
-     HOME COMPONENT – Portfolio Landing Page
-     Szabó Norbert – Szoftverfejlesztő
+     HOME COMPONENT — Portfolio Landing Page
+     Szabó Norbert — Szoftverfejlesztő
      ============================================================ -->
 
 <div class="home-container">
@@ -19,13 +19,13 @@
 
       <div class="hero-badge">
         <span class="badge-dot"></span>
-        Nyitott új lehetőségekre
+        {{ 'home.badge' | translate }}
       </div>
 
       <h1 class="hero-title">
-        <span class="greeting">Szia, én</span>
-        <span class="name-highlight">Szabó Norbert</span>
-        <span class="role-line">vagyok</span>
+        <span class="greeting">{{ 'home.greeting' | translate }}</span>
+        <span class="name-highlight">{{ 'home.name' | translate }}</span>
+        <span class="role-line" *ngIf="showRoleSuffix">{{ 'home.role_suffix' | translate }}</span>
       </h1>
 
       <div class="typing-container">
@@ -33,20 +33,17 @@
         <span class="cursor">|</span>
       </div>
 
-      <p class="hero-subtitle">
-        Full stack fejlesztő <strong>2+ év</strong> tapasztalattal, programtervező informatikus
-        <strong>(MSc)</strong> végzettséggel. Képfeldolgozási projekteken és QA folyamatokban
-        egyaránt jártas, modern technológiák iránt elkötelezett szakember.
+      <p class="hero-subtitle" [innerHTML]="'home.hero_subtitle' | translate">
       </p>
 
       <div class="hero-actions">
         <a routerLink="/projects" class="btn-primary">
           <mat-icon>rocket_launch</mat-icon>
-          Projektjeim
+          {{ 'home.btn_projects' | translate }}
         </a>
         <a routerLink="/contact" class="btn-secondary">
           <mat-icon>mail_outline</mat-icon>
-          Kapcsolat
+          {{ 'home.btn_contact' | translate }}
         </a>
         <a href="https://github.com/LordGiano" target="_blank" rel="noopener" class="btn-ghost">
           <mat-icon>code</mat-icon>
@@ -58,7 +55,7 @@
         <div class="scroll-mouse">
           <div class="scroll-wheel"></div>
         </div>
-        <span>Görgess lejjebb</span>
+        <span>{{ 'home.scroll_hint' | translate }}</span>
       </div>
     </div>
   </section>
@@ -71,22 +68,22 @@
       <div class="stats-grid">
         <div class="stat-item">
           <span class="stat-number">{{ yearsExperience }}+</span>
-          <span class="stat-label">Év tapasztalat</span>
+          <span class="stat-label">{{ 'home.stat_years' | translate }}</span>
           <div class="stat-bar" style="--bar-width: 75%"></div>
         </div>
         <div class="stat-item">
           <span class="stat-number">{{ projectsCompleted }}+</span>
-          <span class="stat-label">Befejezett projekt</span>
+          <span class="stat-label">{{ 'home.stat_projects' | translate }}</span>
           <div class="stat-bar" style="--bar-width: 85%"></div>
         </div>
         <div class="stat-item">
           <span class="stat-number">{{ technologiesUsed }}+</span>
-          <span class="stat-label">Technológia</span>
+          <span class="stat-label">{{ 'home.stat_technologies' | translate }}</span>
           <div class="stat-bar" style="--bar-width: 90%"></div>
         </div>
         <div class="stat-item">
           <span class="stat-number">{{ languagesSpoken }}</span>
-          <span class="stat-label">Nyelv (HU, EN, DE, ES)</span>
+          <span class="stat-label">{{ 'home.stat_languages' | translate }}</span>
           <div class="stat-bar" style="--bar-width: 70%"></div>
         </div>
       </div>
@@ -99,10 +96,10 @@
            [class.visible]="isSectionVisible('competencies')">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Szakterületek</span>
-        <h2 class="section-title">Szakmai kompetenciák</h2>
+        <span class="section-tag">{{ 'home.comp_tag' | translate }}</span>
+        <h2 class="section-title">{{ 'home.comp_title' | translate }}</h2>
         <p class="section-desc">
-          Széles spektrumú technológiai tudás, a frontend fejlesztéstől a képfeldolgozásig
+          {{ 'home.comp_desc' | translate }}
         </p>
       </div>
 
@@ -116,8 +113,8 @@
           <div class="card-icon">
             <mat-icon>{{ comp.icon }}</mat-icon>
           </div>
-          <h3>{{ comp.title }}</h3>
-          <p>{{ comp.description }}</p>
+          <h3>{{ comp.titleKey | translate }}</h3>
+          <p>{{ comp.descKey | translate }}</p>
           <div class="card-techs">
             <span class="card-tech" *ngFor="let tech of comp.techs">{{ tech }}</span>
           </div>
@@ -132,10 +129,10 @@
            [class.visible]="isSectionVisible('experience')">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">Karrierút</span>
-        <h2 class="section-title">Szakmai tapasztalat</h2>
+        <span class="section-tag">{{ 'home.exp_tag' | translate }}</span>
+        <h2 class="section-title">{{ 'home.exp_title' | translate }}</h2>
         <p class="section-desc">
-          Budapesti technológiai cégeknél szerzett full stack fejlesztői tapasztalat
+          {{ 'home.exp_desc' | translate }}
         </p>
       </div>
 
@@ -152,13 +149,11 @@
             <div class="timeline-header">
               <div class="timeline-company">{{ exp.company }}</div>
               <span class="timeline-type" [attr.data-type]="exp.type">
-                {{ exp.type === 'full-time' ? 'Teljes munkaidős' :
-                   exp.type === 'contract' ? 'Projekt alapú' :
-                   exp.type === 'internship' ? 'Gyakornok' : exp.type }}
+                {{ exp.typeKey | translate }}
               </span>
             </div>
-            <div class="timeline-role">{{ exp.role }}</div>
-            <div class="timeline-period">{{ exp.period }}</div>
+            <div class="timeline-role">{{ exp.roleKey | translate }}</div>
+            <div class="timeline-period">{{ exp.periodKey | translate }}</div>
             <div class="timeline-techs">
               <span *ngFor="let tech of exp.techs" class="timeline-tech">{{ tech }}</span>
             </div>
@@ -166,7 +161,7 @@
         </div>
 
         <a routerLink="/experience" class="timeline-cta">
-          Részletes tapasztalat & tanulmányok
+          {{ 'home.exp_cta' | translate }}
           <mat-icon>arrow_forward</mat-icon>
         </a>
       </div>
@@ -182,24 +177,24 @@
         <div class="edu-item">
           <mat-icon>school</mat-icon>
           <div>
-            <strong>Programtervező informatikus MSc</strong>
-            <span>Szegedi Tudományegyetem · 2025</span>
+            <strong>{{ 'home.edu_msc' | translate }}</strong>
+            <span>{{ 'home.edu_msc_inst' | translate }}</span>
           </div>
         </div>
         <div class="edu-divider"></div>
         <div class="edu-item">
           <mat-icon>engineering</mat-icon>
           <div>
-            <strong>Mérnökinformatikus BSc</strong>
-            <span>Dunaújvárosi Egyetem · 2022</span>
+            <strong>{{ 'home.edu_bsc' | translate }}</strong>
+            <span>{{ 'home.edu_bsc_inst' | translate }}</span>
           </div>
         </div>
         <div class="edu-divider"></div>
         <div class="edu-item">
           <mat-icon>public</mat-icon>
           <div>
-            <strong>Erasmus+ csereprogram</strong>
-            <span>Universidad del País Vasco, Bilbao · 2020–2021</span>
+            <strong>{{ 'home.edu_erasmus' | translate }}</strong>
+            <span>{{ 'home.edu_erasmus_inst' | translate }}</span>
           </div>
         </div>
       </div>
@@ -212,19 +207,18 @@
            [class.visible]="isSectionVisible('cta')">
     <div class="cta-bg-pattern"></div>
     <div class="container cta-content">
-      <h2>Dolgozzunk együtt!</h2>
+      <h2>{{ 'home.cta_title' | translate }}</h2>
       <p>
-        Ha érdekel a profilom és szívesen megbeszélnél velem egy projektet
-        vagy álláslehetőséget, keress bátran.
+        {{ 'home.cta_desc' | translate }}
       </p>
       <div class="cta-actions">
         <a routerLink="/contact" class="btn-primary btn-lg">
           <mat-icon>send</mat-icon>
-          Írj nekem
+          {{ 'home.cta_contact' | translate }}
         </a>
-        <a routerLink="/documents" class="btn-secondary btn-lg">
+        <a class="btn-secondary btn-lg" (click)="downloadCV()" style="cursor: pointer;">
           <mat-icon>description</mat-icon>
-          Önéletrajz letöltése
+          {{ 'home.cta_cv' | translate }}
         </a>
       </div>
     </div>

@@ -26,7 +26,6 @@
   font-family: 'Sora', sans-serif;
   color: var(--text-1);
   background: var(--surface-1);
-  overflow-x: hidden;
 }
 .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 
