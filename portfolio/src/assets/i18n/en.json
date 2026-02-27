@@ -204,7 +204,8 @@
     "portfolio_h2": "Custom i18n system with 4 languages (HU, EN, DE, ES)",
     "portfolio_h3": "Custom animations, 3D effects, and interactive elements",
     "cta_title": "Have an idea?",
-    "cta_subtitle": "If you're interested in my work and want to collaborate on a project, feel free to reach out!"
+    "cta_subtitle": "If you're interested in my work and want to collaborate on a project, feel free to reach out!",
+    "btn_details": "Details"
   },
   "projects": {
     "pageTitle": "Projects",

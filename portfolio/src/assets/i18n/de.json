@@ -204,7 +204,8 @@
     "portfolio_h2": "Eigenes i18n-System mit 4 Sprachen (HU, EN, DE, ES)",
     "portfolio_h3": "Eigene Animationen, 3D-Effekte und interaktive Elemente",
     "cta_title": "Haben Sie eine Idee?",
-    "cta_subtitle": "Wenn Sie sich für meine Arbeit interessieren und an einem Projekt zusammenarbeiten möchten, kontaktieren Sie mich!"
+    "cta_subtitle": "Wenn Sie sich für meine Arbeit interessieren und an einem Projekt zusammenarbeiten möchten, kontaktieren Sie mich!",
+    "btn_details": "Details"
   },
   "projects": {
     "pageTitle": "Projekte",

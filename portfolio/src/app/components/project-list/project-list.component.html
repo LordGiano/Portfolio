@@ -1,65 +1,32 @@
 <div class="proj-page">
 
-  <!-- ===== HERO: Text | Code | Viz ===== -->
+  <!-- ===== HERO: Text (left) + Orbits (right) ===== -->
   <section class="proj-hero" data-section="hero"
            [class.visible]="isSectionVisible('hero')">
     <div class="hero-noise"></div>
     <div class="hero-mesh"></div>
-
-    <!-- LEFT: Hero text -->
-    <div class="hero-inner">
-      <div class="hero-eyebrow">
-        <span class="eyebrow-line"></span>
-        <span class="eyebrow-text">{{ 'proj.badge' | translate }}</span>
-        <span class="eyebrow-line"></span>
-      </div>
-      <h1 class="hero-massive">{{ 'proj.hero_title' | translate }}</h1>
-      <p class="hero-lead">{{ 'proj.hero_subtitle' | translate }}</p>
+    <div class="hero-grid"></div>
+    <div class="hero-lines">
+      <div class="h-line"></div>
+      <div class="h-line"></div>
+      <div class="h-line"></div>
+      <div class="h-line"></div>
+      <div class="h-line"></div>
     </div>
 
-    <!-- CENTER + RIGHT: Code → Viz -->
-    <div class="code-viz-row">
-
-      <!-- Code Editor -->
-      <div class="code-editor">
-        <div class="editor-titlebar">
-          <div class="ed-dot"></div>
-          <div class="ed-dot"></div>
-          <div class="ed-dot"></div>
-          <span class="ed-filename">graph_builder.py</span>
-          <span class="ed-status">● running</span>
+    <div class="hero-layout">
+      <div class="hero-inner">
+        <div class="hero-eyebrow">
+          <span class="eyebrow-line"></span>
+          <span class="eyebrow-text">{{ 'proj.badge' | translate }}</span>
+          <span class="eyebrow-line"></span>
         </div>
-        <div class="editor-body" id="heroEditorBody"></div>
+        <h1 class="hero-massive">{{ 'proj.hero_title' | translate }}</h1>
+        <p class="hero-lead">{{ 'proj.hero_subtitle' | translate }}</p>
       </div>
 
-      <!-- Horizontal connector -->
-      <div class="h-connector">
-        <div class="hc-flow">
-          <div class="hc-dot"></div>
-          <div class="hc-dot"></div>
-          <div class="hc-dot"></div>
-          <div class="hc-dot"></div>
-          <div class="hc-dot"></div>
-        </div>
-        <span class="hc-label">stdout</span>
-      </div>
-
-      <!-- Viz output -->
-      <div class="viz-panel">
-        <div class="viz-titlebar">
-          <span class="viz-title">▸ output</span>
-          <div class="viz-live">
-            <div class="viz-live-dot"></div>
-            live
-          </div>
-        </div>
-        <div class="viz-canvas-wrap">
-          <canvas id="heroVizCanvas"></canvas>
-        </div>
-        <div class="viz-stats">
-          <div class="viz-stat">nodes: <span id="heroStatNodes">0</span></div>
-          <div class="viz-stat">edges: <span id="heroStatEdges">0</span></div>
-        </div>
+      <div class="hero-orbits-wrap">
+        <canvas id="orbitsCanvas"></canvas>
       </div>
     </div>
   </section>
@@ -90,43 +57,59 @@
         <div class="feat-card" *ngFor="let proj of featuredProjects; let i = index"
              [style.--pc]="proj.color"
              [style.--pg]="proj.gradient"
-             [style.animation-delay]="(i * 0.15) + 's'"
-             [class.expanded]="expandedProject === proj.id"
-             (click)="toggleProject(proj.id)">
+             [style.animation-delay]="(i * 0.15) + 's'">
 
           <div class="feat-glow"></div>
           <div class="feat-accent"></div>
 
-          <div class="feat-top">
-            <div class="feat-icon" [style.background]="proj.gradient">
-              <mat-icon>{{ proj.icon }}</mat-icon>
+          <!-- Placeholder image -->
+          <div class="feat-image" [style.background]="proj.gradient">
+            <div class="feat-image-overlay">
+              <mat-icon class="feat-image-icon">{{ proj.icon }}</mat-icon>
             </div>
             <div class="feat-status" [attr.data-status]="proj.status">
               {{ getStatusLabel(proj.status) }}
             </div>
           </div>
 
-          <h3 class="feat-title">{{ proj.title }}</h3>
-          <p class="feat-subtitle">{{ proj.subtitle }}</p>
-          <p class="feat-desc">{{ proj.description }}</p>
+          <!-- Content -->
+          <div class="feat-body">
+            <div class="feat-top">
+              <div>
+                <h3 class="feat-title">{{ proj.title }}</h3>
+                <p class="feat-subtitle">{{ proj.subtitle }}</p>
+              </div>
+              <span class="feat-date">{{ proj.date }}</span>
+            </div>
 
-          <div class="feat-expand" [class.open]="expandedProject === proj.id">
+            <p class="feat-desc">{{ proj.description }}</p>
+
             <div class="feat-highlights" *ngIf="proj.highlights">
               <div class="feat-hl" *ngFor="let hl of proj.highlights">
                 <span class="hl-arrow" [style.color]="proj.color">▹</span>
                 {{ hl }}
               </div>
             </div>
-          </div>
 
-          <div class="feat-techs">
-            <span class="feat-tech" *ngFor="let tech of proj.technologies">{{ tech }}</span>
-          </div>
+            <div class="feat-techs">
+              <span class="feat-tech" *ngFor="let tech of proj.technologies">{{ tech }}</span>
+            </div>
 
-          <div class="feat-footer">
-            <span class="feat-date">{{ proj.date }}</span>
-            <span class="feat-cat">{{ proj.category }}</span>
-            <mat-icon class="feat-arrow">{{ expandedProject === proj.id ? 'expand_less' : 'expand_more' }}</mat-icon>
+            <div class="feat-actions">
+              <a [routerLink]="['/projects', proj.id]" class="feat-btn feat-btn-primary"
+                 (click)="$event.stopPropagation()">
+                <mat-icon>arrow_forward</mat-icon>
+                {{ 'proj.btn_details' | translate }}
+              </a>
+              <a *ngIf="proj.githubUrl" [href]="proj.githubUrl" target="_blank"
+                 rel="noopener noreferrer" class="feat-btn feat-btn-secondary"
+                 (click)="$event.stopPropagation()">
+                <svg class="gh-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                GitHub
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -147,40 +130,55 @@
         <div class="other-card" *ngFor="let proj of otherProjects; let i = index"
              [style.--pc]="proj.color"
              [style.--pg]="proj.gradient"
-             [style.animation-delay]="(i * 0.12) + 's'"
-             [class.expanded]="expandedProject === proj.id"
-             (click)="toggleProject(proj.id)">
+             [style.animation-delay]="(i * 0.12) + 's'">
 
           <div class="other-accent"></div>
 
-          <div class="other-top">
-            <div class="other-icon">
-              <mat-icon [style.color]="proj.color">{{ proj.icon }}</mat-icon>
+          <!-- Placeholder image -->
+          <div class="other-image" [style.background]="proj.gradient">
+            <div class="other-image-overlay">
+              <mat-icon class="other-image-icon">{{ proj.icon }}</mat-icon>
             </div>
-            <div class="other-meta">
-              <span class="other-status" [attr.data-status]="proj.status">{{ getStatusLabel(proj.status) }}</span>
-              <span class="other-date">{{ proj.date }}</span>
-            </div>
+            <span class="other-status" [attr.data-status]="proj.status">{{ getStatusLabel(proj.status) }}</span>
           </div>
 
-          <h3>{{ proj.title }}</h3>
-          <p class="other-subtitle">{{ proj.subtitle }}</p>
-          <p class="other-desc">{{ proj.description }}</p>
+          <!-- Content -->
+          <div class="other-body">
+            <div class="other-top">
+              <div>
+                <h3>{{ proj.title }}</h3>
+                <p class="other-subtitle">{{ proj.subtitle }}</p>
+              </div>
+              <span class="other-date">{{ proj.date }}</span>
+            </div>
 
-          <div class="other-expand" [class.open]="expandedProject === proj.id">
+            <p class="other-desc">{{ proj.description }}</p>
+
             <div class="other-highlights" *ngIf="proj.highlights">
               <div class="other-hl" *ngFor="let hl of proj.highlights">
                 <span class="hl-arrow" [style.color]="proj.color">▹</span>{{ hl }}
               </div>
             </div>
-          </div>
 
-          <div class="other-techs">
-            <span class="other-tech" *ngFor="let tech of proj.technologies">{{ tech }}</span>
-          </div>
+            <div class="other-techs">
+              <span class="other-tech" *ngFor="let tech of proj.technologies">{{ tech }}</span>
+            </div>
 
-          <div class="other-footer">
-            <mat-icon class="other-arrow">{{ expandedProject === proj.id ? 'expand_less' : 'expand_more' }}</mat-icon>
+            <div class="other-actions">
+              <a [routerLink]="['/projects', proj.id]" class="feat-btn feat-btn-primary"
+                 (click)="$event.stopPropagation()">
+                <mat-icon>arrow_forward</mat-icon>
+                {{ 'proj.btn_details' | translate }}
+              </a>
+              <a *ngIf="proj.githubUrl" [href]="proj.githubUrl" target="_blank"
+                 rel="noopener noreferrer" class="feat-btn feat-btn-secondary"
+                 (click)="$event.stopPropagation()">
+                <svg class="gh-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                GitHub
+              </a>
+            </div>
           </div>
         </div>
       </div>

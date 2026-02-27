@@ -204,7 +204,8 @@
     "portfolio_h2": "Egyedi i18n rendszer 4 nyelvvel (HU, EN, DE, ES)",
     "portfolio_h3": "Egyedi animációk, 3D effektek és interaktív elemek",
     "cta_title": "Van egy ötleted?",
-    "cta_subtitle": "Ha érdekel a munkám és szeretnél együtt dolgozni egy projekten, keress bátran!"
+    "cta_subtitle": "Ha érdekel a munkám és szeretnél együtt dolgozni egy projekten, keress bátran!",
+    "btn_details": "Részletek"
   },
   "projects": {
     "pageTitle": "Projektek",
