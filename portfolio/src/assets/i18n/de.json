@@ -267,13 +267,18 @@
     "sending": "Wird gesendet...",
     "sent": "Gesendet!",
     "err_name_required": "Name ist erforderlich",
-    "err_name_min": "Name muss mindestens 2 Zeichen lang sein",
+    "err_name_min": "Name muss mindestens 5 Zeichen lang sein",
     "err_email_required": "E-Mail ist erforderlich",
     "err_email_format": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
     "err_subject_required": "Betreff ist erforderlich",
     "err_subject_min": "Betreff muss mindestens 3 Zeichen lang sein",
     "err_msg_required": "Nachricht ist erforderlich",
-    "err_msg_min": "Nachricht muss mindestens 10 Zeichen lang sein"
+    "err_msg_min": "Nachricht muss mindestens 10 Zeichen lang sein",
+    "err_name_max": "Name darf maximal 50 Zeichen lang sein",
+    "success_title": "Nachricht gesendet!",
+    "success_message": "Vielen Dank für Ihre Nachricht! Ich melde mich bald — in der Regel innerhalb von 24 Stunden.",
+    "error_title": "Senden fehlgeschlagen",
+    "error_message": "Beim Senden Ihrer Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie mich direkt per E-Mail."
   },
   "bug": {
     "tooltip": "Fehler melden",

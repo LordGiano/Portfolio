@@ -267,13 +267,18 @@
     "sending": "Sending...",
     "sent": "Sent!",
     "err_name_required": "Name is required",
-    "err_name_min": "Name must be at least 2 characters",
+    "err_name_min": "Name must be at least 5 characters",
     "err_email_required": "Email is required",
     "err_email_format": "Please enter a valid email address",
     "err_subject_required": "Subject is required",
     "err_subject_min": "Subject must be at least 3 characters",
     "err_msg_required": "Message is required",
-    "err_msg_min": "Message must be at least 10 characters"
+    "err_msg_min": "Message must be at least 10 characters",
+    "err_name_max": "Name must be at most 50 characters",
+    "success_title": "Message sent!",
+    "success_message": "Thank you for reaching out! I'll get back to you soon — usually within 24 hours.",
+    "error_title": "Sending failed",
+    "error_message": "Something went wrong while sending your message. Please try again or contact me directly via email."
   },
   "bug": {
     "tooltip": "Report a Bug",

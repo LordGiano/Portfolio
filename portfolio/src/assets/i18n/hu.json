@@ -267,13 +267,18 @@
     "sending": "Küldés...",
     "sent": "Elküldve!",
     "err_name_required": "A név megadása kötelező",
-    "err_name_min": "A név legalább 2 karakter legyen",
+    "err_name_min": "A név legalább 5 karakter legyen",
     "err_email_required": "Az email megadása kötelező",
     "err_email_format": "Kérlek adj meg egy érvényes email címet",
     "err_subject_required": "A tárgy megadása kötelező",
     "err_subject_min": "A tárgy legalább 3 karakter legyen",
     "err_msg_required": "Az üzenet megadása kötelező",
-    "err_msg_min": "Az üzenet legalább 10 karakter legyen"
+    "err_msg_min": "Az üzenet legalább 10 karakter legyen",
+    "err_name_max": "A név legfeljebb 50 karakter lehet",
+    "success_title": "Üzenet elküldve!",
+    "success_message": "Köszönöm az üzeneted! Hamarosan válaszolok — általában 24 órán belül.",
+    "error_title": "Küldés sikertelen",
+    "error_message": "Hiba történt az üzenet küldése közben. Kérlek próbáld újra, vagy írj közvetlenül emailben."
   },
   "bug": {
     "tooltip": "Hibabejelentés",
