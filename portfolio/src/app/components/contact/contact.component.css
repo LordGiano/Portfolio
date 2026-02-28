@@ -388,7 +388,7 @@
 .channel-card:hover .card-arrow-icon, .channel-card.active .card-arrow-icon { opacity: 1; transform: translateX(0); }
 
 /* —— FORM SECTION —— */
-.form-section { position: relative; z-index: 1; padding: 2rem 0 6rem; }
+.form-section { position: relative; z-index: 1; padding: 2rem 0 0.5rem; }
 .form-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3.5rem; align-items: start; opacity: 0; animation: fadeUp .7s ease-out .4s forwards; }
 .info-tag { display: inline-block; font-family: 'Fira Code', monospace; font-size: .7rem; font-weight: 500; color: var(--purple); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 1rem; padding: 4px 10px; background: var(--purple-dim); border: 1px solid rgba(183,148,244,.15); border-radius: 5px; }
 .info-title { font-size: 1.8rem !important; font-weight: 800 !important; line-height: 1.2 !important; margin: 0 0 .75rem !important; letter-spacing: -.02em; color: var(--text-2); }

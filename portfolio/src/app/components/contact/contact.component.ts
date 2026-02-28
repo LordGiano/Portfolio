@@ -1,7 +1,9 @@
-import { Component, ElementRef } from '@angular/core';
+// src/app/components/contact/contact.component.ts
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { ContactService } from '../../services/contact.service';
 
 /**
  * Industry-standard email validator (stricter than Angular's built-in Validators.email).
@@ -9,23 +11,17 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
  * Rules enforced:
  *  - Local part (before @): min 2 chars, allows letters, digits, ._%+-
  *  - Must contain exactly one @
- *  - Domain part (between @ and last .): min 2 chars, allows letters, digits, hyphens, dots for subdomains
- *  - TLD (after last .): 2–10 letters only (covers .com, .info, .museum, .travel, etc.)
+ *  - Domain part (between @ and last .): min 2 chars per label, allows letters, digits, hyphens
+ *  - TLD (after last .): 2–10 letters only
  *
  * Rejects: a@a, 1@1, a@_.7319, test@.com, test@com., user@-domain.com
  */
 function strictEmailValidator(control: AbstractControl): ValidationErrors | null {
   if (!control.value) {
-    return null; // let Validators.required handle empty
+    return null;
   }
 
   const email: string = control.value.trim();
-
-  //  local   : 2+ chars from [a-zA-Z0-9._%+-]
-  //  @
-  //  domain  : 2+ chars per label [a-zA-Z0-9-], labels separated by dots, no leading/trailing hyphens
-  //  .
-  //  TLD     : 2-10 alpha chars
   const pattern = /^[a-zA-Z0-9._%+\-]{2,}@[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,10}$/;
 
   if (!pattern.test(email)) {
@@ -56,7 +52,10 @@ export class ContactComponent {
   private sceneBaseRotX = 5;
   private sceneBaseRotY = -5;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private contactService: ContactService
+  ) {
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
       email: ['', [Validators.required, strictEmailValidator]],
@@ -65,10 +64,6 @@ export class ContactComponent {
     });
   }
 
-  /**
-   * Returns true if a field should display its error state.
-   * Shows errors when the field has been touched/dirty OR the form has been submitted.
-   */
   isFieldInvalid(fieldName: string): boolean {
     const field = this.contactForm.get(fieldName);
     if (!field) return false;
@@ -103,12 +98,11 @@ export class ContactComponent {
     this.submitSuccess = false;
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     this.formSubmitted = true;
     this.submitError = false;
 
     if (!this.contactForm.valid || this.isSubmitting) {
-      // Mark all fields as touched so errors appear
       Object.keys(this.contactForm.controls).forEach(key => {
         this.contactForm.get(key)?.markAsTouched();
       });
@@ -117,30 +111,31 @@ export class ContactComponent {
 
     this.isSubmitting = true;
 
-    // Replace with actual HTTP call (e.g. EmailJS, Formspree, backend API)
-    setTimeout(() => {
-      const success = true; // Toggle to false to test error state
+    try {
+      await this.contactService.sendMessage({
+        name: this.contactForm.value.name.trim(),
+        email: this.contactForm.value.email.trim(),
+        subject: this.contactForm.value.subject.trim(),
+        message: this.contactForm.value.message.trim()
+      });
 
-      if (success) {
-        console.log('Contact form submitted:', this.contactForm.value);
-        this.isSubmitting = false;
-        this.submitSuccess = true;
-        this.formSubmitted = false;
-        this.contactForm.reset();
+      this.isSubmitting = false;
+      this.submitSuccess = true;
+      this.formSubmitted = false;
+      this.contactForm.reset();
 
-        // Auto-close success overlay after 4 seconds
-        setTimeout(() => {
-          this.submitSuccess = false;
-        }, 4000);
-      } else {
-        this.isSubmitting = false;
-        this.submitError = true;
+      setTimeout(() => {
+        this.submitSuccess = false;
+      }, 4000);
 
-        // Auto-dismiss error after 5 seconds
-        setTimeout(() => {
-          this.submitError = false;
-        }, 5000);
-      }
-    }, 1500);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      this.isSubmitting = false;
+      this.submitError = true;
+
+      setTimeout(() => {
+        this.submitError = false;
+      }, 5000);
+    }
   }
 }
