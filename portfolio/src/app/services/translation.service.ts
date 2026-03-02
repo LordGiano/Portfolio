@@ -12,6 +12,7 @@ export interface LanguageOption {
   code: Language;
   name: string;
   flag: string;
+  emoji: string;
 }
 
 const TRANSLATIONS: Record<Language, any> = { hu, en, de, es };
@@ -24,10 +25,10 @@ export class TranslationService {
   private readonly DEFAULT_LANG: Language = 'hu';
 
   readonly languages: LanguageOption[] = [
-    { code: 'hu', name: 'Magyar',  flag: 'assets/flags/hu.svg' },
-    { code: 'en', name: 'English', flag: 'assets/flags/gb.svg' },
-    { code: 'de', name: 'Deutsch', flag: 'assets/flags/de.svg' },
-    { code: 'es', name: 'Español', flag: 'assets/flags/es.svg' }
+    { code: 'hu', name: 'Magyar',  flag: 'assets/flags/hu.svg', emoji: '🇭🇺' },
+    { code: 'en', name: 'English', flag: 'assets/flags/gb.svg', emoji: '🇬🇧' },
+    { code: 'de', name: 'Deutsch', flag: 'assets/flags/de.svg', emoji: '🇩🇪' },
+    { code: 'es', name: 'Español', flag: 'assets/flags/es.svg', emoji: '🇪🇸' }
   ];
 
   private currentLang$ = new BehaviorSubject<Language>(this.getInitialLanguage());

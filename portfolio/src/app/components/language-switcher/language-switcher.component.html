@@ -3,6 +3,7 @@
           (click)="toggle()"
           [class.open]="isOpen"
           type="button">
+    <span class="lang-flag">{{ currentLang.emoji }}</span>
     <span class="lang-code">{{ currentLang.name }}</span>
     <svg class="lang-chevron" [class.flipped]="isOpen"
          width="14" height="14" viewBox="0 0 24 24"
@@ -18,6 +19,7 @@
             [class.active]="lang.code === currentLang.code"
             (click)="select(lang)"
             type="button">
+      <span class="lang-flag">{{ lang.emoji }}</span>
       <span class="lang-name">{{ lang.name }}</span>
       <svg *ngIf="lang.code === currentLang.code"
            class="lang-check"
