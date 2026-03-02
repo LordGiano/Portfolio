@@ -56,7 +56,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
   private animFrameId: number = 0;
   private ctx!: CanvasRenderingContext2D;
   private readonly HEX_SIZE = 26;
-  private readonly MAX_VISIBLE = 4;     // max symbols visible at once
+  private readonly MAX_VISIBLE = 6;     // max symbols visible at once
 
   // Glitch scanline
   glitchActive = false;
@@ -101,8 +101,14 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.glitchInterval = setInterval(() => {
       if (this.isExpanded) {
+        // First glitch
         this.glitchActive = true;
         setTimeout(() => this.glitchActive = false, 200);
+        // Second glitch after short pause
+        setTimeout(() => {
+          this.glitchActive = true;
+          setTimeout(() => this.glitchActive = false, 200);
+        }, 400);
       }
     }, 5000);
   }
@@ -114,6 +120,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.glitchInterval) clearInterval(this.glitchInterval);
     if (this.langSub) this.langSub.unsubscribe();
     document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
   }
 
   toggleExpand(): void {
@@ -123,12 +130,20 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isExpanded) {
       // Lock background scroll
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
       this.currentStep = 1;
       this.submitSuccess = false;
-      setTimeout(() => this.initHexGrid(), 100);
+      setTimeout(() => {
+        this.initHexGrid();
+        // Retry if canvas wasn't ready
+        if (!this.ctx) {
+          setTimeout(() => this.initHexGrid(), 300);
+        }
+      }, 100);
     } else {
       // Unlock background scroll
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
       if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
       if (this.bugReportForm.dirty && !this.isSubmitting) {
         this.bugReportForm.reset({ severity: 'medium' });
@@ -180,6 +195,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
           this.submitSuccess = false;
           this.buttonPulse = true;
           document.body.style.overflow = '';
+          document.documentElement.style.overflow = '';
         }, 3000);
       }, 2000);
     }
@@ -236,7 +252,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
     for (let row = -1; row < canvas.height / hH + 1; row++) {
       for (let col = -1; col < canvas.width / (hW * 0.75) + 1; col++) {
-        const hasSymbol = Math.random() < 0.14;
+        const hasSymbol = Math.random() < 0.20;
         const hex: HexCell = {
           x: col * hW * 0.75,
           y: row * hH + (col % 2 === 0 ? 0 : hH / 2),
@@ -245,11 +261,11 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
           // Start invisible, with a random cooldown before first appearance
           visible: false,
           fadeValue: 0,
-          fadeSpeed: 0.004 + Math.random() * 0.004,  // slow fade: ~4-6 seconds to fully appear
+          fadeSpeed: 0.005 + Math.random() * 0.005,  // slightly faster fade: ~3-5 seconds
           fadeDirection: 0, // 0 = waiting
           holdTimer: 0,
-          holdDuration: 4 + Math.random() * 6,        // stay visible 4-10 seconds
-          cooldown: 2 + Math.random() * 12,            // wait 2-12 seconds before appearing
+          holdDuration: 3 + Math.random() * 5,        // stay visible 3-8 seconds
+          cooldown: 1 + Math.random() * 8,             // wait 1-9 seconds before appearing
           flashTimer: 0,
           flashDur: 1.5 + Math.random() * 2,
           nextFlash: 3 + Math.random() * 8,
@@ -374,8 +390,8 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
         if (hex.fadeValue <= 0) {
           hex.fadeDirection = 0;
           hex.visible = false;
-          hex.cooldown = 4 + Math.random() * 14; // wait 4-18s before next appearance
-          hex.holdDuration = 4 + Math.random() * 6;
+          hex.cooldown = 2 + Math.random() * 8; // wait 2-10s before next appearance
+          hex.holdDuration = 3 + Math.random() * 5;
         }
       }
 
