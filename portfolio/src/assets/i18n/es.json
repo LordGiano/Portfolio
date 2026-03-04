@@ -316,6 +316,7 @@
     "back": "Atrás",
     "next": "Siguiente",
     "submit": "Enviar",
+    "submit_error": "No se pudo enviar el reporte de error. ¡Por favor, inténtalo de nuevo!",
     "success_title": "¡Gracias!",
     "success_message": "Tu reporte de error se ha enviado correctamente. ¡Lo revisaremos pronto!"
   }

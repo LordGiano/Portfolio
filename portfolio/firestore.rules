@@ -1,12 +1,20 @@
 // firestore.rules
 // ──────────────────────────────────────────────────────────────
-// Security rules for the portfolio contact form.
+// Security rules for the portfolio.
 //
-// The "messages" collection:
+// Collections:
+//
+// 1. "messages" (contact form)
 //   - Anyone can CREATE (submit the contact form)
 //   - Nobody can READ, UPDATE, or DELETE from the client side
-//   - Cloud Functions run with admin privileges and bypass these rules
 //   - Validates required fields and enforces size limits
+//
+// 2. "bug-reports" (bug report modal)
+//   - Anyone can CREATE (submit a bug report)
+//   - Nobody can READ, UPDATE, or DELETE from the client side
+//   - Validates required fields and enforces size limits
+//
+// Cloud Functions run with admin privileges and bypass these rules.
 // ──────────────────────────────────────────────────────────────
 
 rules_version = '2';
@@ -39,6 +47,39 @@ service cloud.firestore {
         && request.resource.data.message.size() <= 2000
         // Prevent client from setting read to true
         && request.resource.data.read == false;
+
+      // No reading, updating, or deleting from client
+      allow read, update, delete: if false;
+    }
+
+    // Bug report submissions
+    match /bug-reports/{reportId} {
+
+      // Allow anyone to create a bug report
+      allow create: if
+        // Must have all required fields
+        request.resource.data.keys().hasAll(['category', 'severity', 'title', 'description', 'createdAt', 'status', 'source'])
+        // Field type validation
+        && request.resource.data.category is string
+        && request.resource.data.severity is string
+        && request.resource.data.title is string
+        && request.resource.data.description is string
+        && request.resource.data.status is string
+        && request.resource.data.source is string
+        // Category must be one of the allowed values
+        && request.resource.data.category in ['ui', 'functionality', 'performance', 'translation', 'other']
+        // Severity must be one of the allowed values
+        && request.resource.data.severity in ['low', 'medium', 'high', 'critical']
+        // Length limits (prevent abuse)
+        && request.resource.data.title.size() >= 5
+        && request.resource.data.title.size() <= 100
+        && request.resource.data.description.size() >= 10
+        && request.resource.data.description.size() <= 1000
+        // Prevent client from setting status to anything other than 'new'
+        && request.resource.data.status == 'new'
+        // Optional fields validation (if present)
+        && (!('reproduceSteps' in request.resource.data.keys()) || (request.resource.data.reproduceSteps is string && request.resource.data.reproduceSteps.size() <= 500))
+        && (!('email' in request.resource.data.keys()) || (request.resource.data.email is string && request.resource.data.email.size() <= 200));
 
       // No reading, updating, or deleting from client
       allow read, update, delete: if false;

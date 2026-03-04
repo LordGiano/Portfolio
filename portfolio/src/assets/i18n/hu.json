@@ -316,6 +316,7 @@
     "back": "Vissza",
     "next": "Tovább",
     "submit": "Beküldés",
+    "submit_error": "A hibajelentés küldése sikertelen. Kérlek próbáld újra!",
     "success_title": "Köszönjük!",
     "success_message": "A hibajelentésed sikeresen beérkezett. Hamarosan foglalkozunk vele!"
   }

@@ -316,6 +316,7 @@
     "back": "Zurück",
     "next": "Weiter",
     "submit": "Absenden",
+    "submit_error": "Der Fehlerbericht konnte nicht gesendet werden. Bitte versuchen Sie es erneut!",
     "success_title": "Vielen Dank!",
     "success_message": "Ihr Fehlerbericht wurde erfolgreich eingereicht. Wir werden ihn bald prüfen!"
   }

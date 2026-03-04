@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { TranslationService } from '../../services/translation.service';
+import { BugReportService } from '../../services/bug-report.service';
 import { Subscription } from 'rxjs';
 
 interface HexCell {
@@ -48,6 +49,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
   currentStep = 1;
   totalSteps = 3;
   submitSuccess = false;
+  submitError = false;
   buttonPulse = true;
 
   // Hex grid
@@ -84,7 +86,8 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private translationService: TranslationService
+    private translationService: TranslationService,
+    private bugReportService: BugReportService
   ) {}
 
   ngOnInit(): void {
@@ -133,6 +136,7 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
       document.documentElement.style.overflow = 'hidden';
       this.currentStep = 1;
       this.submitSuccess = false;
+      this.submitError = false;
       setTimeout(() => {
         this.initHexGrid();
         // Retry if canvas wasn't ready
@@ -181,24 +185,51 @@ export class BugReportComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.currentStep > 1) this.currentStep--;
   }
 
-  onSubmit(): void {
-    if (this.selectedCategory && this.bugReportForm.get('title')?.valid && this.bugReportForm.get('description')?.valid) {
-      this.isSubmitting = true;
-      setTimeout(() => {
-        this.isSubmitting = false;
-        this.submitSuccess = true;
-        setTimeout(() => {
-          this.bugReportForm.reset({ severity: 'medium' });
-          this.selectedCategory = '';
-          this.selectedSeverity = '';
-          this.isExpanded = false;
-          this.submitSuccess = false;
-          this.buttonPulse = true;
-          document.body.style.overflow = '';
-          document.documentElement.style.overflow = '';
-        }, 3000);
-      }, 2000);
+  async onSubmit(): Promise<void> {
+    if (!this.selectedCategory || this.bugReportForm.get('title')?.invalid || this.bugReportForm.get('description')?.invalid) {
+      return;
     }
+
+    this.isSubmitting = true;
+    this.submitError = false;
+
+    try {
+      await this.bugReportService.submitBugReport({
+        category: this.selectedCategory,
+        severity: this.selectedSeverity || 'medium',
+        title: this.bugReportForm.value.title.trim(),
+        description: this.bugReportForm.value.description.trim(),
+        reproduceSteps: this.bugReportForm.value.reproduceSteps?.trim() || '',
+        email: this.bugReportForm.value.email?.trim() || ''
+      });
+
+      this.isSubmitting = false;
+      this.submitSuccess = true;
+
+      setTimeout(() => {
+        this.bugReportForm.reset({ severity: 'medium' });
+        this.selectedCategory = '';
+        this.selectedSeverity = '';
+        this.isExpanded = false;
+        this.submitSuccess = false;
+        this.buttonPulse = true;
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+      }, 3000);
+
+    } catch (error) {
+      console.error('Failed to submit bug report:', error);
+      this.isSubmitting = false;
+      this.submitError = true;
+
+      setTimeout(() => {
+        this.submitError = false;
+      }, 5000);
+    }
+  }
+
+  dismissError(): void {
+    this.submitError = false;
   }
 
   getStepValid(step: number): boolean {

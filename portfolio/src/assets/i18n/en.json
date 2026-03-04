@@ -316,6 +316,7 @@
     "back": "Back",
     "next": "Next",
     "submit": "Submit",
+    "submit_error": "Failed to submit the bug report. Please try again!",
     "success_title": "Thank you!",
     "success_message": "Your bug report has been submitted successfully. We will look into it soon!"
   }
