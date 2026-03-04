@@ -152,6 +152,26 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   ];
 
+  // ——— Tech Stack Marquee ———
+  // id is used as CSS class suffix for per-tech coloring (no CSS variable binding issues)
+  techStackItems = [
+    { id: 'angular',    name: 'Angular',    icon: 'angular.svg' },
+    { id: 'typescript', name: 'TypeScript', icon: 'typescript.svg' },
+    { id: 'python',     name: 'Python',     icon: 'python.svg' },
+    { id: 'csharp',     name: 'C#',         icon: 'csharp.svg' },
+    { id: 'dotnet',     name: '.NET',       icon: 'dotnet.svg' },
+    { id: 'html5',      name: 'HTML5',      icon: 'html5.svg' },
+    { id: 'css3',       name: 'CSS3',       icon: 'css3.svg' },
+    { id: 'firebase',   name: 'Firebase',   icon: 'firebase.svg' },
+    { id: 'docker',     name: 'Docker',     icon: 'docker.svg' },
+    { id: 'git',        name: 'Git',        icon: 'git.svg' },
+    { id: 'mssql',      name: 'MSSQL',      icon: 'mssql.svg' },
+    { id: 'mysql',      name: 'MySQL',      icon: 'mysql.svg' },
+    { id: 'opencv',     name: 'OpenCV',     icon: 'opencv.svg' },
+    { id: 'istqb',      name: 'ISTQB',      icon: 'istqb.svg' },
+    { id: 'linux',      name: 'Linux',      icon: 'linux.svg' },
+  ];
+
   constructor(private translationService: TranslationService) {}
 
   ngOnInit(): void {
@@ -172,10 +192,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private onLanguageChange(lang: Language): void {
-    // Only Hungarian shows "vagyok" after the name
     this.showRoleSuffix = (lang === 'hu');
 
-    // Update typing animation texts from translations
     this.fullTexts = [
       this.translationService.translate('home.typed_1'),
       this.translationService.translate('home.typed_2'),
@@ -183,7 +201,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.translationService.translate('home.typed_4')
     ];
 
-    // Restart typing animation
     if (this.typingTimer) clearTimeout(this.typingTimer);
     this.typedText = '';
     this.currentTextIndex = 0;
@@ -192,12 +209,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.startTypingAnimation();
   }
 
-  // --- CV Download with language awareness ---
   downloadCV(): void {
     const lang = this.translationService.currentLang;
 
-    // Map of available CV files per language
-    // Files should be placed in: assets/documents/cv-{lang}.pdf
     const cvFiles: Record<string, string> = {
       'hu': '/assets/documents/cv-hu.pdf',
       'en': '/assets/documents/cv-en.pdf',
@@ -205,7 +219,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       'es': '/assets/documents/cv-es.pdf'
     };
 
-    // Use the current language's CV, fallback to English
     const cvUrl = cvFiles[lang] || cvFiles['en'];
 
     const fileNames: Record<string, string> = {
@@ -224,8 +237,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private getMLTechLabel(): string {
-    // This is a static tech label, not translated dynamically
-    // since tech names typically remain in their original form
     return 'ML';
   }
 
@@ -244,7 +255,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mouseY = event.clientY;
   }
 
-  // --- Typing animation ---
   private startTypingAnimation(): void {
     if (!this.fullTexts.length) return;
 
@@ -273,7 +283,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.typingTimer = setTimeout(() => this.startTypingAnimation(), speed);
   }
 
-  // --- Particle canvas ---
   private initParticleCanvas(): void {
     if (!this.canvasRef) return;
     const canvas = this.canvasRef.nativeElement;
@@ -312,7 +321,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
       if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
-      // Draw particle
       this.ctx.beginPath();
       this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
       this.ctx.fillStyle = p.color;
@@ -320,7 +328,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.ctx.fill();
     }
 
-    // Draw connections
     this.ctx.globalAlpha = 1;
     for (let i = 0; i < this.particles.length; i++) {
       for (let j = i + 1; j < this.particles.length; j++) {
@@ -344,7 +351,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.animationId = requestAnimationFrame(() => this.animateParticles());
   }
 
-  // --- Intersection observer for scroll reveal & counter ---
   private setupIntersectionObserver(): void {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -380,7 +386,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
       (this as any)[prop] = Math.round(start + (end - start) * eased);
       if (progress < 1) requestAnimationFrame(animate);
     };

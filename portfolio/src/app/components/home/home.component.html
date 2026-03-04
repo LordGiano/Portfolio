@@ -51,6 +51,29 @@
         </a>
       </div>
 
+      <!-- ===== TECH STACK MARQUEE (hero bottom) ===== -->
+      <div class="hero-tech-marquee">
+        <div class="marquee-wrapper">
+          <div class="marquee-track">
+            <ng-container *ngFor="let set of [1,2,3]">
+              <div class="tech-chip"
+                   *ngFor="let tech of techStackItems"
+                   [class]="'tech-chip tech-chip--' + tech.id">
+                <div class="tech-chip-logo">
+                  <img [src]="'assets/tech-logos/' + tech.icon"
+                       [alt]="tech.name"
+                       loading="lazy"
+                       width="24"
+                       height="24">
+                </div>
+                <span class="tech-chip-name">{{ tech.name }}</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="marquee-glow"></div>
+      </div>
+
       <div class="scroll-indicator" (click)="scrollToSection('stats-section')">
         <div class="scroll-mouse">
           <div class="scroll-wheel"></div>

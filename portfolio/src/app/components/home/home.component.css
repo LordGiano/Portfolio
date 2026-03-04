@@ -105,6 +105,198 @@
 .scroll-indicator span { font-size: .7rem; color: var(--c-text-muted); letter-spacing: .1em; text-transform: uppercase; }
 @keyframes fade-in-up { from { opacity: 0; transform: translateY(10px); } to { opacity: .5; transform: translateY(0); } }
 
+/* ===== TECH STACK MARQUEE (inside hero) ===== */
+.hero-tech-marquee {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+.marquee-wrapper {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: .5rem 0;
+}
+
+.marquee-wrapper::before,
+.marquee-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: clamp(60px, 12vw, 150px);
+  z-index: 10;
+  pointer-events: none;
+}
+.marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--c-surface) 0%, transparent 100%);
+}
+.marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(-90deg, var(--c-surface) 0%, transparent 100%);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 1.25rem;
+  animation: marquee-scroll 40s linear infinite;
+}
+
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-33.333%); }
+}
+
+.marquee-wrapper:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* --- Base tech chip --- */
+.tech-chip {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 20px 10px 13px;
+  border-radius: 11px !important;
+  white-space: nowrap;
+  transition: all .35s cubic-bezier(.25, .46, .45, .94) !important;
+  cursor: default;
+  flex-shrink: 0;
+  backdrop-filter: blur(4px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: none !important;
+  /* Default fallback */
+  background: rgba(30, 41, 59, .6) !important;
+  border: 1px solid rgba(148, 163, 184, .15) !important;
+}
+
+.tech-chip::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, .3), transparent);
+  opacity: .8;
+  transition: opacity .35s;
+}
+
+.tech-chip:hover {
+  transform: translateY(-2px) !important;
+}
+
+.tech-chip-logo {
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.tech-chip-logo img {
+  width: 24px; height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, .25));
+}
+
+.tech-chip-name {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: .78rem !important;
+  font-weight: 500;
+  color: #94A3B8 !important;
+  transition: color .3s, text-shadow .3s !important;
+  position: relative;
+  z-index: 1;
+}
+
+.marquee-glow {
+  width: min(600px, 70%);
+  height: 1px;
+  margin: 1rem auto 0;
+  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, .15), rgba(167, 139, 250, .1), transparent);
+}
+
+/* --- PER-TECH COLOR CLASSES --- */
+/* Each tech gets its own class with brand color — no CSS variable binding needed */
+
+.tech-chip--angular    { background: rgba(221,0,49,.10) !important;   border-color: rgba(221,0,49,.25) !important; }
+.tech-chip--angular::before { background: linear-gradient(90deg, transparent, rgba(221,0,49,.7), transparent); }
+.tech-chip--angular .tech-chip-name { color: #FF4D6A !important; }
+.tech-chip--angular:hover { border-color: rgba(221,0,49,.55) !important; box-shadow: 0 0 28px rgba(221,0,49,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(221,0,49,.18) !important; }
+
+.tech-chip--typescript { background: rgba(49,120,198,.10) !important;  border-color: rgba(49,120,198,.25) !important; }
+.tech-chip--typescript::before { background: linear-gradient(90deg, transparent, rgba(49,120,198,.7), transparent); }
+.tech-chip--typescript .tech-chip-name { color: #58A6FF !important; }
+.tech-chip--typescript:hover { border-color: rgba(49,120,198,.55) !important; box-shadow: 0 0 28px rgba(49,120,198,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(49,120,198,.18) !important; }
+
+.tech-chip--python     { background: rgba(55,118,171,.10) !important;  border-color: rgba(55,118,171,.25) !important; }
+.tech-chip--python::before { background: linear-gradient(90deg, transparent, rgba(55,118,171,.7), transparent); }
+.tech-chip--python .tech-chip-name { color: #6DB3F2 !important; }
+.tech-chip--python:hover { border-color: rgba(55,118,171,.55) !important; box-shadow: 0 0 28px rgba(55,118,171,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(55,118,171,.18) !important; }
+
+.tech-chip--csharp     { background: rgba(155,79,150,.10) !important;  border-color: rgba(155,79,150,.25) !important; }
+.tech-chip--csharp::before { background: linear-gradient(90deg, transparent, rgba(155,79,150,.7), transparent); }
+.tech-chip--csharp .tech-chip-name { color: #C97CC4 !important; }
+.tech-chip--csharp:hover { border-color: rgba(155,79,150,.55) !important; box-shadow: 0 0 28px rgba(155,79,150,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(155,79,150,.18) !important; }
+
+.tech-chip--dotnet     { background: rgba(98,54,151,.10) !important;   border-color: rgba(98,54,151,.25) !important; }
+.tech-chip--dotnet::before { background: linear-gradient(90deg, transparent, rgba(98,54,151,.7), transparent); }
+.tech-chip--dotnet .tech-chip-name { color: #A87FDB !important; }
+.tech-chip--dotnet:hover { border-color: rgba(98,54,151,.55) !important; box-shadow: 0 0 28px rgba(98,54,151,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(98,54,151,.18) !important; }
+
+.tech-chip--html5      { background: rgba(228,77,38,.10) !important;   border-color: rgba(228,77,38,.25) !important; }
+.tech-chip--html5::before { background: linear-gradient(90deg, transparent, rgba(228,77,38,.7), transparent); }
+.tech-chip--html5 .tech-chip-name { color: #F0825A !important; }
+.tech-chip--html5:hover { border-color: rgba(228,77,38,.55) !important; box-shadow: 0 0 28px rgba(228,77,38,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(228,77,38,.18) !important; }
+
+.tech-chip--css3       { background: rgba(21,114,182,.10) !important;  border-color: rgba(21,114,182,.25) !important; }
+.tech-chip--css3::before { background: linear-gradient(90deg, transparent, rgba(21,114,182,.7), transparent); }
+.tech-chip--css3 .tech-chip-name { color: #47B5FF !important; }
+.tech-chip--css3:hover { border-color: rgba(21,114,182,.55) !important; box-shadow: 0 0 28px rgba(21,114,182,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(21,114,182,.18) !important; }
+
+.tech-chip--firebase   { background: rgba(255,180,0,.10) !important;   border-color: rgba(255,180,0,.25) !important; }
+.tech-chip--firebase::before { background: linear-gradient(90deg, transparent, rgba(255,180,0,.7), transparent); }
+.tech-chip--firebase .tech-chip-name { color: #FFD054 !important; }
+.tech-chip--firebase:hover { border-color: rgba(255,180,0,.55) !important; box-shadow: 0 0 28px rgba(255,180,0,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(255,180,0,.18) !important; }
+
+.tech-chip--docker     { background: rgba(36,150,237,.10) !important;  border-color: rgba(36,150,237,.25) !important; }
+.tech-chip--docker::before { background: linear-gradient(90deg, transparent, rgba(36,150,237,.7), transparent); }
+.tech-chip--docker .tech-chip-name { color: #56B8FF !important; }
+.tech-chip--docker:hover { border-color: rgba(36,150,237,.55) !important; box-shadow: 0 0 28px rgba(36,150,237,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(36,150,237,.18) !important; }
+
+.tech-chip--git        { background: rgba(243,79,41,.10) !important;   border-color: rgba(243,79,41,.25) !important; }
+.tech-chip--git::before { background: linear-gradient(90deg, transparent, rgba(243,79,41,.7), transparent); }
+.tech-chip--git .tech-chip-name { color: #FF8A65 !important; }
+.tech-chip--git:hover { border-color: rgba(243,79,41,.55) !important; box-shadow: 0 0 28px rgba(243,79,41,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(243,79,41,.18) !important; }
+
+.tech-chip--mssql      { background: rgba(204,41,39,.10) !important;   border-color: rgba(204,41,39,.25) !important; }
+.tech-chip--mssql::before { background: linear-gradient(90deg, transparent, rgba(204,41,39,.7), transparent); }
+.tech-chip--mssql .tech-chip-name { color: #FF6B6B !important; }
+.tech-chip--mssql:hover { border-color: rgba(204,41,39,.55) !important; box-shadow: 0 0 28px rgba(204,41,39,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(204,41,39,.18) !important; }
+
+.tech-chip--mysql      { background: rgba(0,117,143,.10) !important;   border-color: rgba(0,117,143,.25) !important; }
+.tech-chip--mysql::before { background: linear-gradient(90deg, transparent, rgba(0,117,143,.7), transparent); }
+.tech-chip--mysql .tech-chip-name { color: #40C4AA !important; }
+.tech-chip--mysql:hover { border-color: rgba(0,117,143,.55) !important; box-shadow: 0 0 28px rgba(0,117,143,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(0,117,143,.18) !important; }
+
+.tech-chip--opencv     { background: rgba(18,141,255,.10) !important;  border-color: rgba(18,141,255,.25) !important; }
+.tech-chip--opencv::before { background: linear-gradient(90deg, transparent, rgba(18,141,255,.7), transparent); }
+.tech-chip--opencv .tech-chip-name { color: #5DAAFF !important; }
+.tech-chip--opencv:hover { border-color: rgba(18,141,255,.55) !important; box-shadow: 0 0 28px rgba(18,141,255,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(18,141,255,.18) !important; }
+
+.tech-chip--istqb      { background: rgba(0,161,224,.10) !important;   border-color: rgba(0,161,224,.25) !important; }
+.tech-chip--istqb::before { background: linear-gradient(90deg, transparent, rgba(0,161,224,.7), transparent); }
+.tech-chip--istqb .tech-chip-name { color: #4DC8FF !important; }
+.tech-chip--istqb:hover { border-color: rgba(0,161,224,.55) !important; box-shadow: 0 0 28px rgba(0,161,224,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(0,161,224,.18) !important; }
+
+.tech-chip--linux      { background: rgba(252,198,36,.10) !important;  border-color: rgba(252,198,36,.25) !important; }
+.tech-chip--linux::before { background: linear-gradient(90deg, transparent, rgba(252,198,36,.7), transparent); }
+.tech-chip--linux .tech-chip-name { color: #FFE066 !important; }
+.tech-chip--linux:hover { border-color: rgba(252,198,36,.55) !important; box-shadow: 0 0 28px rgba(252,198,36,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(252,198,36,.18) !important; }
+
 /* ===== STATS ===== */
 .stats-section { background: var(--c-surface-light) !important; padding: 4rem 0 !important; border-top: 1px solid var(--c-border) !important; border-bottom: 1px solid var(--c-border) !important; }
 .stats-section.visible .stat-item { animation: slide-up .6s ease-out both; }
@@ -216,5 +408,10 @@
   .geo-shape { display: none; }
   .cta-actions { flex-direction: column; align-items: center; }
   .btn-lg { width: 100%; max-width: 280px; justify-content: center; }
+  /* Tech marquee responsive */
+  .tech-chip { padding: 8px 16px 8px 10px; gap: 8px; border-radius: 10px !important; }
+  .tech-chip-logo, .tech-chip-logo img { width: 20px; height: 20px; }
+  .tech-chip-name { font-size: .7rem !important; }
+  .marquee-track { gap: 1rem; }
 }
 @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } .hero-title { font-size: 2rem !important; } }
