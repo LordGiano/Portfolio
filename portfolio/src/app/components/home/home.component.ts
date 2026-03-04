@@ -157,9 +157,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   techStackItems = [
     { id: 'angular',    name: 'Angular',    icon: 'angular.svg' },
     { id: 'typescript', name: 'TypeScript', icon: 'typescript.svg' },
+    { id: 'javascript', name: 'JavaScript', icon: 'javascript.svg' },
     { id: 'python',     name: 'Python',     icon: 'python.svg' },
+    { id: 'java',       name: 'Java',       icon: 'java.svg' },
+    { id: 'kotlin',     name: 'Kotlin',     icon: 'kotlin.svg' },
     { id: 'csharp',     name: 'C#',         icon: 'csharp.svg' },
     { id: 'dotnet',     name: '.NET',       icon: 'dotnet.svg' },
+    { id: 'android',    name: 'Android',    icon: 'android.svg' },
     { id: 'html5',      name: 'HTML5',      icon: 'html5.svg' },
     { id: 'css3',       name: 'CSS3',       icon: 'css3.svg' },
     { id: 'firebase',   name: 'Firebase',   icon: 'firebase.svg' },

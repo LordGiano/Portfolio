@@ -111,6 +111,8 @@
   margin-left: calc(-50vw + 50%);
   margin-bottom: 2rem;
   margin-top: 1rem;
+  padding: 0 6vw;            /* <-- ÚJ: behúzás mindkét oldalon */
+  box-sizing: border-box;    /* <-- hogy a padding ne lógjon ki */
 }
 
 .marquee-wrapper {
@@ -277,10 +279,10 @@
 .tech-chip--mssql .tech-chip-name { color: #FF6B6B !important; }
 .tech-chip--mssql:hover { border-color: rgba(204,41,39,.55) !important; box-shadow: 0 0 28px rgba(204,41,39,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(204,41,39,.18) !important; }
 
-.tech-chip--mysql      { background: rgba(0,117,143,.10) !important;   border-color: rgba(0,117,143,.25) !important; }
-.tech-chip--mysql::before { background: linear-gradient(90deg, transparent, rgba(0,117,143,.7), transparent); }
-.tech-chip--mysql .tech-chip-name { color: #40C4AA !important; }
-.tech-chip--mysql:hover { border-color: rgba(0,117,143,.55) !important; box-shadow: 0 0 28px rgba(0,117,143,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(0,117,143,.18) !important; }
+.tech-chip--mysql      { background: rgba(0,149,181,.10) !important;   border-color: rgba(0,149,181,.25) !important; }
+.tech-chip--mysql::before { background: linear-gradient(90deg, transparent, rgba(0,149,181,.7), transparent); }
+.tech-chip--mysql .tech-chip-name { color: #4DD9C0 !important; }
+.tech-chip--mysql:hover { border-color: rgba(0,149,181,.55) !important; box-shadow: 0 0 28px rgba(0,149,181,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(0,149,181,.18) !important; }
 
 .tech-chip--opencv     { background: rgba(18,141,255,.10) !important;  border-color: rgba(18,141,255,.25) !important; }
 .tech-chip--opencv::before { background: linear-gradient(90deg, transparent, rgba(18,141,255,.7), transparent); }
@@ -296,6 +298,28 @@
 .tech-chip--linux::before { background: linear-gradient(90deg, transparent, rgba(252,198,36,.7), transparent); }
 .tech-chip--linux .tech-chip-name { color: #FFE066 !important; }
 .tech-chip--linux:hover { border-color: rgba(252,198,36,.55) !important; box-shadow: 0 0 28px rgba(252,198,36,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(252,198,36,.18) !important; }
+
+/* --- 2) ÚJ TECH CHIP SZÍNEK --- */
+
+.tech-chip--javascript { background: rgba(247,223,30,.10) !important;  border-color: rgba(247,223,30,.25) !important; }
+.tech-chip--javascript::before { background: linear-gradient(90deg, transparent, rgba(247,223,30,.7), transparent); }
+.tech-chip--javascript .tech-chip-name { color: #F7DF1E !important; }
+.tech-chip--javascript:hover { border-color: rgba(247,223,30,.55) !important; box-shadow: 0 0 28px rgba(247,223,30,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(247,223,30,.18) !important; }
+
+.tech-chip--java       { background: rgba(231,111,0,.10) !important;   border-color: rgba(231,111,0,.25) !important; }
+.tech-chip--java::before { background: linear-gradient(90deg, transparent, rgba(231,111,0,.7), transparent); }
+.tech-chip--java .tech-chip-name { color: #F0925A !important; }
+.tech-chip--java:hover { border-color: rgba(231,111,0,.55) !important; box-shadow: 0 0 28px rgba(231,111,0,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(231,111,0,.18) !important; }
+
+.tech-chip--kotlin     { background: rgba(127,82,255,.10) !important;  border-color: rgba(127,82,255,.25) !important; }
+.tech-chip--kotlin::before { background: linear-gradient(90deg, transparent, rgba(127,82,255,.7), transparent); }
+.tech-chip--kotlin .tech-chip-name { color: #A78BFA !important; }
+.tech-chip--kotlin:hover { border-color: rgba(127,82,255,.55) !important; box-shadow: 0 0 28px rgba(127,82,255,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(127,82,255,.18) !important; }
+
+.tech-chip--android    { background: rgba(164,196,57,.10) !important;  border-color: rgba(164,196,57,.25) !important; }
+.tech-chip--android::before { background: linear-gradient(90deg, transparent, rgba(164,196,57,.7), transparent); }
+.tech-chip--android .tech-chip-name { color: #B8D968 !important; }
+.tech-chip--android:hover { border-color: rgba(164,196,57,.55) !important; box-shadow: 0 0 28px rgba(164,196,57,.18), 0 4px 20px rgba(0,0,0,.3) !important; background: rgba(164,196,57,.18) !important; }
 
 /* ===== STATS ===== */
 .stats-section { background: var(--c-surface-light) !important; padding: 4rem 0 !important; border-top: 1px solid var(--c-border) !important; border-bottom: 1px solid var(--c-border) !important; }
