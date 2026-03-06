@@ -8,14 +8,16 @@ import { Subscription } from 'rxjs';
 import { TranslationService, Language } from '../../services/translation.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
-interface Particle {
+interface NetworkNode {
   x: number;
   y: number;
+  z: number;          // depth (0.4–1.0) for parallax + size scaling
   vx: number;
   vy: number;
   radius: number;
-  opacity: number;
   color: string;
+  pulse: number;       // phase for pulsing glow
+  pulseSpeed: number;
 }
 
 interface LanguageSkill {
@@ -56,12 +58,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   showRoleSuffix = true;
   private langSub!: Subscription;
 
-  // Particle system
-  private particles: Particle[] = [];
+  // Network node system
+  private nodes: NetworkNode[] = [];
   private animationId: any;
   private ctx!: CanvasRenderingContext2D;
-  private mouseX = 0;
-  private mouseY = 0;
+  private canvasW = 0;
+  private canvasH = 0;
+
+  // Mouse tracking – pixel coords relative to canvas; null = mouse outside hero
+  private mouseCanvasX: number | null = null;
+  private mouseCanvasY: number | null = null;
+  // Normalised 0‑1 coords for parallax (default center)
+  private mouseNormX = 0.5;
+  private mouseNormY = 0.5;
+  private mouseInsideHero = false;
 
   // Counter animations
   yearsExperience = 0;
@@ -161,7 +171,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
 
   // ——— Tech Stack Marquee ———
-  // id is used as CSS class suffix for per-tech coloring (no CSS variable binding issues)
   techStackItems = [
     { id: 'angular',    name: 'Angular',    icon: 'angular.svg' },
     { id: 'typescript', name: 'TypeScript', icon: 'typescript.svg' },
@@ -184,7 +193,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     { id: 'linux',      name: 'Linux',      icon: 'linux.svg' },
   ];
 
-  // ——— Language Skills (moved from Experience) ———
+  // ——— Language Skills ———
   languages: LanguageSkill[] = [];
 
   constructor(private translationService: TranslationService) {}
@@ -196,8 +205,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.initParticleCanvas();
+    this.initNodeNetwork();
     this.setupIntersectionObserver();
+    this.attachHeroMouseListeners();
   }
 
   ngOnDestroy(): void {
@@ -237,7 +247,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getRingDash(percent: number): string {
-    const circumference = 2 * Math.PI * 58; // r=58 matching SVG circle r="58"
+    const circumference = 2 * Math.PI * 58;
     const filled = (percent / 100) * circumference;
     return `${filled} ${circumference}`;
   }
@@ -273,21 +283,205 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return 'ML';
   }
 
+  // ──────────────────────────────────────────────
+  //  Canvas resize
+  // ──────────────────────────────────────────────
   @HostListener('window:resize')
   onResize(): void {
-    if (this.canvasRef) {
-      const canvas = this.canvasRef.nativeElement;
-      canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
-      canvas.height = canvas.parentElement?.offsetHeight || window.innerHeight;
+    this.resizeCanvasToParent();
+  }
+
+  private resizeCanvasToParent(): void {
+    if (!this.canvasRef) return;
+    const canvas = this.canvasRef.nativeElement;
+    const parent = canvas.parentElement;
+    if (!parent) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = parent.offsetWidth;
+    const h = parent.offsetHeight;
+
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    this.canvasW = w;
+    this.canvasH = h;
+  }
+
+  // ──────────────────────────────────────────────
+  //  Mouse tracking — only inside hero-section
+  // ──────────────────────────────────────────────
+  private attachHeroMouseListeners(): void {
+    const heroEl = this.canvasRef?.nativeElement?.closest('.hero-section') as HTMLElement | null;
+    if (!heroEl) return;
+
+    heroEl.addEventListener('mousemove', (e: MouseEvent) => {
+      const rect = heroEl.getBoundingClientRect();
+      this.mouseCanvasX = e.clientX - rect.left;
+      this.mouseCanvasY = e.clientY - rect.top;
+      this.mouseNormX = (e.clientX - rect.left) / rect.width;
+      this.mouseNormY = (e.clientY - rect.top) / rect.height;
+      this.mouseInsideHero = true;
+    });
+
+    heroEl.addEventListener('mouseleave', () => {
+      this.mouseInsideHero = false;
+      this.mouseCanvasX = null;
+      this.mouseCanvasY = null;
+      // Keep last norm for parallax so it doesn't snap
+    });
+  }
+
+  // ──────────────────────────────────────────────
+  //  Node network initialisation
+  // ──────────────────────────────────────────────
+  private initNodeNetwork(): void {
+    if (!this.canvasRef) return;
+    const canvas = this.canvasRef.nativeElement;
+    this.ctx = canvas.getContext('2d')!;
+    this.resizeCanvasToParent();
+
+    const colors = ['#2563EB', '#4F46E5', '#7C3AED', '#3B82F6', '#06B6D4'];
+    // More nodes for a denser network feel
+    const count = Math.min(Math.floor((this.canvasW * this.canvasH) / 7000), 100);
+
+    this.nodes = [];
+    for (let i = 0; i < count; i++) {
+      this.nodes.push({
+        x: Math.random() * this.canvasW,
+        y: Math.random() * this.canvasH,
+        z: Math.random() * 0.6 + 0.4,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        radius: Math.random() * 2.5 + 2,
+        color: colors[i % colors.length],
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.015 + Math.random() * 0.02
+      });
     }
+
+    this.animateNetwork();
   }
 
-  @HostListener('window:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent): void {
-    this.mouseX = event.clientX;
-    this.mouseY = event.clientY;
+  // ──────────────────────────────────────────────
+  //  Render loop
+  // ──────────────────────────────────────────────
+  private animateNetwork(): void {
+    const canvas = this.canvasRef?.nativeElement;
+    if (!canvas || !this.ctx) return;
+
+    const w = this.canvasW;
+    const h = this.canvasH;
+    const ctx = this.ctx;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // --- Update nodes ---
+    for (const n of this.nodes) {
+      n.x += n.vx;
+      n.y += n.vy;
+      n.pulse += n.pulseSpeed;
+
+      // Parallax offset from mouse (normalised)
+      const px = (this.mouseNormX - 0.5) * 25 * n.z;
+      const py = (this.mouseNormY - 0.5) * 25 * n.z;
+      (n as any)._dx = n.x + px;
+      (n as any)._dy = n.y + py;
+
+      // Wrap edges with margin
+      if (n.x < -40) n.x = w + 40;
+      if (n.x > w + 40) n.x = -40;
+      if (n.y < -40) n.y = h + 40;
+      if (n.y > h + 40) n.y = -40;
+    }
+
+    // --- Draw connections between nodes ---
+    const maxDist = 160;
+    for (let i = 0; i < this.nodes.length; i++) {
+      const a = this.nodes[i];
+      const ax = (a as any)._dx;
+      const ay = (a as any)._dy;
+      for (let j = i + 1; j < this.nodes.length; j++) {
+        const b = this.nodes[j];
+        const bx = (b as any)._dx;
+        const by = (b as any)._dy;
+        const dx = ax - bx;
+        const dy = ay - by;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < maxDist) {
+          const alpha = (1 - dist / maxDist) * 0.22;
+          ctx.beginPath();
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(bx, by);
+          ctx.strokeStyle = `rgba(124,58,237,${alpha})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // --- Mouse connections (only when inside hero) ---
+    if (this.mouseInsideHero && this.mouseCanvasX !== null && this.mouseCanvasY !== null) {
+      const mx = this.mouseCanvasX;
+      const my = this.mouseCanvasY;
+      const mouseReach = 200;
+
+      for (const n of this.nodes) {
+        const nx = (n as any)._dx;
+        const ny = (n as any)._dy;
+        const dx = nx - mx;
+        const dy = ny - my;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < mouseReach) {
+          const alpha = (1 - dist / mouseReach) * 0.45;
+          ctx.beginPath();
+          ctx.moveTo(nx, ny);
+          ctx.lineTo(mx, my);
+          ctx.strokeStyle = `rgba(6,182,212,${alpha})`;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // --- Draw node dots ---
+    for (const n of this.nodes) {
+      const nx = (n as any)._dx;
+      const ny = (n as any)._dy;
+      const pulseR = Math.sin(n.pulse) * 1.5;
+      const r = (n.radius + pulseR) * n.z;
+
+      // Outer glow
+      const grd = ctx.createRadialGradient(nx, ny, 0, nx, ny, r * 3.5);
+      grd.addColorStop(0, n.color + '28');
+      grd.addColorStop(1, 'transparent');
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(nx, ny, r * 3.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(nx, ny, r, 0, Math.PI * 2);
+      ctx.fillStyle = n.color;
+      ctx.fill();
+
+      // Inner highlight (small white center)
+      ctx.beginPath();
+      ctx.arc(nx, ny, r * 0.35, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.fill();
+    }
+
+    this.animationId = requestAnimationFrame(() => this.animateNetwork());
   }
 
+  // ──────────────────────────────────────────────
+  //  Typing animation
+  // ──────────────────────────────────────────────
   private startTypingAnimation(): void {
     if (!this.fullTexts.length) return;
 
@@ -316,74 +510,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.typingTimer = setTimeout(() => this.startTypingAnimation(), speed);
   }
 
-  private initParticleCanvas(): void {
-    if (!this.canvasRef) return;
-    const canvas = this.canvasRef.nativeElement;
-    this.ctx = canvas.getContext('2d')!;
-    canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
-    canvas.height = canvas.parentElement?.offsetHeight || 700;
-
-    const colors = ['#2563EB', '#4F46E5', '#7C3AED', '#3B82F6', '#06B6D4'];
-    const count = Math.min(80, Math.floor(canvas.width / 15));
-
-    for (let i = 0; i < count; i++) {
-      this.particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.8,
-        vy: (Math.random() - 0.5) * 0.8,
-        radius: Math.random() * 2 + 1,
-        opacity: Math.random() * 0.5 + 0.2,
-        color: colors[Math.floor(Math.random() * colors.length)]
-      });
-    }
-
-    this.animateParticles();
-  }
-
-  private animateParticles(): void {
-    const canvas = this.canvasRef?.nativeElement;
-    if (!canvas || !this.ctx) return;
-
-    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (const p of this.particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      this.ctx.fillStyle = p.color;
-      this.ctx.globalAlpha = p.opacity;
-      this.ctx.fill();
-    }
-
-    this.ctx.globalAlpha = 1;
-    for (let i = 0; i < this.particles.length; i++) {
-      for (let j = i + 1; j < this.particles.length; j++) {
-        const dx = this.particles[i].x - this.particles[j].x;
-        const dy = this.particles[i].y - this.particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < 120) {
-          this.ctx.beginPath();
-          this.ctx.strokeStyle = this.particles[i].color;
-          this.ctx.globalAlpha = (1 - dist / 120) * 0.15;
-          this.ctx.lineWidth = 0.5;
-          this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-          this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-          this.ctx.stroke();
-        }
-      }
-    }
-
-    this.ctx.globalAlpha = 1;
-    this.animationId = requestAnimationFrame(() => this.animateParticles());
-  }
-
+  // ──────────────────────────────────────────────
+  //  Intersection observer
+  // ──────────────────────────────────────────────
   private setupIntersectionObserver(): void {
     const observer = new IntersectionObserver(
       (entries) => {
