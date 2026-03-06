@@ -37,15 +37,15 @@
       </p>
 
       <div class="hero-actions">
-        <a routerLink="/projects" class="btn-primary">
+        <a routerLink="/projects" class="btn-hero">
           <mat-icon>rocket_launch</mat-icon>
           {{ 'home.btn_projects' | translate }}
         </a>
-        <a routerLink="/contact" class="btn-secondary">
-          <mat-icon>mail_outline</mat-icon>
-          {{ 'home.btn_contact' | translate }}
+        <a class="btn-hero" (click)="downloadCV()" style="cursor: pointer;">
+          <mat-icon>description</mat-icon>
+          {{ 'home.cta_cv' | translate }}
         </a>
-        <a href="https://github.com/LordGiano" target="_blank" rel="noopener" class="btn-ghost">
+        <a href="https://github.com/LordGiano" target="_blank" rel="noopener" class="btn-hero">
           <mat-icon>code</mat-icon>
           GitHub
         </a>
