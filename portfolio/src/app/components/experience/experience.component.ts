@@ -25,11 +25,6 @@ interface Competency {
   color: string; gradient: string;
 }
 
-interface LanguageSkill {
-  name: string; level: string; flag: string;
-  percent: number; color: string;
-}
-
 @Component({
   selector: 'app-experience',
   standalone: true,
@@ -60,7 +55,6 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
   workExperiences: WorkExperience[] = [];
   educations: Education[] = [];
   competencies: Competency[] = [];
-  languages: LanguageSkill[] = [];
 
   constructor(private translationService: TranslationService) {}
 
@@ -170,13 +164,6 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.activeEduPage > 0) this.goToEduPage(this.activeEduPage - 1);
   }
 
-  // —— Ring circumference helper ——
-  getRingDash(percent: number): string {
-    const circumference = 2 * Math.PI * 52;
-    const filled = (percent / 100) * circumference;
-    return `${filled} ${circumference}`;
-  }
-
   getTypeLabel(type: string): string {
     const t = (key: string) => this.translationService.translate(key);
     switch (type) {
@@ -231,13 +218,6 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
       { matIcon: 'bug_report', title: t('exp.comp_testing'), items: ['ISTQB', 'Manual Testing', 'Test Plans'], color: '#DC2626', gradient: 'linear-gradient(135deg, #DC2626, #EF4444)' },
       { matIcon: 'devices', title: t('exp.comp_devops'), items: ['Docker', 'Git', 'GitHub', 'Agile/Scrum'], color: '#0891B2', gradient: 'linear-gradient(135deg, #0891B2, #06B6D4)' },
       { matIcon: 'visibility', title: t('exp.comp_cv'), items: ['OpenCV', 'MediaPipe', 'Image Proc.'], color: '#7C3AED', gradient: 'linear-gradient(135deg, #7C3AED, #8B5CF6)' }
-    ];
-
-    this.languages = [
-      { name: t('exp.lang_hu'), level: t('exp.lang_native'), flag: '🇭🇺', percent: 100, color: '#22C55E' },
-      { name: t('exp.lang_en'), level: 'C1', flag: '🇬🇧', percent: 85, color: '#2563EB' },
-      { name: t('exp.lang_de'), level: 'B2', flag: '🇩🇪', percent: 65, color: '#D97706' },
-      { name: t('exp.lang_es'), level: 'B1', flag: '🇪🇸', percent: 50, color: '#DC2626' }
     ];
   }
 }

@@ -18,6 +18,14 @@ interface Particle {
   color: string;
 }
 
+interface LanguageSkill {
+  name: string;
+  level: string;
+  flag: string;
+  percent: number;
+  color: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -176,6 +184,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     { id: 'linux',      name: 'Linux',      icon: 'linux.svg' },
   ];
 
+  // ——— Language Skills (moved from Experience) ———
+  languages: LanguageSkill[] = [];
+
   constructor(private translationService: TranslationService) {}
 
   ngOnInit(): void {
@@ -211,6 +222,24 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.charIndex = 0;
     this.isDeleting = false;
     this.startTypingAnimation();
+
+    this.loadLanguages();
+  }
+
+  private loadLanguages(): void {
+    const t = (key: string) => this.translationService.translate(key);
+    this.languages = [
+      { name: t('home.lang_hu'), level: t('home.lang_native'), flag: '🇭🇺', percent: 100, color: '#22C55E' },
+      { name: t('home.lang_en'), level: 'C1', flag: '🇬🇧', percent: 85, color: '#3B82F6' },
+      { name: t('home.lang_de'), level: 'B2', flag: '🇩🇪', percent: 65, color: '#F59E0B' },
+      { name: t('home.lang_es'), level: 'B1', flag: '🇪🇸', percent: 50, color: '#EF4444' }
+    ];
+  }
+
+  getRingDash(percent: number): string {
+    const circumference = 2 * Math.PI * 58; // r=58 matching SVG circle r="58"
+    const filled = (percent / 100) * circumference;
+    return `${filled} ${circumference}`;
   }
 
   downloadCV(): void {

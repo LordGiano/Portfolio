@@ -113,6 +113,37 @@
     </div>
   </section>
 
+  <!-- ==================== LANGUAGES SECTION (SVG Rings) ==================== -->
+  <section class="languages-section"
+           data-section="languages"
+           [class.visible]="isSectionVisible('languages')">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">{{ 'home.lang_tag' | translate }}</span>
+        <h2 class="section-title">{{ 'home.lang_title' | translate }}</h2>
+        <p class="section-desc">{{ 'home.lang_desc' | translate }}</p>
+      </div>
+
+      <div class="rings-grid">
+        <div class="ring-card" *ngFor="let lang of languages; let i = index"
+             [style.animation-delay]="(i * 0.15) + 's'">
+          <div class="ring-visual">
+            <svg viewBox="0 0 140 140" class="ring-svg">
+              <circle cx="70" cy="70" r="58" class="ring-track"/>
+              <circle cx="70" cy="70" r="58" class="ring-progress"
+                      [style.stroke]="lang.color"
+                      [attr.stroke-dasharray]="getRingDash(lang.percent)"
+                      stroke-dashoffset="0"/>
+            </svg>
+            <span class="ring-flag">{{ lang.flag }}</span>
+          </div>
+          <span class="ring-name">{{ lang.name }}</span>
+          <span class="ring-level" [style.color]="lang.color">{{ lang.level }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ==================== COMPETENCIES SECTION ==================== -->
   <section class="competencies-section"
            data-section="competencies"

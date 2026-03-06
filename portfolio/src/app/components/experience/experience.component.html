@@ -271,35 +271,6 @@
     </div>
   </section>
 
-  <!-- ===== LANGUAGES — Fixed SVG Rings ===== -->
-  <section class="rings-section" data-section="rings"
-           [class.visible]="isSectionVisible('rings')">
-    <div class="container">
-      <div class="section-head">
-        <span class="section-label">{{ 'exp.lang_tag' | translate }}</span>
-        <h2>{{ 'exp.lang_title' | translate }}</h2>
-      </div>
-
-      <div class="rings-grid">
-        <div class="ring-card" *ngFor="let lang of languages; let i = index"
-             [style.animation-delay]="(i * 0.15) + 's'">
-          <div class="ring-visual">
-            <svg viewBox="0 0 140 140" class="ring-svg">
-              <circle cx="70" cy="70" r="58" class="ring-track"/>
-              <circle cx="70" cy="70" r="58" class="ring-progress"
-                      [style.stroke]="lang.color"
-                      [attr.stroke-dasharray]="getRingDash(lang.percent)"
-                      stroke-dashoffset="0"/>
-            </svg>
-            <span class="ring-flag">{{ lang.flag }}</span>
-          </div>
-          <span class="ring-name">{{ lang.name }}</span>
-          <span class="ring-level" [style.color]="lang.color">{{ lang.level }}</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ===== CTA ===== -->
   <section class="exp-cta" data-section="cta"
            [class.visible]="isSectionVisible('cta')">
