@@ -344,9 +344,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.ctx = canvas.getContext('2d')!;
     this.resizeCanvasToParent();
 
-    const colors = ['#2563EB', '#4F46E5', '#7C3AED', '#3B82F6', '#06B6D4'];
-    // More nodes for a denser network feel
-    const count = Math.min(Math.floor((this.canvasW * this.canvasH) / 7000), 100);
+    // Site palette: primary blue, accent purple, light blue, lavender, emerald, cyan
+    const colors = ['#2563EB', '#7C3AED', '#60A5FA', '#A78BFA', '#34D399', '#06B6D4'];
+    // Dense coverage — many small dots filling the hero
+    const count = Math.min(Math.floor((this.canvasW * this.canvasH) / 4500), 160);
 
     this.nodes = [];
     for (let i = 0; i < count; i++) {
@@ -354,12 +355,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         x: Math.random() * this.canvasW,
         y: Math.random() * this.canvasH,
         z: Math.random() * 0.6 + 0.4,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45,
-        radius: Math.random() * 2.5 + 2,
-        color: colors[i % colors.length],
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        radius: Math.random() * 1.8 + 1.2,
+        color: colors[Math.floor(Math.random() * colors.length)],
         pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: 0.015 + Math.random() * 0.02
+        pulseSpeed: 0.012 + Math.random() * 0.018
       });
     }
 
@@ -412,7 +413,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         const dy = ay - by;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < maxDist) {
-          const alpha = (1 - dist / maxDist) * 0.22;
+          const alpha = (1 - dist / maxDist) * 0.4;
           ctx.beginPath();
           ctx.moveTo(ax, ay);
           ctx.lineTo(bx, by);
@@ -451,8 +452,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     for (const n of this.nodes) {
       const nx = (n as any)._dx;
       const ny = (n as any)._dy;
-      const pulseR = Math.sin(n.pulse) * 1.5;
-      const r = (n.radius + pulseR) * n.z;
+      const pulseR = Math.sin(n.pulse) * 0.5;
+      const r = Math.max(0.1, (n.radius + pulseR) * n.z);
 
       // Outer glow
       const grd = ctx.createRadialGradient(nx, ny, 0, nx, ny, r * 3.5);
