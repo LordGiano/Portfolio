@@ -1,6 +1,6 @@
 <div class="proj-page">
 
-  <!-- ===== HERO: Text (left) + Orbits (right) ===== -->
+  <!-- ===== HERO: Text (left) + Code Editor (right) ===== -->
   <section class="proj-hero" data-section="hero"
            [class.visible]="isSectionVisible('hero')">
     <div class="hero-noise"></div>
@@ -25,8 +25,71 @@
         <p class="hero-lead">{{ 'proj.hero_subtitle' | translate }}</p>
       </div>
 
-      <div class="hero-orbits-wrap">
-        <canvas id="orbitsCanvas"></canvas>
+      <div class="hero-editor-wrap">
+        <div class="code-editor">
+          <!-- Editor chrome / title bar -->
+          <div class="editor-titlebar">
+            <div class="editor-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+            </div>
+            <div class="editor-filename">
+              <span class="file-icon">📄</span>
+              <span class="file-name">{{ currentFile }}</span>
+            </div>
+            <div class="editor-lang" [style.color]="currentLangColor">
+              {{ currentLang }}
+            </div>
+          </div>
+
+          <!-- Tab bar -->
+          <div class="editor-tabs">
+            <div class="tab active" [style.border-top-color]="currentLangColor">
+              <span class="tab-name">{{ currentFile }}</span>
+              <span class="tab-close">×</span>
+            </div>
+            <div class="tab-fill"></div>
+          </div>
+
+          <!-- Code body -->
+          <div class="editor-body">
+            <div class="code-lines">
+              <div class="code-line" *ngFor="let line of renderedLines; let i = index"
+                   [class.active-line]="i === renderedLines.length - 1">
+                <span class="line-num">{{ line.lineNum }}</span>
+                <span class="line-content">
+                  <ng-container *ngFor="let token of line.tokens">
+                    <span [class]="getTokenClass(token.type)">{{ token.text }}</span>
+                  </ng-container>
+                  <span class="cursor-blink" *ngIf="i === renderedLines.length - 1 && showCursor">|</span>
+                </span>
+              </div>
+              <!-- Empty placeholder lines for height -->
+              <div class="code-line ghost" *ngIf="renderedLines.length < 3">
+                <span class="line-num">~</span>
+                <span class="line-content"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status bar -->
+          <div class="editor-statusbar">
+            <div class="status-left">
+              <span class="status-branch">⎇ main</span>
+              <span class="status-sep">|</span>
+              <span class="status-info">{{ renderedLines.length }} lines</span>
+            </div>
+            <div class="status-right">
+              <span class="status-lang" [style.color]="currentLangColor">{{ currentLang }}</span>
+              <span class="status-sep">|</span>
+              <span class="status-enc">UTF-8</span>
+            </div>
+          </div>
+
+          <!-- Decorative reflection -->
+          <div class="editor-reflection"></div>
+        </div>
       </div>
     </div>
   </section>

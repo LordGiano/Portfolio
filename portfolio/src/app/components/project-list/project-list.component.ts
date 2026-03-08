@@ -24,18 +24,16 @@ interface Project {
   highlights?: string[];
 }
 
-interface OrbitParticle {
-  angle: number;
-  label: string;
-  color: string;
-  size: number;
+interface CodeToken {
+  text: string;
+  type: 'keyword' | 'function' | 'string' | 'comment' | 'number' | 'operator' | 'variable' | 'decorator' | 'type' | 'plain' | 'bracket';
 }
 
-interface Orbit {
-  radius: number;
-  tilt: number;
-  rotationSpeed: number;
-  particles: OrbitParticle[];
+interface CodeSnippet {
+  fileName: string;
+  language: string;
+  langColor: string;
+  lines: CodeToken[][];
 }
 
 @Component({
@@ -55,12 +53,342 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
   categories = ['all', 'Computer Vision', 'Mobile', 'Web'];
   projects: Project[] = [];
 
-  // Orbits state
-  private orbitsAnimId: number | null = null;
-  private orbits: Orbit[] = [];
-  private orbitsMouse = { x: 0.5, y: 0.5 };
-  private orbitsMouseTarget = { x: 0.5, y: 0.5 };
+  // Code editor state
+  private codeAnimId: number | null = null;
   private heroStarted = false;
+  private currentSnippetIdx = 0;
+  private currentLineIdx = 0;
+  private currentCharIdx = 0;
+  private typeTimer: ReturnType<typeof setTimeout> | null = null;
+  private snippetTimer: ReturnType<typeof setTimeout> | null = null;
+  private editorMouse = { x: 0.5, y: 0.5 };
+  private editorMouseTarget = { x: 0.5, y: 0.5 };
+  private frameId: number | null = null;
+
+  // Rendered lines for the template
+  renderedLines: { tokens: CodeToken[]; lineNum: number }[] = [];
+  currentFile = '';
+  currentLang = '';
+  currentLangColor = '';
+  showCursor = true;
+  private cursorInterval: ReturnType<typeof setInterval> | null = null;
+
+  // Editor tilt
+  editorTiltX = 0;
+  editorTiltY = 0;
+
+  private readonly CODE_SNIPPETS: CodeSnippet[] = [
+    {
+      fileName: 'segmentation.py',
+      language: 'Python',
+      langColor: '#A78BFA',
+      lines: [
+        [
+          { text: 'import', type: 'keyword' },
+          { text: ' cv2', type: 'variable' }
+        ],
+        [
+          { text: 'import', type: 'keyword' },
+          { text: ' numpy ', type: 'variable' },
+          { text: 'as', type: 'keyword' },
+          { text: ' np', type: 'variable' }
+        ],
+        [],
+        [
+          { text: 'def', type: 'keyword' },
+          { text: ' segment_objects', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'frame', type: 'variable' },
+          { text: ',', type: 'plain' },
+          { text: ' bg_model', type: 'variable' },
+          { text: '):', type: 'bracket' }
+        ],
+        [
+          { text: '    ', type: 'plain' },
+          { text: '# Apply background subtraction', type: 'comment' }
+        ],
+        [
+          { text: '    fg_mask ', type: 'plain' },
+          { text: '=', type: 'operator' },
+          { text: ' bg_model', type: 'variable' },
+          { text: '.', type: 'operator' },
+          { text: 'apply', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'frame', type: 'variable' },
+          { text: ')', type: 'bracket' }
+        ],
+        [
+          { text: '    contours', type: 'plain' },
+          { text: ',', type: 'plain' },
+          { text: ' _', type: 'variable' },
+          { text: ' =', type: 'operator' },
+          { text: ' cv2', type: 'variable' },
+          { text: '.', type: 'operator' },
+          { text: 'findContours', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'fg_mask', type: 'variable' },
+          { text: ')', type: 'bracket' }
+        ],
+        [],
+        [
+          { text: '    ', type: 'plain' },
+          { text: '# Build alpha shape hull', type: 'comment' }
+        ],
+        [
+          { text: '    ', type: 'plain' },
+          { text: 'for', type: 'keyword' },
+          { text: ' c ', type: 'variable' },
+          { text: 'in', type: 'keyword' },
+          { text: ' contours', type: 'variable' },
+          { text: ':', type: 'bracket' }
+        ],
+        [
+          { text: '        hull ', type: 'plain' },
+          { text: '=', type: 'operator' },
+          { text: ' alpha_shape', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'c', type: 'variable' },
+          { text: ',', type: 'plain' },
+          { text: ' alpha', type: 'variable' },
+          { text: '=', type: 'operator' },
+          { text: '0.03', type: 'number' },
+          { text: ')', type: 'bracket' }
+        ],
+        [
+          { text: '        cv2', type: 'variable' },
+          { text: '.', type: 'operator' },
+          { text: 'drawContours', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'frame', type: 'variable' },
+          { text: ',', type: 'plain' },
+          { text: ' [hull]', type: 'variable' },
+          { text: ',', type: 'plain' },
+          { text: ' -1', type: 'number' },
+          { text: ',', type: 'plain' },
+          { text: ' (', type: 'bracket' },
+          { text: '0', type: 'number' },
+          { text: ',', type: 'plain' },
+          { text: '255', type: 'number' },
+          { text: ',', type: 'plain' },
+          { text: '0', type: 'number' },
+          { text: ')', type: 'bracket' },
+          { text: ')', type: 'bracket' }
+        ]
+      ]
+    },
+    {
+      fileName: 'SpendLensApp.kt',
+      language: 'Kotlin',
+      langColor: '#FBBF24',
+      lines: [
+        [
+          { text: '@Composable', type: 'decorator' }
+        ],
+        [
+          { text: 'fun', type: 'keyword' },
+          { text: ' ExpenseCard', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'expense', type: 'variable' },
+          { text: ':', type: 'operator' },
+          { text: ' Expense', type: 'type' },
+          { text: ') {', type: 'bracket' }
+        ],
+        [
+          { text: '    Card', type: 'function' },
+          { text: '(', type: 'bracket' }
+        ],
+        [
+          { text: '        modifier ', type: 'variable' },
+          { text: '=', type: 'operator' },
+          { text: ' Modifier', type: 'type' },
+          { text: '.', type: 'operator' },
+          { text: 'padding', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: '16', type: 'number' },
+          { text: '.dp', type: 'variable' },
+          { text: ')', type: 'bracket' }
+        ],
+        [
+          { text: '    ) {', type: 'bracket' }
+        ],
+        [
+          { text: '        ', type: 'plain' },
+          { text: '// ML Kit receipt scanning', type: 'comment' }
+        ],
+        [
+          { text: '        ', type: 'plain' },
+          { text: 'val', type: 'keyword' },
+          { text: ' total ', type: 'variable' },
+          { text: '=', type: 'operator' },
+          { text: ' recognizer', type: 'variable' },
+          { text: '.', type: 'operator' },
+          { text: 'process', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'image', type: 'variable' },
+          { text: ')', type: 'bracket' }
+        ],
+        [
+          { text: '        Text', type: 'function' },
+          { text: '(', type: 'bracket' }
+        ],
+        [
+          { text: '            text ', type: 'variable' },
+          { text: '=', type: 'operator' },
+          { text: ' "', type: 'string' },
+          { text: '${expense.amount}', type: 'variable' },
+          { text: ' Ft"', type: 'string' },
+        ],
+        [
+          { text: '        )', type: 'bracket' }
+        ],
+        [
+          { text: '    }', type: 'bracket' }
+        ],
+        [
+          { text: '}', type: 'bracket' }
+        ]
+      ]
+    },
+    {
+      fileName: 'virtual-mouse.py',
+      language: 'Python',
+      langColor: '#60A5FA',
+      lines: [
+        [
+          { text: 'import', type: 'keyword' },
+          { text: ' mediapipe ', type: 'variable' },
+          { text: 'as', type: 'keyword' },
+          { text: ' mp', type: 'variable' }
+        ],
+        [
+          { text: 'import', type: 'keyword' },
+          { text: ' pyautogui', type: 'variable' }
+        ],
+        [],
+        [
+          { text: 'hands ', type: 'variable' },
+          { text: '=', type: 'operator' },
+          { text: ' mp', type: 'variable' },
+          { text: '.', type: 'operator' },
+          { text: 'solutions', type: 'variable' },
+          { text: '.', type: 'operator' },
+          { text: 'hands', type: 'variable' },
+          { text: '.', type: 'operator' },
+          { text: 'Hands', type: 'function' },
+          { text: '()', type: 'bracket' }
+        ],
+        [],
+        [
+          { text: 'def', type: 'keyword' },
+          { text: ' track_gesture', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'landmarks', type: 'variable' },
+          { text: '):', type: 'bracket' }
+        ],
+        [
+          { text: '    ', type: 'plain' },
+          { text: '# Index finger tip detection', type: 'comment' }
+        ],
+        [
+          { text: '    tip ', type: 'plain' },
+          { text: '=', type: 'operator' },
+          { text: ' landmarks', type: 'variable' },
+          { text: '[', type: 'bracket' },
+          { text: '8', type: 'number' },
+          { text: ']', type: 'bracket' }
+        ],
+        [
+          { text: '    x', type: 'variable' },
+          { text: ',', type: 'plain' },
+          { text: ' y ', type: 'variable' },
+          { text: '=', type: 'operator' },
+          { text: ' int', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'tip', type: 'variable' },
+          { text: '.x ', type: 'variable' },
+          { text: '*', type: 'operator' },
+          { text: ' W', type: 'variable' },
+          { text: ')', type: 'bracket' },
+          { text: ',', type: 'plain' },
+          { text: ' int', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'tip', type: 'variable' },
+          { text: '.y ', type: 'variable' },
+          { text: '*', type: 'operator' },
+          { text: ' H', type: 'variable' },
+          { text: ')', type: 'bracket' }
+        ],
+        [
+          { text: '    pyautogui', type: 'variable' },
+          { text: '.', type: 'operator' },
+          { text: 'moveTo', type: 'function' },
+          { text: '(', type: 'bracket' },
+          { text: 'x', type: 'variable' },
+          { text: ',', type: 'plain' },
+          { text: ' y', type: 'variable' },
+          { text: ',', type: 'plain' },
+          { text: ' duration', type: 'variable' },
+          { text: '=', type: 'operator' },
+          { text: '0.1', type: 'number' },
+          { text: ')', type: 'bracket' }
+        ]
+      ]
+    },
+    {
+      fileName: 'portfolio.component.ts',
+      language: 'Angular',
+      langColor: '#F472B6',
+      lines: [
+        [
+          { text: 'import', type: 'keyword' },
+          { text: ' { Component } ', type: 'plain' },
+          { text: 'from', type: 'keyword' },
+          { text: " '@angular/core'", type: 'string' }
+        ],
+        [],
+        [
+          { text: '@', type: 'decorator' },
+          { text: 'Component', type: 'decorator' },
+          { text: '({', type: 'bracket' }
+        ],
+        [
+          { text: '  selector', type: 'variable' },
+          { text: ':', type: 'operator' },
+          { text: " 'app-portfolio'", type: 'string' },
+          { text: ',', type: 'plain' }
+        ],
+        [
+          { text: '  standalone', type: 'variable' },
+          { text: ':', type: 'operator' },
+          { text: ' true', type: 'keyword' },
+          { text: ',', type: 'plain' }
+        ],
+        [
+          { text: '})', type: 'bracket' }
+        ],
+        [
+          { text: 'export', type: 'keyword' },
+          { text: ' class', type: 'keyword' },
+          { text: ' PortfolioComponent', type: 'type' },
+          { text: ' {', type: 'bracket' }
+        ],
+        [
+          { text: '  languages', type: 'variable' },
+          { text: ':', type: 'operator' },
+          { text: ' string[]', type: 'type' },
+          { text: " = ['hu','en','de','es']", type: 'string' }
+        ],
+        [
+          { text: '  darkMode', type: 'variable' },
+          { text: ' =', type: 'operator' },
+          { text: ' true', type: 'keyword' }
+        ],
+        [
+          { text: '}', type: 'bracket' }
+        ]
+      ]
+    }
+  ];
 
   constructor(
     private translationService: TranslationService,
@@ -83,10 +411,12 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.langSub?.unsubscribe();
-    if (this.orbitsAnimId) cancelAnimationFrame(this.orbitsAnimId);
-    window.removeEventListener('resize', this.onResize);
-    const wrap = this.el('.hero-orbits-wrap');
-    if (wrap) wrap.removeEventListener('mousemove', this.onOrbitsMouseMove);
+    if (this.typeTimer) clearTimeout(this.typeTimer);
+    if (this.snippetTimer) clearTimeout(this.snippetTimer);
+    if (this.cursorInterval) clearInterval(this.cursorInterval);
+    if (this.frameId) cancelAnimationFrame(this.frameId);
+    const wrap = this.el('.hero-editor-wrap');
+    if (wrap) wrap.removeEventListener('mousemove', this.onEditorMouseMove);
   }
 
   // ====================
@@ -102,7 +432,7 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
               this.visibleSections.add(id);
               if (id === 'hero' && !this.heroStarted) {
                 this.heroStarted = true;
-                setTimeout(() => this.initOrbits(), 300);
+                setTimeout(() => this.initCodeEditor(), 300);
               }
             }
           }
@@ -152,260 +482,165 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // ====================
-  // ORBITING TECH PARTICLES
+  // CODE EDITOR ANIMATION
   // ====================
-  private readonly TECH_ITEMS = [
-    { label: 'Python', color: '#A78BFA' },
-    { label: 'Angular', color: '#60A5FA' },
-    { label: 'OpenCV', color: '#34D399' },
-    { label: 'Kotlin', color: '#FBBF24' },
-    { label: 'TypeScript', color: '#60A5FA' },
-    { label: 'MediaPipe', color: '#C4B5FD' },
-    { label: 'NumPy', color: '#22D3EE' },
-    { label: 'C#', color: '#67E8F9' },
-    { label: 'ML Kit', color: '#FCD34D' },
-    { label: 'Docker', color: '#60A5FA' },
-    { label: 'Git', color: '#C4B5FD' },
-    { label: 'MSSQL', color: '#22D3EE' },
-    { label: 'REST API', color: '#34D399' },
-    { label: '.NET', color: '#67E8F9' },
-    { label: 'RxJS', color: '#A78BFA' },
-    { label: 'Room DB', color: '#FBBF24' },
-    { label: 'HTML5', color: '#FB923C' },
-    { label: 'CSS3', color: '#60A5FA' },
-    { label: 'Jetpack', color: '#C4B5FD' },
-    { label: 'Firebase', color: '#FBBF24' },
-  ];
+  private initCodeEditor(): void {
+    // Set initial snippet info
+    const snippet = this.CODE_SNIPPETS[0];
+    this.currentFile = snippet.fileName;
+    this.currentLang = snippet.language;
+    this.currentLangColor = snippet.langColor;
+    this.renderedLines = [];
+    this.currentSnippetIdx = 0;
+    this.currentLineIdx = 0;
+    this.currentCharIdx = 0;
 
-  private initOrbits(): void {
-    this.initOrbitsCanvas();
-    this.buildOrbits();
+    // Cursor blink
+    this.cursorInterval = setInterval(() => {
+      this.showCursor = !this.showCursor;
+    }, 530);
 
-    const wrap = this.el('.hero-orbits-wrap');
+    // Mouse parallax
+    const wrap = this.el('.hero-editor-wrap');
     if (wrap) {
-      wrap.addEventListener('mousemove', this.onOrbitsMouseMove);
+      wrap.addEventListener('mousemove', this.onEditorMouseMove);
       wrap.addEventListener('mouseleave', () => {
-        this.orbitsMouseTarget = { x: 0.5, y: 0.5 };
+        this.editorMouseTarget = { x: 0.5, y: 0.5 };
       });
     }
 
-    window.addEventListener('resize', this.onResize);
-
+    // Start parallax loop
     this.ngZone.runOutsideAngular(() => {
-      this.renderOrbits();
+      this.updateTilt();
     });
+
+    // Start typing
+    this.typeNextChar();
   }
 
-  private onResize = (): void => {
-    this.initOrbitsCanvas();
-    this.buildOrbits();
-  };
-
-  private onOrbitsMouseMove = (e: MouseEvent): void => {
-    const wrap = this.el('.hero-orbits-wrap');
+  private onEditorMouseMove = (e: MouseEvent): void => {
+    const wrap = this.el('.hero-editor-wrap');
     if (!wrap) return;
     const rect = wrap.getBoundingClientRect();
-    this.orbitsMouseTarget = {
+    this.editorMouseTarget = {
       x: (e.clientX - rect.left) / rect.width,
       y: (e.clientY - rect.top) / rect.height
     };
   };
 
-  private initOrbitsCanvas(): void {
-    const canvas = this.el('#orbitsCanvas') as HTMLCanvasElement;
-    if (!canvas || !canvas.parentElement) return;
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio, 2);
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
-    const ctx = canvas.getContext('2d');
-    if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
+  private updateTilt = (): void => {
+    const lerp = 0.08;
+    this.editorMouse.x += (this.editorMouseTarget.x - this.editorMouse.x) * lerp;
+    this.editorMouse.y += (this.editorMouseTarget.y - this.editorMouse.y) * lerp;
 
-  private buildOrbits(): void {
-    const canvas = this.el('#orbitsCanvas') as HTMLCanvasElement;
-    if (!canvas || !canvas.parentElement) return;
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const W = rect.width;
-    const H = rect.height;
-    const baseRadius = Math.min(W, H) * 0.13;
+    this.editorTiltX = (this.editorMouse.y - 0.5) * -8;
+    this.editorTiltY = (this.editorMouse.x - 0.5) * 8;
 
-    this.orbits = [];
-    let techIdx = 0;
-    const numOrbits = 5;
+    const editor = this.el('.code-editor');
+    if (editor) {
+      editor.style.transform = `perspective(800px) rotateX(${this.editorTiltX}deg) rotateY(${this.editorTiltY}deg)`;
+    }
 
-    for (let o = 0; o < numOrbits; o++) {
-      const radius = baseRadius * 0.8 + o * (baseRadius * 0.7);
-      const particlesPerOrbit = 2 + o;
-      const orbit: Orbit = {
-        radius,
-        tilt: 0.3 + o * 0.1,
-        rotationSpeed: (0.28 - o * 0.03) * (o % 2 === 0 ? 1 : -1),
-        particles: []
-      };
-      for (let p = 0; p < particlesPerOrbit; p++) {
-        const item = this.TECH_ITEMS[techIdx % this.TECH_ITEMS.length];
-        orbit.particles.push({
-          angle: (p / particlesPerOrbit) * Math.PI * 2 + o * 0.5,
-          label: item.label,
-          color: item.color,
-          size: 4 + (numOrbits - o) * 0.7
-        });
-        techIdx++;
+    this.frameId = requestAnimationFrame(this.updateTilt);
+  };
+
+  private typeNextChar(): void {
+    const snippet = this.CODE_SNIPPETS[this.currentSnippetIdx];
+    if (!snippet) return;
+
+    const lines = snippet.lines;
+
+    // If we've typed all lines, pause then move to next snippet
+    if (this.currentLineIdx >= lines.length) {
+      this.snippetTimer = setTimeout(() => {
+        this.transitionToNextSnippet();
+      }, 2800);
+      return;
+    }
+
+    const currentLine = lines[this.currentLineIdx];
+
+    // Empty line — just add it
+    if (currentLine.length === 0) {
+      this.renderedLines.push({ tokens: [], lineNum: this.renderedLines.length + 1 });
+      this.currentLineIdx++;
+      this.currentCharIdx = 0;
+      this.scrollEditorToBottom();
+      this.typeTimer = setTimeout(() => this.typeNextChar(), 60);
+      return;
+    }
+
+    // Build the full text of this line
+    const fullText = currentLine.map(t => t.text).join('');
+
+    if (this.currentCharIdx === 0) {
+      // Start a new rendered line
+      this.renderedLines.push({ tokens: [], lineNum: this.renderedLines.length + 1 });
+    }
+
+    // Find which token and char position within it
+    this.currentCharIdx++;
+    const visibleText = fullText.substring(0, this.currentCharIdx);
+
+    // Build partial tokens from visible text
+    const partialTokens: CodeToken[] = [];
+    let consumed = 0;
+    for (const token of currentLine) {
+      if (consumed >= visibleText.length) break;
+      const remaining = visibleText.length - consumed;
+      const visiblePart = token.text.substring(0, remaining);
+      if (visiblePart.length > 0) {
+        partialTokens.push({ text: visiblePart, type: token.type });
       }
-      this.orbits.push(orbit);
+      consumed += token.text.length;
+    }
+
+    // Update the last rendered line
+    this.renderedLines[this.renderedLines.length - 1] = {
+      tokens: partialTokens,
+      lineNum: this.renderedLines.length
+    };
+    this.scrollEditorToBottom();
+
+    if (this.currentCharIdx >= fullText.length) {
+      // Line done, move to next
+      this.currentLineIdx++;
+      this.currentCharIdx = 0;
+      this.typeTimer = setTimeout(() => this.typeNextChar(), 80 + Math.random() * 60);
+    } else {
+      // Type speed variation
+      const ch = fullText[this.currentCharIdx - 1];
+      let delay = 28 + Math.random() * 32;
+      if (ch === ' ') delay = 15;
+      if (ch === '(' || ch === ')' || ch === '.' || ch === ',') delay = 20;
+      this.typeTimer = setTimeout(() => this.typeNextChar(), delay);
     }
   }
 
-  private renderOrbits = (): void => {
-    const canvas = this.el('#orbitsCanvas') as HTMLCanvasElement;
-    if (!canvas || !canvas.parentElement) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const W = rect.width;
-    const H = rect.height;
-
-    ctx.clearRect(0, 0, W, H);
-
-    // Smooth lerp
-    const lerpFactor = 0.06;
-    this.orbitsMouse.x += (this.orbitsMouseTarget.x - this.orbitsMouse.x) * lerpFactor;
-    this.orbitsMouse.y += (this.orbitsMouseTarget.y - this.orbitsMouse.y) * lerpFactor;
-
-    const mouse = this.orbitsMouse;
-    const tiltX = (mouse.y - 0.5) * 0.45;
-    const tiltY = (mouse.x - 0.5) * 0.35;
-    const cx = W / 2;
-    const cy = H / 2;
-
-    // Core glow
-    const pulse = Math.sin(Date.now() * 0.0008) * 0.05 + 0.18;
-    const coreGrd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 60);
-    coreGrd.addColorStop(0, `rgba(139,92,246,${pulse})`);
-    coreGrd.addColorStop(0.4, `rgba(59,130,246,${pulse * 0.5})`);
-    coreGrd.addColorStop(1, 'transparent');
-    ctx.fillStyle = coreGrd;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 60, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Core dot
-    ctx.beginPath();
-    ctx.arc(cx, cy, 3, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(139,92,246,${0.5 + Math.sin(Date.now() * 0.002) * 0.2})`;
-    ctx.fill();
-
-    // Core symbol
-    ctx.font = '600 14px "JetBrains Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = `rgba(167,139,250,${0.45 + Math.sin(Date.now() * 0.002) * 0.15})`;
-    ctx.fillText('</>', cx, cy);
-
-    const allParticles: {
-      px: number; py: number; pz: number;
-      label: string; color: string; size: number;
-      depthScale: number;
-    }[] = [];
-
-    this.orbits.forEach(orbit => {
-      // Orbit ring
-      ctx.beginPath();
-      const segments = 80;
-      for (let s = 0; s <= segments; s++) {
-        const a = (s / segments) * Math.PI * 2;
-        const x3d = Math.cos(a) * orbit.radius;
-        const y3d = Math.sin(a) * orbit.radius * Math.cos(orbit.tilt + tiltX);
-        const z3d = Math.sin(a) * orbit.radius * Math.sin(orbit.tilt + tiltX);
-        const px = cx + x3d * Math.cos(tiltY) - z3d * Math.sin(tiltY);
-        const py = cy + y3d;
-        if (s === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  private scrollEditorToBottom(): void {
+    setTimeout(() => {
+      const body = this.el('.editor-body');
+      if (body) {
+        body.scrollTop = body.scrollHeight;
       }
-      ctx.closePath();
-      ctx.strokeStyle = 'rgba(139,92,246,0.14)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
+    }, 0);
+  }
 
-      ctx.setLineDash([4, 8]);
-      ctx.strokeStyle = 'rgba(59,130,246,0.07)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.setLineDash([]);
+  private transitionToNextSnippet(): void {
+    this.currentSnippetIdx = (this.currentSnippetIdx + 1) % this.CODE_SNIPPETS.length;
+    const snippet = this.CODE_SNIPPETS[this.currentSnippetIdx];
+    this.currentFile = snippet.fileName;
+    this.currentLang = snippet.language;
+    this.currentLangColor = snippet.langColor;
+    this.renderedLines = [];
+    this.currentLineIdx = 0;
+    this.currentCharIdx = 0;
+    this.typeNextChar();
+  }
 
-      // Particles
-      orbit.particles.forEach(p => {
-        p.angle += orbit.rotationSpeed * 0.008;
-        const x3d = Math.cos(p.angle) * orbit.radius;
-        const y3d = Math.sin(p.angle) * orbit.radius * Math.cos(orbit.tilt + tiltX);
-        const z3d = Math.sin(p.angle) * orbit.radius * Math.sin(orbit.tilt + tiltX);
-        const px = cx + x3d * Math.cos(tiltY) - z3d * Math.sin(tiltY);
-        const py = cy + y3d;
-        const pz = z3d * Math.cos(tiltY) + x3d * Math.sin(tiltY);
-        const depthScale = 0.55 + (pz + 300) / 600 * 0.55;
-
-        allParticles.push({
-          px, py, pz, label: p.label, color: p.color, size: p.size, depthScale
-        });
-      });
-    });
-
-    allParticles.sort((a, b) => a.pz - b.pz);
-
-    allParticles.forEach(p => {
-      const r = p.size * Math.max(0.5, p.depthScale);
-      const alpha = Math.max(0.3, Math.min(1, p.depthScale));
-
-      // Glow
-      const grd = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, r * 6);
-      grd.addColorStop(0, p.color + '35');
-      grd.addColorStop(1, 'transparent');
-      ctx.fillStyle = grd;
-      ctx.beginPath();
-      ctx.arc(p.px, p.py, r * 6, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Dot
-      ctx.beginPath();
-      ctx.arc(p.px, p.py, r, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = alpha;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-
-      // Highlight
-      ctx.beginPath();
-      ctx.arc(p.px - r * 0.2, p.py - r * 0.2, r * 0.35, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${0.35 * alpha})`;
-      ctx.fill();
-
-      // Label
-      const fs = Math.max(9, 11.5 * p.depthScale);
-      ctx.font = `600 ${fs}px 'JetBrains Mono', monospace`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'bottom';
-
-      ctx.shadowColor = 'rgba(0,0,0,0.6)';
-      ctx.shadowBlur = 4;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 1;
-
-      ctx.globalAlpha = Math.max(0.5, alpha);
-      ctx.fillStyle = p.color;
-      ctx.fillText(p.label, p.px, p.py - r - 6);
-
-      ctx.shadowColor = 'transparent';
-      ctx.shadowBlur = 0;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-      ctx.globalAlpha = 1;
-    });
-
-    this.orbitsAnimId = requestAnimationFrame(this.renderOrbits);
-  };
+  getTokenClass(type: string): string {
+    return 'tok-' + type;
+  }
 
   // ====================
   // PROJECT DATA
