@@ -159,6 +159,12 @@
 .nav-item:hover {
   color: #F1F5F9;
   background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 20px -4px rgba(96, 165, 250, 0.15);
+}
+
+.nav-item:hover svg {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 2px 6px rgba(96, 165, 250, 0.3));
 }
 
 /* Active — underline indicator */

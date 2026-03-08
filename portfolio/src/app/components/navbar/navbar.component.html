@@ -2,8 +2,8 @@
 <nav class="navbar" [class.scrolled]="isScrolled">
   <a class="logo-link" routerLink="/">
     <span class="logo-text">
-      <span class="first-name">Szabó</span>
-      <span class="last-name">Norbert</span>
+      <span class="first-name">{{ 'nav.logoFirst' | translate }}</span>
+      <span class="last-name">{{ 'nav.logoLast' | translate }}</span>
     </span>
 
     <!-- Logo accent: Signal bars -->
@@ -51,8 +51,8 @@
 <aside class="sidebar" [class.open]="isSidebarOpen">
   <div class="sidebar-header">
     <span class="sidebar-logo">
-      <span class="first-name">Szabó</span>
-      <span class="last-name">Norbert</span>
+      <span class="first-name">{{ 'nav.logoFirst' | translate }}</span>
+      <span class="last-name">{{ 'nav.logoLast' | translate }}</span>
     </span>
     <button class="sidebar-close" (click)="closeSidebar()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">

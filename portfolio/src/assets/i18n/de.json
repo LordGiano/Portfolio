@@ -4,7 +4,9 @@
     "experience": "Erfahrung",
     "studies": "Ausbildung",
     "projects": "Projekte",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "logoFirst": "Norbert",
+    "logoLast": "Szabó"
   },
   "home": {
     "greeting": "Hallo, ich bin",
