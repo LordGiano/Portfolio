@@ -41,7 +41,7 @@
   display: flex;
   align-items: center;
   padding: 6px 0;
-  gap: 0;
+  gap: 8px;
 }
 
 .logo-text {
@@ -73,40 +73,46 @@
   opacity: 1;
 }
 
-.logo-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-left: 3px;
-  margin-bottom: 2px;
-  background: #60A5FA;
-  display: inline-block;
-  position: relative;
-  animation: dot-pulse 3s ease-in-out infinite;
-}
-
-.logo-dot::after {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  background: rgba(96, 165, 250, 0.3);
-  animation: dot-ring 3s ease-in-out infinite;
-}
-
 @keyframes logo-gradient {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
 
-@keyframes dot-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+/* ─── Logo Accent: Signal Bars ─── */
+.logo-signal {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
 }
 
-@keyframes dot-ring {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.8); opacity: 0; }
+.signal-bar {
+  width: 3px;
+  border-radius: 1.5px;
+  animation: signal-wave 1.8s ease-in-out infinite;
+}
+
+.signal-bar:nth-child(1) {
+  height: 5px;
+  animation-delay: 0s;
+  background: #60A5FA;
+}
+
+.signal-bar:nth-child(2) {
+  height: 9px;
+  animation-delay: 0.15s;
+  background: #A78BFA;
+}
+
+.signal-bar:nth-child(3) {
+  height: 13px;
+  animation-delay: 0.3s;
+  background: #34D399;
+}
+
+@keyframes signal-wave {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
 }
 
 /* ─── Spacer ─── */
