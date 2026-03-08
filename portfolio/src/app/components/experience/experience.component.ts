@@ -49,9 +49,6 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
   // Expanded timeline card
   expandedJob = -1;
 
-  // 3D Cube hover state
-  cubeHovered = false;
-
   workExperiences: WorkExperience[] = [];
   educations: Education[] = [];
   competencies: Competency[] = [];
@@ -124,12 +121,12 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateX = ((y - centerY) / centerY) * -6;
-    const rotateY = ((x - centerX) / centerX) * 6;
+    const rotateX = ((y - centerY) / centerY) * -3;
+    const rotateY = ((x - centerX) / centerX) * 3;
 
     const inner = card.querySelector('.v-tl-card-inner') as HTMLElement;
     if (inner) {
-      inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(8px)`;
+      inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(4px)`;
     }
 
     // Move light dot
