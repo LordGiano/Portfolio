@@ -1,0 +1,297 @@
+/* ═══════════════════════════════════════════════════════════
+   404 NOT FOUND – Digital Void Theme
+   ═══════════════════════════════════════════════════════════ */
+
+.not-found-page {
+  position: relative;
+  height: 100vh;
+  padding-top: 64px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0f1e;
+  overflow: hidden;
+}
+
+/* ── Canvas Background ── */
+.void-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* ── Scanline overlay ── */
+.scanline-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+}
+
+/* ── Content ── */
+.content-container {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+  max-width: 640px;
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Glitching 404 ── */
+.error-code-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.error-code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: clamp(6rem, 18vw, 12rem);
+  font-weight: 900;
+  color: transparent;
+  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 50%, #2563EB 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  animation: gradientShift 4s ease infinite;
+  text-shadow: none;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Glitch pseudo-elements */
+.error-code::before,
+.error-code::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 50%, #2563EB 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.error-code::before {
+  animation: glitchTop 3s infinite linear alternate-reverse;
+  clip-path: inset(0 0 60% 0);
+  text-shadow: -2px 0 #2563EB;
+}
+
+.error-code::after {
+  animation: glitchBottom 2.5s infinite linear alternate-reverse;
+  clip-path: inset(60% 0 0 0);
+  text-shadow: 2px 0 #7C3AED;
+}
+
+@keyframes glitchTop {
+  0% { transform: translate(0); }
+  2% { transform: translate(3px, -1px); }
+  4% { transform: translate(-3px, 1px); }
+  6% { transform: translate(0); }
+  100% { transform: translate(0); }
+}
+
+@keyframes glitchBottom {
+  0% { transform: translate(0); }
+  3% { transform: translate(-2px, 1px); }
+  5% { transform: translate(2px, -1px); }
+  7% { transform: translate(0); }
+  100% { transform: translate(0); }
+}
+
+/* ── Separator ── */
+.separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.sep-line {
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #2563EB, transparent);
+  border-radius: 1px;
+}
+
+.sep-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2563EB;
+  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.6);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.7; }
+}
+
+/* ── Text ── */
+.error-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #F8FAFC;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.error-description {
+  font-size: 1rem;
+  color: #94A3B8;
+  margin: 0 0 2rem;
+  line-height: 1.6;
+}
+
+/* ── Path display (terminal style) ── */
+.path-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85rem;
+  color: #64748B;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(8px);
+}
+
+.path-label {
+  color: #2563EB;
+}
+
+.path-value {
+  color: #94A3B8;
+}
+
+.cursor-blink {
+  color: #2563EB;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* ── Action buttons ── */
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1.75rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(30, 41, 59, 0.6);
+  color: #CBD5E1;
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  border-color: #2563EB;
+  color: #F8FAFC;
+  background: rgba(37, 99, 235, 0.15);
+}
+
+.btn-primary svg,
+.btn-secondary svg {
+  flex-shrink: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .content-container {
+    padding: 1.5rem;
+  }
+
+  .error-code {
+    font-size: clamp(4rem, 20vw, 6rem);
+  }
+
+  .error-title {
+    font-size: 1.25rem;
+  }
+
+  .path-display {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}

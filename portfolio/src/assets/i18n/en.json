@@ -329,5 +329,30 @@
     "submit_error": "Failed to submit the bug report. Please try again!",
     "success_title": "Thank you!",
     "success_message": "Your bug report has been submitted successfully. We will look into it soon!"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist, has been moved, or is temporarily unavailable.",
+    "requestedPath": "Requested path",
+    "unknown": "unknown",
+    "goHome": "Back to Home",
+    "viewProjects": "View Projects",
+    "terminalLine1": "GET /unknown-page HTTP/1.1",
+    "terminalLine2": "404 — The requested resource was not found on this server.",
+    "terminalLine3": "Try navigating back to the homepage."
+  },
+  "underConstruction": {
+    "title": "Coming Soon!",
+    "subtitle": "This page is currently under active development. Check back soon for updates!",
+    "progress": "Development",
+    "goHome": "Back to Home",
+    "contact": "Get in Touch",
+    "status": "Under active development",
+    "feature1Title": "New Features",
+    "feature1Desc": "Modern features and interactive elements",
+    "feature2Title": "Responsive Design",
+    "feature2Desc": "Perfect appearance on every device",
+    "feature3Title": "Content Upload",
+    "feature3Desc": "Detailed project descriptions and demos"
   }
 }

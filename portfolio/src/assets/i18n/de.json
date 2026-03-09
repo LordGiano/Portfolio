@@ -329,5 +329,30 @@
     "submit_error": "Der Fehlerbericht konnte nicht gesendet werden. Bitte versuchen Sie es erneut!",
     "success_title": "Vielen Dank!",
     "success_message": "Ihr Fehlerbericht wurde erfolgreich eingereicht. Wir werden ihn bald prüfen!"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "description": "Die gesuchte Seite existiert nicht, wurde verschoben oder ist vorübergehend nicht verfügbar.",
+    "requestedPath": "Angeforderter Pfad",
+    "unknown": "unbekannt",
+    "goHome": "Zurück zur Startseite",
+    "viewProjects": "Projekte ansehen",
+    "terminalLine1": "GET /unknown-page HTTP/1.1",
+    "terminalLine2": "404 — Die angeforderte Ressource wurde auf diesem Server nicht gefunden.",
+    "terminalLine3": "Versuchen Sie, zur Startseite zurückzukehren."
+  },
+  "underConstruction": {
+    "title": "Demnächst verfügbar!",
+    "subtitle": "Diese Seite befindet sich derzeit in aktiver Entwicklung. Schauen Sie bald wieder vorbei!",
+    "progress": "Entwicklung",
+    "goHome": "Zurück zur Startseite",
+    "contact": "Kontakt aufnehmen",
+    "status": "In aktiver Entwicklung",
+    "feature1Title": "Neue Funktionen",
+    "feature1Desc": "Moderne Funktionen und interaktive Elemente",
+    "feature2Title": "Responsives Design",
+    "feature2Desc": "Perfekte Darstellung auf jedem Gerät",
+    "feature3Title": "Inhalte hochladen",
+    "feature3Desc": "Detaillierte Projektbeschreibungen und Demos"
   }
 }

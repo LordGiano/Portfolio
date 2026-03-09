@@ -329,5 +329,30 @@
     "submit_error": "No se pudo enviar el reporte de error. ¡Por favor, inténtalo de nuevo!",
     "success_title": "¡Gracias!",
     "success_message": "Tu reporte de error se ha enviado correctamente. ¡Lo revisaremos pronto!"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe, fue movida o no está disponible temporalmente.",
+    "requestedPath": "Ruta solicitada",
+    "unknown": "desconocido",
+    "goHome": "Volver al Inicio",
+    "viewProjects": "Ver Proyectos",
+    "terminalLine1": "GET /unknown-page HTTP/1.1",
+    "terminalLine2": "404 — El recurso solicitado no fue encontrado en este servidor.",
+    "terminalLine3": "Intenta volver a la página principal."
+  },
+  "underConstruction": {
+    "title": "¡Próximamente!",
+    "subtitle": "Esta página está actualmente en desarrollo activo. ¡Vuelve pronto para ver las novedades!",
+    "progress": "Desarrollo",
+    "goHome": "Volver al Inicio",
+    "contact": "Contactar",
+    "status": "En desarrollo activo",
+    "feature1Title": "Nuevas funciones",
+    "feature1Desc": "Funciones modernas y elementos interactivos",
+    "feature2Title": "Diseño responsivo",
+    "feature2Desc": "Apariencia perfecta en todos los dispositivos",
+    "feature3Title": "Contenido nuevo",
+    "feature3Desc": "Descripciones detalladas de proyectos y demos"
   }
 }

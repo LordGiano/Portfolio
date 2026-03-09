@@ -1,0 +1,52 @@
+<section class="not-found-page">
+  <!-- Canvas background -->
+  <canvas #voidCanvas class="void-canvas"></canvas>
+
+  <!-- Scanline overlay -->
+  <div class="scanline-overlay"></div>
+
+  <!-- Main content -->
+  <div class="content-container">
+    <!-- Glitching 404 -->
+    <div class="error-code-wrapper">
+      <span class="error-code" [attr.data-text]="glitchText">{{ glitchText }}</span>
+    </div>
+
+    <!-- Separator line with pulse -->
+    <div class="separator">
+      <span class="sep-line"></span>
+      <span class="sep-dot"></span>
+      <span class="sep-line"></span>
+    </div>
+
+    <!-- Message -->
+    <h2 class="error-title">{{ 'notFound.title' | translate }}</h2>
+    <p class="error-description">{{ 'notFound.description' | translate }}</p>
+
+    <!-- Attempted path display -->
+    <div class="path-display">
+      <span class="path-label">&gt; {{ 'notFound.requestedPath' | translate }}:</span>
+      <span class="path-value">~/{{ 'notFound.unknown' | translate }}</span>
+      <span class="cursor-blink">_</span>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="actions">
+      <a routerLink="/" class="btn-primary">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        {{ 'notFound.goHome' | translate }}
+      </a>
+      <a routerLink="/projects" class="btn-secondary">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        {{ 'notFound.viewProjects' | translate }}
+      </a>
+    </div>
+
+  </div>
+</section>
