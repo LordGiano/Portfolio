@@ -20,7 +20,7 @@ interface Gear { x: number; y: number; radius: number; teeth: number; angle: num
 interface Spark { x: number; y: number; vx: number; vy: number; life: number; maxLife: number; color: string; size: number; }
 interface Occupied { x: number; y: number; r: number; }
 interface StackedBlock { x: number; y: number; color: string; settled: number; }
-interface CraneBlock { color: string; targetY: number; }
+interface CraneBlock { color: string; targetX: number; targetY: number; }
 type CranePhase = 'lowerPickup' | 'raisePickup' | 'moveRight' | 'lower' | 'place' | 'raise' | 'moveLeft';
 
 @Component({
@@ -62,13 +62,15 @@ export class UnderConstructionComponent implements OnInit, OnDestroy, AfterViewI
   private BLOCK_W = 30;
   private BLOCK_H = 12;
   private BASE_Y = 0;
-  private STACK_X = 0;
   private PICKUP_X = 35;
   private BOOM_Y = 28;
-  private readonly MAX_BLOCKS = 7;
   private readonly PICKUP_ROPE = 55;
   private readonly SHORT_ROPE = 25;
-  private readonly BLOCK_COLORS = ['#2563EB', '#4F46E5', '#7C3AED', '#1D4ED8', '#3B82F6', '#6366F1', '#818CF8'];
+  private readonly BLOCK_COLORS = ['#2563EB', '#4F46E5', '#7C3AED', '#1D4ED8', '#3B82F6', '#6366F1', '#818CF8', '#A78BFA', '#60A5FA', '#34D399'];
+
+  // Pyramid slot positions (pre-calculated on init)
+  private pyramidSlots: { x: number; y: number }[] = [];
+  private readonly PYRAMID_ROWS = [4, 3, 2, 1]; // bottom to top
 
   constructor(private translationService: TranslationService, private ngZone: NgZone) {}
 
@@ -144,7 +146,26 @@ export class UnderConstructionComponent implements OnInit, OnDestroy, AfterViewI
     this.craneOffsetX = this.W / 2 - this.craneW / 2;
     this.craneOffsetY = this.H / 2 - 280;
     this.BASE_Y = this.craneH - 30;
-    this.STACK_X = this.craneW / 2 + 25;
+
+    // Calculate pyramid slot positions (bottom-up, left-to-right)
+    this.pyramidSlots = [];
+    const gap = 2; // horizontal gap between blocks
+    const rowH = this.BLOCK_H + 2; // vertical step
+    const centerX = this.craneW / 2 + 15; // pyramid center (slightly right of crane center)
+
+    for (let row = 0; row < this.PYRAMID_ROWS.length; row++) {
+      const count = this.PYRAMID_ROWS[row];
+      const totalW = count * this.BLOCK_W + (count - 1) * gap;
+      const startX = centerX - totalW / 2 + this.BLOCK_W / 2;
+      const y = this.BASE_Y - row * rowH;
+
+      for (let col = 0; col < count; col++) {
+        this.pyramidSlots.push({
+          x: startX + col * (this.BLOCK_W + gap),
+          y
+        });
+      }
+    }
   }
 
   // ═══ Init All ═══
@@ -187,8 +208,13 @@ export class UnderConstructionComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   private nextCraneBlock(): void {
-    if (this.craneStack.length >= this.MAX_BLOCKS) this.craneStack = [];
-    this.craneBlock = { color: this.BLOCK_COLORS[this.craneStack.length % this.BLOCK_COLORS.length], targetY: this.BASE_Y - this.craneStack.length * (this.BLOCK_H + 2) };
+    if (this.craneStack.length >= this.pyramidSlots.length) this.craneStack = [];
+    const slot = this.pyramidSlots[this.craneStack.length];
+    this.craneBlock = {
+      color: this.BLOCK_COLORS[this.craneStack.length % this.BLOCK_COLORS.length],
+      targetX: slot.x,
+      targetY: slot.y
+    };
   }
 
   // ═══ Draw Frame ═══
@@ -320,12 +346,12 @@ export class UnderConstructionComponent implements OnInit, OnDestroy, AfterViewI
       case 'raisePickup':
         this.pauseT--; if(this.pauseT<=0){this.ropeLen+=(this.SHORT_ROPE-this.ropeLen)*0.06;if(Math.abs(this.ropeLen-this.SHORT_ROPE)<1)this.cranePhase='moveRight';} break;
       case 'moveRight':
-        this.trolleyX+=(this.STACK_X-this.trolleyX)*0.04; if(Math.abs(this.trolleyX-this.STACK_X)<1.5)this.cranePhase='lower'; break;
+        this.trolleyX+=(this.craneBlock!.targetX-this.trolleyX)*0.04; if(Math.abs(this.trolleyX-this.craneBlock!.targetX)<1.5)this.cranePhase='lower'; break;
       case 'lower':
         const tr=this.craneBlock.targetY-this.BOOM_Y-5-this.BLOCK_H/2; this.ropeLen+=(tr-this.ropeLen)*e;
         if(Math.abs(this.ropeLen-tr)<1){this.cranePhase='place';this.pauseT=20;} break;
       case 'place':
-        this.pauseT--; if(this.pauseT<=0){this.craneStack.push({x:this.trolleyX,y:this.craneBlock.targetY,color:this.craneBlock.color,settled:0});this.cranePhase='raise';} break;
+        this.pauseT--; if(this.pauseT<=0){this.craneStack.push({x:this.craneBlock!.targetX,y:this.craneBlock!.targetY,color:this.craneBlock!.color,settled:0});this.cranePhase='raise';} break;
       case 'raise':
         this.ropeLen+=(this.SHORT_ROPE-this.ropeLen)*0.06; if(Math.abs(this.ropeLen-this.SHORT_ROPE)<1)this.cranePhase='moveLeft'; break;
       case 'moveLeft':
