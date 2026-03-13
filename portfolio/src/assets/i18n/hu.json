@@ -330,29 +330,12 @@
     "success_title": "Köszönjük!",
     "success_message": "A hibajelentésed sikeresen beérkezett. Hamarosan foglalkozunk vele!"
   },
-  "notFound": {
-    "title": "Az oldal nem található",
-    "description": "A keresett oldal nem létezik, áthelyezték, vagy ideiglenesen nem elérhető.",
-    "requestedPath": "Kért útvonal",
-    "unknown": "ismeretlen",
-    "goHome": "Vissza a Főoldalra",
-    "viewProjects": "Projektek megtekintése",
-    "terminalLine1": "GET /unknown-page HTTP/1.1",
-    "terminalLine2": "404 — A kért erőforrás nem található a szerveren.",
-    "terminalLine3": "Próbálj vissza navigálni a főoldalra."
-  },
   "underConstruction": {
-    "title": "Hamarosan érkezik!",
-    "subtitle": "Ezen az oldalon jelenleg is dolgozom. Nézz vissza később az újdonságokért!",
-    "progress": "Fejlesztés",
-    "goHome": "Vissza a Főoldalra",
-    "contact": "Kapcsolatfelvétel",
     "status": "Aktív fejlesztés alatt",
-    "feature1Title": "Új funkciók",
-    "feature1Desc": "Modern funkciók és interaktív elemek",
-    "feature2Title": "Reszponzív dizájn",
-    "feature2Desc": "Tökéletes megjelenés minden eszközön",
-    "feature3Title": "Tartalom feltöltés",
-    "feature3Desc": "Részletes projektleírások és demók"
+    "title": "Az oldal hamarosan elkészül",
+    "subtitle": "Éppen ezen a részen dolgozom. Nézz vissza később, vagy keress meg közvetlenül!",
+    "terminal": "status: building...",
+    "goHome": "Főoldal",
+    "contact": "Kapcsolat"
   }
 }
