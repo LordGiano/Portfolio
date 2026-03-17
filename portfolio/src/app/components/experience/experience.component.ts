@@ -147,9 +147,12 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
     const t = (key: string) => this.translationService.translate(key);
 
     this.workExperiences = [
+      { role: t('exp.job0_role'), company: 'Ericsson Magyarország Kft.', type: 'full-time', period: t('exp.job0_period'), location: 'Budapest', mode: 'On-site',
+        technologies: ['Java', 'Spring Boot', 'Python', 'Docker', 'Kubernetes', 'CI/CD', 'Agile/Scrum'], descriptions: [t('exp.job0_desc1'), t('exp.job0_desc2'), t('exp.job0_desc3'), t('exp.job0_desc4')],
+        color: '#0082F0', gradient: 'linear-gradient(135deg, #0082F0, #00B8F0)', icon: 'cell_tower' },
       { role: t('exp.job1_role'), company: 'Master Consulting Kft.', type: 'full-time', period: t('exp.job1_period'), location: 'Budapest', mode: 'Hybrid',
         technologies: ['Python', 'Angular', 'MSSQL', 'REST APIs', 'Git'], descriptions: [t('exp.job1_desc1'), t('exp.job1_desc2'), t('exp.job1_desc3'), t('exp.job1_desc4')],
-        highlight: t('exp.job1_highlight'), color: '#2563EB', gradient: 'linear-gradient(135deg, #2563EB, #3B82F6)', icon: 'business' },
+        highlight: t('exp.job1_highlight'), color: '#0D9488', gradient: 'linear-gradient(135deg, #0D9488, #14B8A6)', icon: 'business' },
       { role: t('exp.job2_role'), company: 'NetAdClick Kft.', type: 'contract', period: t('exp.job2_period'), location: 'Budapest', mode: 'On-site',
         technologies: ['Python', 'Angular', 'MySQL'], descriptions: [t('exp.job2_desc1'), t('exp.job2_desc2'), t('exp.job2_desc3'), t('exp.job2_desc4')],
         color: '#D97706', gradient: 'linear-gradient(135deg, #D97706, #F59E0B)', icon: 'ads_click' },
@@ -181,10 +184,10 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.competencies = [
       { matIcon: 'web', title: t('exp.comp_frontend'), items: ['Angular', 'TypeScript', 'HTML5/CSS3', 'RxJS'], color: '#2563EB', gradient: 'linear-gradient(135deg, #2563EB, #3B82F6)' },
-      { matIcon: 'terminal', title: t('exp.comp_backend'), items: ['Python', 'C#', '.NET', 'REST API'], color: '#059669', gradient: 'linear-gradient(135deg, #059669, #10B981)' },
+      { matIcon: 'terminal', title: t('exp.comp_backend'), items: ['Java', 'Spring Boot', 'Python', 'C#', 'REST API'], color: '#059669', gradient: 'linear-gradient(135deg, #059669, #10B981)' },
       { matIcon: 'storage', title: t('exp.comp_database'), items: ['MSSQL', 'MySQL', 'DB Design'], color: '#D97706', gradient: 'linear-gradient(135deg, #D97706, #F59E0B)' },
       { matIcon: 'bug_report', title: t('exp.comp_testing'), items: ['ISTQB', 'Manual Testing', 'Test Plans'], color: '#DC2626', gradient: 'linear-gradient(135deg, #DC2626, #EF4444)' },
-      { matIcon: 'devices', title: t('exp.comp_devops'), items: ['Docker', 'Git', 'GitHub', 'Agile/Scrum'], color: '#0891B2', gradient: 'linear-gradient(135deg, #0891B2, #06B6D4)' },
+      { matIcon: 'devices', title: t('exp.comp_devops'), items: ['Docker', 'Kubernetes', 'CI/CD', 'Git', 'Agile/Scrum'], color: '#0891B2', gradient: 'linear-gradient(135deg, #0891B2, #06B6D4)' },
       { matIcon: 'visibility', title: t('exp.comp_cv'), items: ['OpenCV', 'MediaPipe', 'Image Proc.'], color: '#7C3AED', gradient: 'linear-gradient(135deg, #7C3AED, #8B5CF6)' }
     ];
   }
