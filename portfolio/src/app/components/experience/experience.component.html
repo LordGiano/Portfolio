@@ -73,27 +73,11 @@
     </div>
   </section>
 
-  <!-- ===== COUNTER STRIP ===== -->
-  <section class="counter-strip" data-section="hero-stats"
-           [class.visible]="isSectionVisible('hero-stats')">
-    <div class="counter-item">
-      <span class="counter-num">{{ yearsExperience }}+</span>
-      <span class="counter-label">{{ 'exp.stat_years' | translate }}</span>
-    </div>
-    <div class="counter-divider"></div>
-    <div class="counter-item">
-      <span class="counter-num">{{ projectsCompleted }}+</span>
-      <span class="counter-label">{{ 'exp.stat_projects' | translate }}</span>
-    </div>
-    <div class="counter-divider"></div>
-    <div class="counter-item">
-      <span class="counter-num">{{ technologiesUsed }}+</span>
-      <span class="counter-label">{{ 'exp.stat_technologies' | translate }}</span>
-    </div>
-    <div class="counter-divider"></div>
-    <div class="counter-item">
-      <span class="counter-num">{{ spokenLanguages }}</span>
-      <span class="counter-label">{{ 'exp.stat_languages' | translate }}</span>
+  <!-- ===== MISSION STATEMENT ===== -->
+  <section class="mission-strip" data-section="mission"
+           [class.visible]="isSectionVisible('mission')">
+    <div class="mission-inner">
+      <p class="mission-text">{{ 'exp.mission_statement' | translate }}</p>
     </div>
   </section>
 

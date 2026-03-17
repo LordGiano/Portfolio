@@ -37,11 +37,6 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
   private langSub!: Subscription;
   visibleSections = new Set<string>();
 
-  // Counters
-  yearsExperience = 0; projectsCompleted = 0;
-  technologiesUsed = 0; spokenLanguages = 0;
-  private counterAnimated = false;
-
   // Book pagination
   activeEduPage = 0;
   bookAnimating = false;
@@ -71,10 +66,6 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
           if (entry.isIntersecting) {
             const id = entry.target.getAttribute('data-section');
             if (id) this.visibleSections.add(id);
-            if (id === 'hero-stats' && !this.counterAnimated) {
-              this.counterAnimated = true;
-              this.animateCounters();
-            }
           }
         });
       },
@@ -86,26 +77,6 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   isSectionVisible(name: string): boolean { return this.visibleSections.has(name); }
-
-  // —— Counter ——
-  private animateCounters(): void {
-    this.animateValue('yearsExperience', 0, 3, 1500);
-    this.animateValue('projectsCompleted', 0, 10, 1800);
-    this.animateValue('technologiesUsed', 0, 15, 2000);
-    this.animateValue('spokenLanguages', 0, 4, 1200);
-  }
-
-  private animateValue(prop: string, start: number, end: number, duration: number): void {
-    const startTime = performance.now();
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      (this as any)[prop] = Math.round(start + (end - start) * eased);
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
-  }
 
   // —— Timeline expand ——
   toggleJob(index: number): void {
