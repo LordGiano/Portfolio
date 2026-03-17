@@ -164,25 +164,33 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // ——— Tech Stack Marquee ———
   techStackItems = [
-    { id: 'angular',    name: 'Angular',    icon: 'angular.svg' },
-    { id: 'typescript', name: 'TypeScript', icon: 'typescript.svg' },
-    { id: 'javascript', name: 'JavaScript', icon: 'javascript.svg' },
-    { id: 'python',     name: 'Python',     icon: 'python.svg' },
-    { id: 'java',       name: 'Java',       icon: 'java.svg' },
-    { id: 'kotlin',     name: 'Kotlin',     icon: 'kotlin.svg' },
-    { id: 'csharp',     name: 'C#',         icon: 'csharp.svg' },
-    { id: 'dotnet',     name: '.NET',       icon: 'dotnet.svg' },
-    { id: 'android',    name: 'Android',    icon: 'android.svg' },
+    // ── web alap ──
     { id: 'html5',      name: 'HTML5',      icon: 'html5.svg' },
     { id: 'css3',       name: 'CSS3',       icon: 'css3.svg' },
+    { id: 'javascript', name: 'JavaScript', icon: 'javascript.svg' },
+    // ── Angular ökoszisztéma ──
+    { id: 'typescript', name: 'TypeScript', icon: 'typescript.svg' },
+    { id: 'angular',    name: 'Angular',    icon: 'angular.svg' },
+    // ── .NET ökoszisztéma ──
+    { id: 'csharp',     name: 'C#',         icon: 'csharp.svg' },
+    { id: 'dotnet',     name: '.NET',       icon: 'dotnet.svg' },
+    // ── JVM → mobile ──
+    { id: 'java',       name: 'Java',       icon: 'java.svg' },
+    { id: 'kotlin',     name: 'Kotlin',     icon: 'kotlin.svg' },
+    { id: 'android',    name: 'Android',    icon: 'android.svg' },
+    // ── CV / AI ──
+    { id: 'python',     name: 'Python',     icon: 'python.svg' },
+    { id: 'opencv',     name: 'OpenCV',     icon: 'opencv.svg' },
+    // ── adatbázisok ──
+    { id: 'mssql',      name: 'MSSQL',      icon: 'mssql.svg' },
+    { id: 'mysql',      name: 'MySQL',      icon: 'mysql.svg' },
+    // ── infra / DevOps ──
     { id: 'firebase',   name: 'Firebase',   icon: 'firebase.svg' },
     { id: 'docker',     name: 'Docker',     icon: 'docker.svg' },
     { id: 'git',        name: 'Git',        icon: 'git.svg' },
-    { id: 'mssql',      name: 'MSSQL',      icon: 'mssql.svg' },
-    { id: 'mysql',      name: 'MySQL',      icon: 'mysql.svg' },
-    { id: 'opencv',     name: 'OpenCV',     icon: 'opencv.svg' },
-    { id: 'istqb',      name: 'ISTQB',      icon: 'istqb.svg' },
     { id: 'linux',      name: 'Linux',      icon: 'linux.svg' },
+    // ── módszertan ──
+    { id: 'istqb',      name: 'ISTQB',      icon: 'istqb.svg' },
   ];
 
   // ——— Language Skills ———
