@@ -79,19 +79,18 @@ app-project-list {
   gap: 3rem;
   max-width: 1200px;
   margin: 0 auto;
+  opacity: 0;
 }
+.proj-hero.visible .hero-layout { animation: fade-up .8s ease-out .2s both; }
 
 .hero-inner {
   text-align: left;
   max-width: 380px;
   flex-shrink: 0;
 }
-.proj-hero.visible .hero-eyebrow { animation: fade-up .8s ease-out .2s both; }
-.proj-hero.visible .hero-massive { animation: fade-up .8s ease-out .4s both; }
-.proj-hero.visible .hero-lead    { animation: fade-up .8s ease-out .6s both; }
 @keyframes fade-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-.hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; opacity: 0; }
+.hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
 .eyebrow-line { width: 28px; height: 1px; background: var(--purple); }
 .eyebrow-text { font-family: 'Space Mono', monospace; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .2em; color: var(--purple); }
 
@@ -100,10 +99,10 @@ app-project-list {
   letter-spacing: -.03em; margin: 0 0 1.25rem;
   background: linear-gradient(135deg, var(--text-1) 0%, var(--text-2) 30%, var(--purple) 65%, var(--blue) 100%);
   background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-size: 300% 300%; animation: hero-grad 8s ease infinite; opacity: 0;
+  background-size: 300% 300%; animation: hero-grad 8s ease infinite;
 }
 @keyframes hero-grad { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-.hero-lead { font-size: .9rem; line-height: 1.7; color: var(--text-3); font-weight: 300; opacity: 0; }
+.hero-lead { font-size: .9rem; line-height: 1.7; color: var(--text-3); font-weight: 300; }
 
 /* ============================================================
    CODE EDITOR
@@ -113,11 +112,6 @@ app-project-list {
   min-width: 0;
   max-width: 560px;
   position: relative;
-}
-.proj-hero.visible .hero-editor-wrap { animation: editor-enter .9s ease-out .5s both; }
-@keyframes editor-enter {
-  from { opacity: 0; transform: translateY(40px) scale(.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .code-editor {
