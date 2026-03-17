@@ -176,16 +176,7 @@
   display: flex;
   width: max-content;
   gap: 1.25rem;
-  animation: marquee-scroll 40s linear infinite;
-}
-
-@keyframes marquee-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-33.333%); }
-}
-
-.marquee-wrapper:hover .marquee-track {
-  animation-play-state: paused;
+  will-change: transform;
 }
 
 /* --- Base tech chip --- */

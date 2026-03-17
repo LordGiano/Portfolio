@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ElementRef, ViewChild, HostListener, NgZone } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -44,6 +44,17 @@ interface LanguageSkill {
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('particleCanvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('marqueeWrapper', { static: false }) marqueeWrapperRef!: ElementRef<HTMLDivElement>;
+
+  // Marquee smooth scroll
+  private marqueePos = 0;
+  private marqueeSpeed = 0;
+  private marqueeTargetSpeed = 1;   // 1 = normal, 0 = paused
+  private marqueeRAF: any;
+  private marqueeTrack!: HTMLElement;
+  private marqueeOneThird = 0;
+  private readonly MARQUEE_BASE_PX_PER_FRAME = 0.8;  // pixels per frame at 60fps
+  private readonly MARQUEE_EASE = 0.04;               // lerp factor — lower = smoother
 
   // Typing animation
   typedText = '';
@@ -196,7 +207,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // ——— Language Skills ———
   languages: LanguageSkill[] = [];
 
-  constructor(private translationService: TranslationService) {}
+  constructor(private translationService: TranslationService, private ngZone: NgZone) {}
 
   ngOnInit(): void {
     this.langSub = this.translationService.language$.subscribe(lang => {
@@ -208,11 +219,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initNodeNetwork();
     this.setupIntersectionObserver();
     this.attachHeroMouseListeners();
+    this.initMarquee();
   }
 
   ngOnDestroy(): void {
     if (this.typingTimer) clearTimeout(this.typingTimer);
     if (this.animationId) cancelAnimationFrame(this.animationId);
+    if (this.marqueeRAF) cancelAnimationFrame(this.marqueeRAF);
     this.langSub?.unsubscribe();
   }
 
@@ -333,6 +346,46 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mouseCanvasY = null;
       // Keep last norm for parallax so it doesn't snap
     });
+  }
+
+  // ──────────────────────────────────────────────
+  //  Marquee — smooth ease-in/out on hover
+  // ──────────────────────────────────────────────
+  private initMarquee(): void {
+    const wrapper = this.marqueeWrapperRef?.nativeElement;
+    if (!wrapper) return;
+
+    this.marqueeTrack = wrapper.querySelector('.marquee-track') as HTMLElement;
+    if (!this.marqueeTrack) return;
+
+    // Wait one frame so the track is fully rendered and we can measure it
+    requestAnimationFrame(() => {
+      // The track contains 3 copies; one third = seamless loop point
+      this.marqueeOneThird = this.marqueeTrack.scrollWidth / 3;
+      this.marqueeSpeed = this.marqueeTargetSpeed;
+
+      wrapper.addEventListener('mouseenter', () => { this.marqueeTargetSpeed = 0; });
+      wrapper.addEventListener('mouseleave', () => { this.marqueeTargetSpeed = 1; });
+
+      this.ngZone.runOutsideAngular(() => this.tickMarquee());
+    });
+  }
+
+  private tickMarquee(): void {
+    // Lerp current speed toward target
+    this.marqueeSpeed += (this.marqueeTargetSpeed - this.marqueeSpeed) * this.MARQUEE_EASE;
+
+    // Advance position
+    this.marqueePos -= this.MARQUEE_BASE_PX_PER_FRAME * this.marqueeSpeed;
+
+    // Seamless wrap
+    if (this.marqueePos <= -this.marqueeOneThird) {
+      this.marqueePos += this.marqueeOneThird;
+    }
+
+    this.marqueeTrack.style.transform = `translateX(${this.marqueePos}px)`;
+
+    this.marqueeRAF = requestAnimationFrame(() => this.tickMarquee());
   }
 
   // ──────────────────────────────────────────────
