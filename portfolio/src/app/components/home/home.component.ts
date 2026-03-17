@@ -53,8 +53,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private marqueeRAF: any;
   private marqueeTrack!: HTMLElement;
   private marqueeOneThird = 0;
-  private readonly MARQUEE_BASE_PX_PER_FRAME = 0.8;  // pixels per frame at 60fps
-  private readonly MARQUEE_EASE = 0.04;               // lerp factor — lower = smoother
+  private marqueePxPerMs = 0;                          // pixels per millisecond (framerate-independent)
+  private marqueeLastTime = 0;                         // timestamp of previous frame
+  private readonly MARQUEE_DURATION_S = 35;            // full cycle duration in seconds
+  private readonly MARQUEE_EASE = 0.12;                // lerp factor per-second (framerate-independent)
 
   // Typing animation
   typedText = '';
@@ -362,7 +364,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     requestAnimationFrame(() => {
       // The track contains 3 copies; one third = seamless loop point
       this.marqueeOneThird = this.marqueeTrack.scrollWidth / 3;
+      // Speed in pixels per millisecond — framerate independent
+      this.marqueePxPerMs = this.marqueeOneThird / (this.MARQUEE_DURATION_S * 1000);
       this.marqueeSpeed = this.marqueeTargetSpeed;
+      this.marqueeLastTime = performance.now();
 
       wrapper.addEventListener('mouseenter', () => { this.marqueeTargetSpeed = 0; });
       wrapper.addEventListener('mouseleave', () => { this.marqueeTargetSpeed = 1; });
@@ -372,11 +377,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private tickMarquee(): void {
-    // Lerp current speed toward target
-    this.marqueeSpeed += (this.marqueeTargetSpeed - this.marqueeSpeed) * this.MARQUEE_EASE;
+    const now = performance.now();
+    const dt = Math.min(now - this.marqueeLastTime, 50);  // cap at 50ms to avoid jumps on tab-switch
+    this.marqueeLastTime = now;
 
-    // Advance position
-    this.marqueePos -= this.MARQUEE_BASE_PX_PER_FRAME * this.marqueeSpeed;
+    // Framerate-independent lerp: 1 - (1 - ease)^(dt/16.67)
+    const lerpFactor = 1 - Math.pow(1 - this.MARQUEE_EASE, dt / 16.667);
+    this.marqueeSpeed += (this.marqueeTargetSpeed - this.marqueeSpeed) * lerpFactor;
+
+    // Advance position based on elapsed time
+    this.marqueePos -= this.marqueePxPerMs * dt * this.marqueeSpeed;
 
     // Seamless wrap
     if (this.marqueePos <= -this.marqueeOneThird) {
