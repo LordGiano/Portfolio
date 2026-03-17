@@ -137,20 +137,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   experienceHighlights = [
     {
-      company: 'Master Consulting Kft.',
+      company: 'Ericsson Magyarország Kft.',
       roleKey: 'home.exp_role_1',
       periodKey: 'home.exp_period_1',
       type: 'full-time',
       typeKey: 'home.exp_type_fulltime',
-      techs: ['Angular', 'Python', 'MSSQL']
+      techs: ['Java', 'Spring Boot', 'Python', 'Docker', 'Kubernetes']
     },
     {
-      company: 'NetAdClick Kft.',
+      company: 'Master Consulting Kft.',
       roleKey: 'home.exp_role_2',
       periodKey: 'home.exp_period_2',
-      type: 'contract',
-      typeKey: 'home.exp_type_contract',
-      techs: ['Angular', 'Python', 'MySQL']
+      type: 'full-time',
+      typeKey: 'home.exp_type_fulltime',
+      techs: ['Angular', 'Python', 'MSSQL']
     },
     {
       company: 'Robert Bosch Kft.',
@@ -159,14 +159,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       type: 'internship',
       typeKey: 'home.exp_type_internship',
       techs: ['Angular', 'C#', 'MSSQL', 'ISTQB']
-    },
-    {
-      company: 'e-track Informatikai Kft.',
-      roleKey: 'home.exp_role_4',
-      periodKey: 'home.exp_period_4',
-      type: 'full-time',
-      typeKey: 'home.exp_type_fulltime',
-      techs: ['C#', 'MSSQL', 'WinForms']
     }
   ];
 
