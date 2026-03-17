@@ -226,32 +226,6 @@
     </div>
   </section>
 
-  <!-- ===== COMPETENCIES ===== -->
-  <section class="orbs-section" data-section="orbs"
-           [class.visible]="isSectionVisible('orbs')">
-    <div class="orbs-bg"></div>
-    <div class="container">
-      <div class="section-head">
-        <span class="section-label">{{ 'exp.comp_tag' | translate }}</span>
-        <h2>{{ 'exp.comp_title' | translate }}</h2>
-      </div>
-      <div class="orbs-grid">
-        <div class="orb-card" *ngFor="let comp of competencies; let i = index"
-             [style.--orb-color]="comp.color" [style.--orb-gradient]="comp.gradient"
-             [style.animation-delay]="(i * 0.1) + 's'">
-          <div class="orb-glow"></div>
-          <div class="orb-icon">
-            <mat-icon>{{ comp.matIcon }}</mat-icon>
-          </div>
-          <h3>{{ comp.title }}</h3>
-          <div class="orb-items">
-            <span *ngFor="let item of comp.items">{{ item }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ===== CTA ===== -->
   <section class="exp-cta" data-section="cta"
            [class.visible]="isSectionVisible('cta')">

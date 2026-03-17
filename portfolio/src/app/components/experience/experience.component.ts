@@ -20,10 +20,6 @@ interface Education {
   icon: string; color: string; gradient: string;
 }
 
-interface Competency {
-  matIcon: string; title: string; items: string[];
-  color: string; gradient: string;
-}
 
 @Component({
   selector: 'app-experience',
@@ -46,7 +42,6 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
 
   workExperiences: WorkExperience[] = [];
   educations: Education[] = [];
-  competencies: Competency[] = [];
 
   constructor(private translationService: TranslationService) {}
 
@@ -180,15 +175,6 @@ export class ExperienceComponent implements OnInit, OnDestroy, AfterViewInit {
       { degree: t('exp.edu3_degree'), specialization: t('exp.edu3_spec'), institution: 'Universidad del País Vasco (EHU)', period: '2020 – 2021', location: 'Bilbao, Spain',
         subjects: ['Telecommunications', 'Spanish', 'Basque'], activities: 'Erasmus+',
         icon: 'public', color: '#059669', gradient: 'linear-gradient(135deg, #059669, #10B981)' }
-    ];
-
-    this.competencies = [
-      { matIcon: 'web', title: t('exp.comp_frontend'), items: ['Angular', 'TypeScript', 'HTML5/CSS3', 'RxJS'], color: '#2563EB', gradient: 'linear-gradient(135deg, #2563EB, #3B82F6)' },
-      { matIcon: 'terminal', title: t('exp.comp_backend'), items: ['Java', 'Spring Boot', 'Python', 'C#', 'REST API'], color: '#059669', gradient: 'linear-gradient(135deg, #059669, #10B981)' },
-      { matIcon: 'storage', title: t('exp.comp_database'), items: ['MSSQL', 'MySQL', 'DB Design'], color: '#D97706', gradient: 'linear-gradient(135deg, #D97706, #F59E0B)' },
-      { matIcon: 'bug_report', title: t('exp.comp_testing'), items: ['ISTQB', 'Manual Testing', 'Test Plans'], color: '#DC2626', gradient: 'linear-gradient(135deg, #DC2626, #EF4444)' },
-      { matIcon: 'devices', title: t('exp.comp_devops'), items: ['Docker', 'Kubernetes', 'CI/CD', 'Git', 'Agile/Scrum'], color: '#0891B2', gradient: 'linear-gradient(135deg, #0891B2, #06B6D4)' },
-      { matIcon: 'visibility', title: t('exp.comp_cv'), items: ['OpenCV', 'MediaPipe', 'Image Proc.'], color: '#7C3AED', gradient: 'linear-gradient(135deg, #7C3AED, #8B5CF6)' }
     ];
   }
 }
