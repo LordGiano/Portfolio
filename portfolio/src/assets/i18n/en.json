@@ -176,7 +176,7 @@
   "proj": {
     "badge": "Portfolio",
     "hero_title": "Projects",
-    "hero_subtitle": "A selection of my university and personal projects. Image processing, computer vision, and application development.",
+    "hero_subtitle": "A selection of my most significant projects — image processing, mobile development, and web solutions.",
     "cat_all": "All",
     "featured_label": "Featured projects",
     "featured_title": "Main works",
@@ -204,7 +204,7 @@
     "cell_h2": "Automatic contour detection and visualization",
     "cell_h3": "Python module with configurable input/output paths",
     "spendlens_subtitle": "Smart expense tracker based on receipt scanning",
-    "spendlens_desc": "Android app that automatically recognizes products from receipt photos, categorizes them, and generates monthly reports on spending habits.",
+    "spendlens_desc": "Android app that recognizes purchased items from receipt photos, categorizes them and analyzes spending.",
     "spendlens_h1": "Receipt OCR recognition using ML Kit",
     "spendlens_h2": "Automatic categorization (food, drinks, cleaning supplies, etc.)",
     "spendlens_h3": "Monthly reports and spending trend visualization",
@@ -216,7 +216,8 @@
     "portfolio_h3": "Custom animations, 3D effects, and interactive elements",
     "cta_title": "Have an idea?",
     "cta_subtitle": "If you're interested in my work and want to collaborate on a project, feel free to reach out!",
-    "btn_details": "Details"
+    "btn_details": "Details",
+    "svg_segmenting": "Segmenting..."
   },
   "projects": {
     "pageTitle": "Projects",

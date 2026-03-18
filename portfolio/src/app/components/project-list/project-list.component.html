@@ -94,148 +94,224 @@
     </div>
   </section>
 
-  <!-- ===== CATEGORY FILTER ===== -->
-  <section class="filter-strip" data-section="filter"
-           [class.visible]="isSectionVisible('filter')">
-    <div class="filter-inner">
-      <button class="filter-pill" *ngFor="let cat of categories"
-              [class.active]="selectedCategory === cat"
-              (click)="selectCategory(cat)">
-        {{ getCategoryLabel(cat) }}
-      </button>
-    </div>
-  </section>
-
-  <!-- ===== FEATURED PROJECTS ===== -->
-  <section class="featured-section" data-section="featured"
-           [class.visible]="isSectionVisible('featured')"
-           *ngIf="featuredProjects.length > 0">
+  <!-- ===== ★ HERO PROJECT — Thesis (flagship) ===== -->
+  <section class="hero-project-section" data-section="heroProject"
+           [class.visible]="isSectionVisible('heroProject')"
+           *ngIf="heroProject">
     <div class="container">
       <div class="section-head">
         <span class="section-label">{{ 'proj.featured_label' | translate }}</span>
-        <h2>{{ 'proj.featured_title' | translate }}</h2>
       </div>
 
-      <div class="featured-grid">
-        <div class="feat-card" *ngFor="let proj of featuredProjects; let i = index"
-             [style.--pc]="proj.color"
-             [style.--pg]="proj.gradient"
-             [style.animation-delay]="(i * 0.15) + 's'">
+      <div class="hero-project-card"
+           [style.--pc]="heroProject.color"
+           [style.--pg]="heroProject.gradient">
 
-          <div class="feat-glow"></div>
-          <div class="feat-accent"></div>
+        <!-- Left: SVG Visual -->
+        <div class="hero-visual">
+          <div class="hero-visual-bg"></div>
+          <span class="status-badge" [attr.data-status]="heroProject.status">
+            {{ getStatusLabel(heroProject.status) }}
+          </span>
+          <!-- Thesis segmentation SVG -->
+          <svg viewBox="0 0 300 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="280" height="220" rx="8" fill="#161b22" stroke="rgba(139,92,246,.2)" stroke-width="1"/>
+            <rect x="20" y="20" width="260" height="170" rx="4" fill="#0d1117"/>
+            <line x1="20" y1="80" x2="280" y2="80" stroke="rgba(139,92,246,.06)" stroke-width=".5"/>
+            <line x1="20" y1="130" x2="280" y2="130" stroke="rgba(139,92,246,.06)" stroke-width=".5"/>
+            <line x1="110" y1="20" x2="110" y2="190" stroke="rgba(139,92,246,.06)" stroke-width=".5"/>
+            <line x1="200" y1="20" x2="200" y2="190" stroke="rgba(139,92,246,.06)" stroke-width=".5"/>
+            <ellipse cx="90" cy="110" rx="35" ry="22" fill="rgba(139,92,246,.15)"/>
+            <ellipse cx="90" cy="110" rx="35" ry="22" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="4 3">
+              <animate attributeName="stroke-dashoffset" from="0" to="14" dur="3s" repeatCount="indefinite"/>
+            </ellipse>
+            <circle cx="90" cy="110" r="3" fill="#A78BFA">
+              <animate attributeName="r" values="2;4;2" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <text x="90" y="140" text-anchor="middle" fill="#A78BFA" font-family="Space Mono, monospace" font-size="7" opacity=".7">ID:01</text>
+            <ellipse cx="200" cy="95" rx="30" ry="18" fill="rgba(59,130,246,.12)"/>
+            <ellipse cx="200" cy="95" rx="30" ry="18" fill="none" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4 3">
+              <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="3.5s" repeatCount="indefinite"/>
+            </ellipse>
+            <circle cx="200" cy="95" r="3" fill="#60A5FA">
+              <animate attributeName="r" values="2;4;2" dur="2.3s" repeatCount="indefinite"/>
+            </circle>
+            <text x="200" y="120" text-anchor="middle" fill="#60A5FA" font-family="Space Mono, monospace" font-size="7" opacity=".7">ID:02</text>
+            <path d="M60 108 Q75 85 105 90 Q125 95 120 115 Q115 135 90 132 Q65 128 60 108Z"
+                  fill="none" stroke="#7C3AED" stroke-width=".8" opacity=".4" stroke-dasharray="2 2"/>
+            <rect x="20" y="198" width="260" height="22" rx="3" fill="#161b22"/>
+            <rect x="28" y="204" width="80" height="10" rx="2" fill="rgba(139,92,246,.15)"/>
+            <rect x="28" y="204" width="52" height="10" rx="2" fill="rgba(139,92,246,.35)">
+              <animate attributeName="width" values="20;80;50;20" dur="4s" repeatCount="indefinite"/>
+            </rect>
+            <text x="120" y="212" fill="#8B949E" font-family="Space Mono, monospace" font-size="6" [textContent]="'proj.svg_segmenting' | translate"></text>
+            <text x="262" y="212" text-anchor="end" fill="#4ADE80" font-family="Space Mono, monospace" font-size="6">98.2%</text>
+          </svg>
+        </div>
 
-          <!-- Placeholder image -->
-          <div class="feat-image" [style.background]="proj.gradient">
-            <div class="feat-image-overlay">
-              <mat-icon class="feat-image-icon">{{ proj.icon }}</mat-icon>
-            </div>
-            <div class="feat-status" [attr.data-status]="proj.status">
-              {{ getStatusLabel(proj.status) }}
+        <!-- Right: Content -->
+        <div class="hero-content">
+          <span class="project-category">{{ heroProject.category }} · {{ heroProject.date }}</span>
+          <h3>{{ heroProject.title }}</h3>
+          <p class="project-subtitle">{{ heroProject.subtitle }}</p>
+          <p class="project-desc">{{ heroProject.description }}</p>
+
+          <div class="project-highlights" *ngIf="heroProject.highlights">
+            <div class="project-hl" *ngFor="let hl of heroProject.highlights">
+              <span class="hl-arrow" [style.color]="heroProject.color">▹</span>
+              {{ hl }}
             </div>
           </div>
 
-          <!-- Content -->
-          <div class="feat-body">
-            <div class="feat-top">
-              <div>
-                <h3 class="feat-title">{{ proj.title }}</h3>
-                <p class="feat-subtitle">{{ proj.subtitle }}</p>
-              </div>
-              <span class="feat-date">{{ proj.date }}</span>
-            </div>
+          <div class="tech-row">
+            <span class="tech-chip" *ngFor="let tech of heroProject.technologies">{{ tech }}</span>
+          </div>
 
-            <p class="feat-desc">{{ proj.description }}</p>
-
-            <div class="feat-highlights" *ngIf="proj.highlights">
-              <div class="feat-hl" *ngFor="let hl of proj.highlights">
-                <span class="hl-arrow" [style.color]="proj.color">▹</span>
-                {{ hl }}
-              </div>
-            </div>
-
-            <div class="feat-techs">
-              <span class="feat-tech" *ngFor="let tech of proj.technologies">{{ tech }}</span>
-            </div>
-
-            <div class="feat-actions">
-              <a routerLink="/coming-soon" class="feat-btn feat-btn-primary"
-                 (click)="$event.stopPropagation()">
-                <mat-icon>arrow_forward</mat-icon>
-                {{ 'proj.btn_details' | translate }}
-              </a>
-              <a *ngIf="proj.githubUrl" [href]="proj.githubUrl" target="_blank"
-                 rel="noopener noreferrer" class="feat-btn feat-btn-secondary"
-                 (click)="$event.stopPropagation()">
-                <svg class="gh-icon" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                </svg>
-                GitHub
-              </a>
-            </div>
+          <div class="action-row">
+            <a routerLink="/coming-soon" class="btn btn-primary"
+               [style.background]="heroProject.color">
+              → {{ 'proj.btn_details' | translate }}
+            </a>
+            <a *ngIf="heroProject.githubUrl" [href]="heroProject.githubUrl" target="_blank"
+               rel="noopener noreferrer" class="btn btn-secondary">
+              <svg class="gh-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+              GitHub
+            </a>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== OTHER PROJECTS ===== -->
-  <section class="other-section" data-section="other"
-           [class.visible]="isSectionVisible('other')"
-           *ngIf="otherProjects.length > 0">
+  <!-- ===== ★ PROJECT GRID — Other projects (compact, no highlights) ===== -->
+  <section class="projects-section" data-section="projects"
+           [class.visible]="isSectionVisible('projects')"
+           *ngIf="gridProjects.length > 0">
     <div class="container">
       <div class="section-head">
         <span class="section-label">{{ 'proj.other_label' | translate }}</span>
-        <h2>{{ 'proj.other_title' | translate }}</h2>
       </div>
 
-      <div class="other-grid">
-        <div class="other-card" *ngFor="let proj of otherProjects; let i = index"
+      <div class="project-grid">
+        <div class="project-card" *ngFor="let proj of gridProjects; let i = index"
              [style.--pc]="proj.color"
              [style.--pg]="proj.gradient"
              [style.animation-delay]="(i * 0.12) + 's'">
 
-          <div class="other-accent"></div>
+          <!-- SVG Visual -->
+          <div class="card-visual">
+            <div class="card-visual-bg" [style.background]="getCardBg(proj.id)"></div>
+            <span class="status-badge" [attr.data-status]="proj.status">
+              {{ getStatusLabel(proj.status) }}
+            </span>
 
-          <!-- Placeholder image -->
-          <div class="other-image" [style.background]="proj.gradient">
-            <div class="other-image-overlay">
-              <mat-icon class="other-image-icon">{{ proj.icon }}</mat-icon>
-            </div>
-            <span class="other-status" [attr.data-status]="proj.status">{{ getStatusLabel(proj.status) }}</span>
+            <!-- Virtual Mouse SVG -->
+            <svg *ngIf="proj.id === 'virtual-mouse'" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="15" y="10" width="170" height="120" rx="6" fill="#0d1117" stroke="rgba(37,99,235,.15)" stroke-width=".5"/>
+              <path d="M70 100 L70 60 Q70 50 78 50 Q86 50 86 60 L86 45 Q86 35 94 35 Q102 35 102 45 L102 40 Q102 30 110 30 Q118 30 118 40 L118 50 Q118 42 126 42 Q134 42 134 50 L134 85 Q134 100 120 108 L80 108 Q70 108 70 100Z"
+                    fill="rgba(37,99,235,.1)" stroke="#3B82F6" stroke-width="1.2"/>
+              <path d="M140 65 L155 80 L148 80 L152 92 L146 94 L142 82 L137 88 Z" fill="#60A5FA" opacity=".8"/>
+              <line x1="155" y1="60" x2="170" y2="50" stroke="#3B82F6" stroke-width=".6" opacity=".4" stroke-dasharray="2 2"/>
+              <line x1="155" y1="75" x2="172" y2="75" stroke="#3B82F6" stroke-width=".6" opacity=".3" stroke-dasharray="2 2"/>
+              <circle cx="78" cy="50" r="2.5" fill="#60A5FA" opacity=".7">
+                <animate attributeName="opacity" values=".4;.9;.4" dur="1.5s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="94" cy="35" r="2.5" fill="#60A5FA" opacity=".7">
+                <animate attributeName="opacity" values=".4;.9;.4" dur="1.8s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="110" cy="30" r="2.5" fill="#60A5FA" opacity=".7">
+                <animate attributeName="opacity" values=".4;.9;.4" dur="2s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+
+            <!-- SpendLens SVG -->
+            <svg *ngIf="proj.id === 'spendlens'" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="60" y="8" width="80" height="124" rx="10" fill="#161b22" stroke="rgba(217,119,6,.2)" stroke-width="1"/>
+              <rect x="64" y="18" width="72" height="104" rx="3" fill="#0d1117"/>
+              <rect x="74" y="26" width="52" height="60" rx="3" fill="rgba(217,119,6,.08)" stroke="rgba(217,119,6,.15)" stroke-width=".5"/>
+              <line x1="80" y1="36" x2="118" y2="36" stroke="rgba(217,119,6,.3)" stroke-width="1"/>
+              <line x1="80" y1="44" x2="110" y2="44" stroke="rgba(217,119,6,.2)" stroke-width="1"/>
+              <line x1="80" y1="52" x2="114" y2="52" stroke="rgba(217,119,6,.2)" stroke-width="1"/>
+              <line x1="80" y1="60" x2="105" y2="60" stroke="rgba(217,119,6,.2)" stroke-width="1"/>
+              <line x1="80" y1="72" x2="120" y2="72" stroke="rgba(251,191,36,.35)" stroke-width="1.5"/>
+              <text x="100" y="80" text-anchor="middle" fill="#FBBF24" font-family="Space Mono, monospace" font-size="6" font-weight="700">2,480 Ft</text>
+              <rect x="70" y="94" width="8" height="20" rx="1" fill="rgba(217,119,6,.2)"/>
+              <rect x="82" y="100" width="8" height="14" rx="1" fill="rgba(217,119,6,.3)"/>
+              <rect x="94" y="88" width="8" height="26" rx="1" fill="rgba(251,191,36,.4)"/>
+              <rect x="106" y="96" width="8" height="18" rx="1" fill="rgba(217,119,6,.25)"/>
+              <rect x="118" y="102" width="8" height="12" rx="1" fill="rgba(217,119,6,.15)"/>
+              <line x1="74" y1="40" x2="126" y2="40" stroke="#FBBF24" stroke-width=".5" opacity=".6">
+                <animate attributeName="y1" values="26;86;26" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="y2" values="26;86;26" dur="3s" repeatCount="indefinite"/>
+              </line>
+            </svg>
+
+            <!-- Cell Segmentation SVG -->
+            <svg *ngIf="proj.id === 'cell-segmentation'" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="100" cy="70" r="55" fill="#0d1117" stroke="rgba(5,150,105,.2)" stroke-width="1"/>
+              <circle cx="78" cy="55" r="12" fill="rgba(5,150,105,.1)" stroke="#10B981" stroke-width="1">
+                <animate attributeName="r" values="11;13;11" dur="4s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="78" cy="55" r="5" fill="rgba(16,185,129,.3)"/>
+              <circle cx="115" cy="50" r="10" fill="rgba(5,150,105,.08)" stroke="#059669" stroke-width="1"/>
+              <circle cx="115" cy="50" r="4" fill="rgba(5,150,105,.25)"/>
+              <circle cx="100" cy="85" r="14" fill="rgba(5,150,105,.1)" stroke="#10B981" stroke-width="1">
+                <animate attributeName="r" values="13;15;13" dur="5s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="100" cy="85" r="6" fill="rgba(16,185,129,.3)"/>
+              <circle cx="128" cy="78" r="8" fill="rgba(5,150,105,.06)" stroke="#059669" stroke-width=".8"/>
+              <circle cx="128" cy="78" r="3" fill="rgba(5,150,105,.2)"/>
+              <circle cx="72" cy="82" r="7" fill="rgba(5,150,105,.06)" stroke="#059669" stroke-width=".8"/>
+              <circle cx="72" cy="82" r="3" fill="rgba(5,150,105,.2)"/>
+              <circle cx="78" cy="55" r="15" fill="none" stroke="#4ADE80" stroke-width=".5" stroke-dasharray="2 3" opacity=".5"/>
+              <circle cx="100" cy="85" r="17" fill="none" stroke="#4ADE80" stroke-width=".5" stroke-dasharray="2 3" opacity=".5"/>
+            </svg>
+
+            <!-- Portfolio SVG -->
+            <svg *ngIf="proj.id === 'portfolio'" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="15" width="160" height="110" rx="6" fill="#161b22" stroke="rgba(8,145,178,.2)" stroke-width=".8"/>
+              <rect x="20" y="15" width="160" height="18" rx="6" fill="#1e2736"/>
+              <circle cx="32" cy="24" r="2.5" fill="#ff5f57"/>
+              <circle cx="40" cy="24" r="2.5" fill="#febc2e"/>
+              <circle cx="48" cy="24" r="2.5" fill="#28c840"/>
+              <rect x="65" y="21" width="70" height="6" rx="3" fill="#0d1117"/>
+              <rect x="26" y="38" width="148" height="80" rx="2" fill="#0d1117"/>
+              <rect x="30" y="42" width="140" height="8" rx="1" fill="rgba(8,145,178,.06)"/>
+              <rect x="34" y="44" width="20" height="4" rx="1" fill="rgba(6,182,212,.3)"/>
+              <rect x="58" y="44" width="12" height="4" rx="1" fill="rgba(8,145,178,.15)"/>
+              <rect x="74" y="44" width="14" height="4" rx="1" fill="rgba(8,145,178,.15)"/>
+              <rect x="92" y="44" width="11" height="4" rx="1" fill="rgba(8,145,178,.15)"/>
+              <rect x="30" y="54" width="60" height="4" rx="1" fill="rgba(6,182,212,.3)"/>
+              <rect x="30" y="62" width="45" height="3" rx="1" fill="rgba(6,182,212,.12)"/>
+              <rect x="30" y="68" width="50" height="3" rx="1" fill="rgba(6,182,212,.08)"/>
+              <rect x="100" y="54" width="68" height="40" rx="3" fill="rgba(8,145,178,.06)" stroke="rgba(8,145,178,.1)" stroke-width=".5"/>
+              <text x="34" y="84" fill="rgba(255,255,255,.5)" font-size="6">🇭🇺 🇬🇧 🇩🇪 🇪🇸</text>
+              <rect x="30" y="90" width="42" height="22" rx="2" fill="rgba(8,145,178,.06)" stroke="rgba(8,145,178,.1)" stroke-width=".5"/>
+              <rect x="76" y="90" width="42" height="22" rx="2" fill="rgba(8,145,178,.06)" stroke="rgba(8,145,178,.1)" stroke-width=".5"/>
+              <rect x="122" y="90" width="42" height="22" rx="2" fill="rgba(8,145,178,.06)" stroke="rgba(8,145,178,.1)" stroke-width=".5"/>
+            </svg>
           </div>
 
-          <!-- Content -->
-          <div class="other-body">
-            <div class="other-top">
-              <div>
-                <h3>{{ proj.title }}</h3>
-                <p class="other-subtitle">{{ proj.subtitle }}</p>
-              </div>
-              <span class="other-date">{{ proj.date }}</span>
+          <!-- Card body -->
+          <div class="card-body">
+            <span class="project-category">{{ proj.category }} · {{ proj.date }}</span>
+            <h3>{{ proj.title }}</h3>
+            <p class="project-subtitle">{{ proj.subtitle }}</p>
+            <p class="project-desc">{{ proj.description }}</p>
+
+            <div class="tech-row">
+              <span class="tech-chip" *ngFor="let tech of proj.technologies">{{ tech }}</span>
             </div>
 
-            <p class="other-desc">{{ proj.description }}</p>
-
-            <div class="other-highlights" *ngIf="proj.highlights">
-              <div class="other-hl" *ngFor="let hl of proj.highlights">
-                <span class="hl-arrow" [style.color]="proj.color">▹</span>{{ hl }}
-              </div>
-            </div>
-
-            <div class="other-techs">
-              <span class="other-tech" *ngFor="let tech of proj.technologies">{{ tech }}</span>
-            </div>
-
-            <div class="other-actions">
-              <a routerLink="/coming-soon" class="feat-btn feat-btn-primary"
-                 (click)="$event.stopPropagation()">
-                <mat-icon>arrow_forward</mat-icon>
-                {{ 'proj.btn_details' | translate }}
+            <div class="action-row">
+              <a routerLink="/coming-soon" class="btn btn-primary"
+                 [style.background]="proj.color">
+                → {{ 'proj.btn_details' | translate }}
               </a>
               <a *ngIf="proj.githubUrl" [href]="proj.githubUrl" target="_blank"
-                 rel="noopener noreferrer" class="feat-btn feat-btn-secondary"
-                 (click)="$event.stopPropagation()">
+                 rel="noopener noreferrer" class="btn btn-secondary">
                 <svg class="gh-icon" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
                 </svg>

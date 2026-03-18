@@ -176,7 +176,7 @@
   "proj": {
     "badge": "Portfólió",
     "hero_title": "Projektek",
-    "hero_subtitle": "Válogatás az egyetemi és személyes projektjeimből. Képfeldolgozás, computer vision és alkalmazásfejlesztés.",
+    "hero_subtitle": "Válogatás a legjelentősebb projektjeimből — képfeldolgozás, mobilfejlesztés és webes megoldások.",
     "cat_all": "Összes",
     "featured_label": "Kiemelt projektek",
     "featured_title": "Főbb munkáim",
@@ -204,7 +204,7 @@
     "cell_h2": "Automatikus kontúrdetektálás és megjelenítés",
     "cell_h3": "Python modul, konfigurálható bemenet/kimenet útvonalakkal",
     "spendlens_subtitle": "Okos kiadáskövető blokk-szkennelés alapján",
-    "spendlens_desc": "Android alkalmazás, amely a számlák fotójából automatikusan felismeri a vásárolt termékeket, kategorizálja őket és havi kimutatásokat készít a vásárlási szokásokról.",
+    "spendlens_desc": "Android app, amely blokkfotókból felismeri a vásárolt tételeket, kategorizálja és elemzi a kiadásokat.",
     "spendlens_h1": "Blokk OCR felismerés ML Kit segítségével",
     "spendlens_h2": "Automatikus kategorizálás (étel, ital, tisztítószer, stb.)",
     "spendlens_h3": "Havi kimutatások és vásárlási trendek vizualizálása",
@@ -216,7 +216,8 @@
     "portfolio_h3": "Egyedi animációk, 3D effektek és interaktív elemek",
     "cta_title": "Van egy ötleted?",
     "cta_subtitle": "Ha érdekel a munkám és szeretnél együtt dolgozni egy projekten, keress bátran!",
-    "btn_details": "Részletek"
+    "btn_details": "Részletek",
+    "svg_segmenting": "Szegmentálás..."
   },
   "projects": {
     "pageTitle": "Projektek",

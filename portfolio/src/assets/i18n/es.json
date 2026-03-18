@@ -176,7 +176,7 @@
   "proj": {
     "badge": "Portafolio",
     "hero_title": "Proyectos",
-    "hero_subtitle": "Una selección de mis proyectos universitarios y personales. Procesamiento de imágenes, visión por computadora y desarrollo de aplicaciones.",
+    "hero_subtitle": "Una selección de mis proyectos más significativos — procesamiento de imágenes, desarrollo móvil y soluciones web.",
     "cat_all": "Todos",
     "featured_label": "Proyectos destacados",
     "featured_title": "Trabajos principales",
@@ -204,7 +204,7 @@
     "cell_h2": "Detección automática de contornos y visualización",
     "cell_h3": "Módulo Python con rutas de entrada/salida configurables",
     "spendlens_subtitle": "Rastreador de gastos inteligente basado en escaneo de recibos",
-    "spendlens_desc": "Aplicación Android que reconoce automáticamente productos de fotos de recibos, los categoriza y genera informes mensuales sobre hábitos de gasto.",
+    "spendlens_desc": "App Android que reconoce artículos comprados de fotos de recibos, los categoriza y analiza los gastos.",
     "spendlens_h1": "Reconocimiento OCR de recibos usando ML Kit",
     "spendlens_h2": "Categorización automática (comida, bebidas, limpieza, etc.)",
     "spendlens_h3": "Informes mensuales y visualización de tendencias de gastos",
@@ -216,7 +216,8 @@
     "portfolio_h3": "Animaciones personalizadas, efectos 3D y elementos interactivos",
     "cta_title": "¿Tienes una idea?",
     "cta_subtitle": "Si te interesa mi trabajo y quieres colaborar en un proyecto, ¡no dudes en contactarme!",
-    "btn_details": "Detalles"
+    "btn_details": "Detalles",
+    "svg_segmenting": "Segmentando..."
   },
   "projects": {
     "pageTitle": "Proyectos",

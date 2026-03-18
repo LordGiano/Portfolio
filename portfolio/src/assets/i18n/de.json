@@ -176,7 +176,7 @@
   "proj": {
     "badge": "Portfolio",
     "hero_title": "Projekte",
-    "hero_subtitle": "Eine Auswahl meiner Uni- und persönlichen Projekte. Bildverarbeitung, Computer Vision und Anwendungsentwicklung.",
+    "hero_subtitle": "Eine Auswahl meiner bedeutendsten Projekte — Bildverarbeitung, mobile Entwicklung und Weblösungen.",
     "cat_all": "Alle",
     "featured_label": "Ausgewählte Projekte",
     "featured_title": "Hauptarbeiten",
@@ -204,7 +204,7 @@
     "cell_h2": "Automatische Konturerkennung und Visualisierung",
     "cell_h3": "Python-Modul mit konfigurierbaren Ein-/Ausgabepfaden",
     "spendlens_subtitle": "Intelligenter Ausgabentracker basierend auf Kassenbon-Scan",
-    "spendlens_desc": "Android-App, die automatisch Produkte von Kassenbonfotos erkennt, kategorisiert und monatliche Berichte über Ausgabengewohnheiten erstellt.",
+    "spendlens_desc": "Android-App, die gekaufte Artikel von Kassenbonfotos erkennt, kategorisiert und Ausgaben analysiert.",
     "spendlens_h1": "Kassenbon-OCR-Erkennung mit ML Kit",
     "spendlens_h2": "Automatische Kategorisierung (Lebensmittel, Getränke, Reinigungsmittel usw.)",
     "spendlens_h3": "Monatsberichte und Visualisierung von Ausgabentrends",
@@ -216,7 +216,8 @@
     "portfolio_h3": "Eigene Animationen, 3D-Effekte und interaktive Elemente",
     "cta_title": "Haben Sie eine Idee?",
     "cta_subtitle": "Wenn Sie sich für meine Arbeit interessieren und an einem Projekt zusammenarbeiten möchten, kontaktieren Sie mich!",
-    "btn_details": "Details"
+    "btn_details": "Details",
+    "svg_segmenting": "Segmentierung..."
   },
   "projects": {
     "pageTitle": "Projekte",

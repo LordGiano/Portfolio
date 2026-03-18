@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, NgZone, ElementRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { TranslationService } from '../../services/translation.service';
@@ -15,8 +14,6 @@ interface Project {
   technologies: string[];
   category: string;
   status: 'completed' | 'in-progress' | 'planned';
-  featured: boolean;
-  icon: string;
   color: string;
   gradient: string;
   date: string;
@@ -39,7 +36,7 @@ interface CodeSnippet {
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule, MatIconModule, FormsModule, RouterLink, TranslatePipe],
+  imports: [CommonModule, MatIconModule, RouterLink, TranslatePipe],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.css',
   encapsulation: ViewEncapsulation.None
@@ -48,13 +45,12 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private langSub!: Subscription;
   visibleSections = new Set<string>();
-  selectedCategory = 'all';
 
-  categories = ['all', 'Computer Vision', 'Mobile', 'Web'];
-  projects: Project[] = [];
+  // Project data
+  heroProject: Project | null = null;
+  gridProjects: Project[] = [];
 
   // Code editor state
-  private codeAnimId: number | null = null;
   private heroStarted = false;
   private currentSnippetIdx = 0;
   private currentLineIdx = 0;
@@ -76,6 +72,14 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
   // Editor tilt
   editorTiltX = 0;
   editorTiltY = 0;
+
+  // Card visual backgrounds by project id
+  private readonly CARD_BGS: Record<string, string> = {
+    'virtual-mouse': 'linear-gradient(135deg, #0c1a38 0%, #0f1628 100%)',
+    'spendlens': 'linear-gradient(135deg, #1a1508 0%, #161210 100%)',
+    'cell-segmentation': 'linear-gradient(135deg, #061a14 0%, #0f1628 100%)',
+    'portfolio': 'linear-gradient(135deg, #061820 0%, #0f1628 100%)'
+  };
 
   private readonly CODE_SNIPPETS: CodeSnippet[] = [
     {
@@ -430,6 +434,7 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
             const id = entry.target.getAttribute('data-section');
             if (id) {
               this.visibleSections.add(id);
+              observer.unobserve(entry.target);
               if (id === 'hero' && !this.heroStarted) {
                 this.heroStarted = true;
                 setTimeout(() => this.initCodeEditor(), 300);
@@ -449,23 +454,6 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.visibleSections.has(name);
   }
 
-  selectCategory(cat: string): void {
-    this.selectedCategory = cat;
-  }
-
-  get filteredProjects(): Project[] {
-    if (this.selectedCategory === 'all') return this.projects;
-    return this.projects.filter(p => p.category === this.selectedCategory);
-  }
-
-  get featuredProjects(): Project[] {
-    return this.filteredProjects.filter(p => p.featured);
-  }
-
-  get otherProjects(): Project[] {
-    return this.filteredProjects.filter(p => !p.featured);
-  }
-
   getStatusLabel(status: string): string {
     const t = (key: string) => this.translationService.translate(key);
     switch (status) {
@@ -476,16 +464,14 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  getCategoryLabel(cat: string): string {
-    if (cat === 'all') return this.translationService.translate('proj.cat_all');
-    return cat;
+  getCardBg(id: string): string {
+    return this.CARD_BGS[id] || 'linear-gradient(135deg, #0f1628 0%, #0d1117 100%)';
   }
 
   // ====================
   // CODE EDITOR ANIMATION
   // ====================
   private initCodeEditor(): void {
-    // Set initial snippet info
     const snippet = this.CODE_SNIPPETS[0];
     this.currentFile = snippet.fileName;
     this.currentLang = snippet.language;
@@ -550,7 +536,6 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const lines = snippet.lines;
 
-    // If we've typed all lines, pause then move to next snippet
     if (this.currentLineIdx >= lines.length) {
       this.snippetTimer = setTimeout(() => {
         this.transitionToNextSnippet();
@@ -560,7 +545,6 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const currentLine = lines[this.currentLineIdx];
 
-    // Empty line — just add it
     if (currentLine.length === 0) {
       this.renderedLines.push({ tokens: [], lineNum: this.renderedLines.length + 1 });
       this.currentLineIdx++;
@@ -570,19 +554,15 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    // Build the full text of this line
     const fullText = currentLine.map(t => t.text).join('');
 
     if (this.currentCharIdx === 0) {
-      // Start a new rendered line
       this.renderedLines.push({ tokens: [], lineNum: this.renderedLines.length + 1 });
     }
 
-    // Find which token and char position within it
     this.currentCharIdx++;
     const visibleText = fullText.substring(0, this.currentCharIdx);
 
-    // Build partial tokens from visible text
     const partialTokens: CodeToken[] = [];
     let consumed = 0;
     for (const token of currentLine) {
@@ -595,7 +575,6 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
       consumed += token.text.length;
     }
 
-    // Update the last rendered line
     this.renderedLines[this.renderedLines.length - 1] = {
       tokens: partialTokens,
       lineNum: this.renderedLines.length
@@ -603,12 +582,10 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.scrollEditorToBottom();
 
     if (this.currentCharIdx >= fullText.length) {
-      // Line done, move to next
       this.currentLineIdx++;
       this.currentCharIdx = 0;
       this.typeTimer = setTimeout(() => this.typeNextChar(), 80 + Math.random() * 60);
     } else {
-      // Type speed variation
       const ch = fullText[this.currentCharIdx - 1];
       let delay = 28 + Math.random() * 32;
       if (ch === ' ') delay = 15;
@@ -648,23 +625,24 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadData(): void {
     const t = (key: string) => this.translationService.translate(key);
 
-    this.projects = [
-      {
-        id: 'thesis',
-        title: t('proj.thesis_title'),
-        subtitle: t('proj.thesis_subtitle'),
-        description: t('proj.thesis_desc'),
-        technologies: ['Python', 'OpenCV', 'NumPy', 'Alpha Shape', 'Background Subtraction', 'Keypoint Detection'],
-        category: 'Computer Vision',
-        status: 'completed',
-        featured: true,
-        icon: 'biotech',
-        color: '#7C3AED',
-        gradient: 'linear-gradient(135deg, #7C3AED, #8B5CF6)',
-        date: '2025',
-        githubUrl: 'https://github.com/bertran',
-        highlights: [t('proj.thesis_h1'), t('proj.thesis_h2'), t('proj.thesis_h3')]
-      },
+    // Hero project (thesis — always first, shown as flagship card)
+    this.heroProject = {
+      id: 'thesis',
+      title: t('proj.thesis_title'),
+      subtitle: t('proj.thesis_subtitle'),
+      description: t('proj.thesis_desc'),
+      technologies: ['Python', 'OpenCV', 'NumPy', 'Alpha Shape', 'Background Subtraction', 'Keypoint Detection'],
+      category: 'Computer Vision',
+      status: 'completed',
+      color: '#7C3AED',
+      gradient: 'linear-gradient(135deg, #7C3AED, #8B5CF6)',
+      date: '2025',
+      githubUrl: 'https://github.com/bertran',
+      highlights: [t('proj.thesis_h1'), t('proj.thesis_h2'), t('proj.thesis_h3')]
+    };
+
+    // Grid projects (compact cards, no highlights shown)
+    this.gridProjects = [
       {
         id: 'virtual-mouse',
         title: t('proj.vmouse_title'),
@@ -673,13 +651,22 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         technologies: ['Python', 'OpenCV', 'MediaPipe', 'Threading'],
         category: 'Computer Vision',
         status: 'completed',
-        featured: true,
-        icon: 'mouse',
         color: '#2563EB',
         gradient: 'linear-gradient(135deg, #2563EB, #3B82F6)',
         date: '2024',
-        githubUrl: 'https://github.com/bertran',
-        highlights: [t('proj.vmouse_h1'), t('proj.vmouse_h2'), t('proj.vmouse_h3')]
+        githubUrl: 'https://github.com/bertran'
+      },
+      {
+        id: 'spendlens',
+        title: 'SpendLens',
+        subtitle: t('proj.spendlens_subtitle'),
+        description: t('proj.spendlens_desc'),
+        technologies: ['Android', 'Kotlin', 'ML Kit', 'Room DB', 'Jetpack Compose'],
+        category: 'Mobile',
+        status: 'in-progress',
+        color: '#D97706',
+        gradient: 'linear-gradient(135deg, #D97706, #F59E0B)',
+        date: '2025'
       },
       {
         id: 'cell-segmentation',
@@ -689,28 +676,10 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         technologies: ['Python', 'OpenCV', 'Image Processing'],
         category: 'Computer Vision',
         status: 'completed',
-        featured: false,
-        icon: 'blur_on',
         color: '#059669',
         gradient: 'linear-gradient(135deg, #059669, #10B981)',
         date: '2024',
-        githubUrl: 'https://github.com/bertran',
-        highlights: [t('proj.cell_h1'), t('proj.cell_h2'), t('proj.cell_h3')]
-      },
-      {
-        id: 'spendlens',
-        title: 'SpendLens',
-        subtitle: t('proj.spendlens_subtitle'),
-        description: t('proj.spendlens_desc'),
-        technologies: ['Android', 'Kotlin', 'ML Kit', 'Room DB', 'Jetpack Compose'],
-        category: 'Mobile',
-        status: 'planned',
-        featured: true,
-        icon: 'receipt_long',
-        color: '#D97706',
-        gradient: 'linear-gradient(135deg, #D97706, #F59E0B)',
-        date: '2025',
-        highlights: [t('proj.spendlens_h1'), t('proj.spendlens_h2'), t('proj.spendlens_h3')]
+        githubUrl: 'https://github.com/bertran'
       },
       {
         id: 'portfolio',
@@ -720,13 +689,10 @@ export class ProjectListComponent implements OnInit, OnDestroy, AfterViewInit {
         technologies: ['Angular', 'TypeScript', 'CSS3', 'i18n'],
         category: 'Web',
         status: 'in-progress',
-        featured: false,
-        icon: 'web',
         color: '#0891B2',
         gradient: 'linear-gradient(135deg, #0891B2, #06B6D4)',
         date: '2025',
-        githubUrl: 'https://github.com/bertran',
-        highlights: [t('proj.portfolio_h1'), t('proj.portfolio_h2'), t('proj.portfolio_h3')]
+        githubUrl: 'https://github.com/bertran'
       }
     ];
   }
