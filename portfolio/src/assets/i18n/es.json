@@ -336,15 +336,12 @@
     "status": "En desarrollo activo",
     "title": "Esta página estará lista pronto",
     "subtitle": "Estoy trabajando en esta sección. ¡Vuelve más tarde o contáctame directamente!",
-    "terminal": "status: building...",
     "goHome": "Inicio",
     "contact": "Contacto"
   },
   "notFound": {
     "title": "Página no encontrada",
     "description": "La página que buscas no existe o ha sido movida.",
-    "requestedPath": "Ruta solicitada",
-    "unknown": "desconocido",
     "goHome": "Inicio",
     "viewProjects": "Ver Proyectos"
   }

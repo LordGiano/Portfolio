@@ -336,15 +336,12 @@
     "status": "Aktív fejlesztés alatt",
     "title": "Az oldal hamarosan elkészül",
     "subtitle": "Éppen ezen a részen dolgozom. Nézz vissza később, vagy keress meg közvetlenül!",
-    "terminal": "status: building...",
     "goHome": "Főoldal",
     "contact": "Kapcsolat"
   },
   "notFound": {
     "title": "Az oldal nem található",
     "description": "A keresett oldal nem létezik vagy áthelyezésre került.",
-    "requestedPath": "Kért útvonal",
-    "unknown": "ismeretlen",
     "goHome": "Főoldal",
     "viewProjects": "Projektek megtekintése"
   }
