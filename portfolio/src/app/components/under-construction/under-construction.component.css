@@ -2,15 +2,22 @@
    UNDER CONSTRUCTION – Blueprint + Gears + Crane Theme
    ═══════════════════════════════════════════════════════════ */
 
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .construction-page {
   position: relative;
-  min-height: 100vh;
+  height: 100%;
   padding-top: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #0a0f1e;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* ── Canvas Background ── */
