@@ -339,5 +339,13 @@
     "terminal": "status: building...",
     "goHome": "Főoldal",
     "contact": "Kapcsolat"
+  },
+  "notFound": {
+    "title": "Az oldal nem található",
+    "description": "A keresett oldal nem létezik vagy áthelyezésre került.",
+    "requestedPath": "Kért útvonal",
+    "unknown": "ismeretlen",
+    "goHome": "Főoldal",
+    "viewProjects": "Projektek megtekintése"
   }
 }

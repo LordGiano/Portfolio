@@ -339,5 +339,13 @@
     "terminal": "status: building...",
     "goHome": "Inicio",
     "contact": "Contacto"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o ha sido movida.",
+    "requestedPath": "Ruta solicitada",
+    "unknown": "desconocido",
+    "goHome": "Inicio",
+    "viewProjects": "Ver Proyectos"
   }
 }

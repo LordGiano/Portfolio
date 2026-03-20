@@ -339,5 +339,13 @@
     "terminal": "status: building...",
     "goHome": "Home",
     "contact": "Contact"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "requestedPath": "Requested path",
+    "unknown": "unknown",
+    "goHome": "Go Home",
+    "viewProjects": "View Projects"
   }
 }
